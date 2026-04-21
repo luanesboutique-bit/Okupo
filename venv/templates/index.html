@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okupo - Servicios Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 🔴 ESTO HACE QUE LAS ESQUINAS SEAN MUY REDONDAS */
+        .btn-categoria {
+            border-radius: 999px !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+
+        <!-- BOTÓN DE MENÚ -->
+     <button onclick="openMenu()" class="text-gray-700 text-2xl border-2 border-gray-300 rounded-lg px-2">
+    <i class="fas fa-bars"></i>
+</button>
+
+        <!-- LOGO -->
+        <h1 class="text-4xl font-black tracking-tighter">
+            <span class="text-orange-500">o</span><span class="text-blue-600">k</span><span class="text-orange-500">u</span><span class="text-blue-600">p</span><span class="text-orange-500">o</span>
+        </h1>
+
+        <!-- BOTÓN DE USUARIO -->
+        <a href="/login" class="text-gray-700 hover:text-blue-600 text-3xl">
+            <i class="fas fa-user-circle"></i>
+        </a>
+
+    </div>
+</header>
+
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+        
+        <div class="mt-4 relative">
+            <input 
+                type="text" 
+                placeholder="Buscar"
+                class="w-full px-4 py-4 rounded-full border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-lg"
+            >
+            <button class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <div class="mt-4 flex items-center text-gray-600 text-lg">
+            <i class="fas fa-map-marker-alt mr-2"></i>
+            <span id="ubicacionTexto">Obteniendo ubicación...</span>
+            <i class="fas fa-chevron-down ml-2 text-sm"></i>
+        </div>
+
+        <h2 class="mt-6 text-2xl font-bold text-gray-800">Categorías de Servicios</h2>
+
+        <!-- GRID PRINCIPAL -->
+        <section class="mt-4 grid grid-cols-2 gap-4">
+            
+            <!-- CERRAJERÍA -->
+            <a href="/cerrajeria" class="bg-blue-600 btn-categoria p-6 text-white shadow-lg">
+                <div class="text-6xl mb-3"><i class="fas fa-key"></i></div>
+                <h4 class="font-bold text-2xl text-center">Cerrajería</h4>
+            </a>
+
+            <!-- PLOMERÍA -->
+<a href="/plomeria" class="bg-orange-500 btn-categoria p-6 text-white shadow-lg">
+    <div class="text-6xl mb-3"><i class="fas fa-faucet"></i></div>
+    <h4 class="font-bold text-2xl text-center">Plomería</h4>
+</a>
+
+            <!-- ELECTRICIDAD -->
+            <a href="/electricidad" class="bg-green-500 btn-categoria p-6 text-white shadow-lg">
+                <div class="text-6xl mb-3"><i class="fas fa-bolt"></i></div>
+                <h4 class="font-bold text-2xl text-center">Electricidad</h4>
+            </a>
+
+            <!-- LIMPIEZA -->
+            <a href="/servicio/limpieza" class="bg-teal-500 btn-categoria p-6 text-white shadow-lg">
+                <div class="text-6xl mb-3"><i class="fas fa-spray-can"></i></div>
+                <h4 class="font-bold text-2xl text-center">Limpieza</h4>
+            </a>
+        </section>
+
+        <!-- SEGUNDA FILA -->
+        <section class="mt-4 grid grid-cols-3 gap-4">
+            
+            <a href="/servicio/limpieza-muebles" class="bg-blue-500 btn-categoria p-4 text-white shadow-md">
+                <div class="text-4xl mb-2"><i class="fas fa-bath"></i></div>
+                <h4 class="font-bold text-lg text-center">Limpieza de Muebles</h4>
+            </a>
+
+            <a href="/servicio/armado" class="bg-orange-400 btn-categoria p-4 text-white shadow-md">
+                <div class="text-4xl mb-2"><i class="fas fa-table-cells"></i></div>
+                <h4 class="font-bold text-lg text-center">Armado de Muebles</h4>
+            </a>
+
+            <a href="/servicio/instalaciones" class="bg-gray-500 btn-categoria p-4 text-white shadow-md">
+                <div class="text-4xl mb-2"><i class="fas fa-faucet"></i></div>
+                <h4 class="font-bold text-lg text-center">Instalaciones</h4>
+            </a>
+        </section>
+
+        <!-- TERCERA FILA -->
+        <section class="mt-4 grid grid-cols-2 gap-4">
+            
+            <a href="/cotizacion/fletes" class="bg-gray-500 btn-categoria p-4 text-white shadow-md">
+                <div class="text-4xl mb-2"><i class="fas fa-truck"></i></div>
+                <h4 class="font-bold text-lg text-center">Fletes y Mudanzas</h4>
+            </a>
+
+            <a href="/cotizacion/albanileria" class="bg-gray-500 btn-categoria p-4 text-white shadow-md">
+                <div class="text-4xl mb-2"><i class="fas fa-hammer"></i></div>
+                <h4 class="font-bold text-lg text-center">Albañilería y Pintura</h4>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- BOTÓN URGENCIA -->
+    <button id="btnUrgencia" class="fixed bottom-6 right-6 bg-blue-600 text-white px-6 py-4 rounded-full shadow-xl font-bold text-lg z-40 flex items-center">
+        Urgencia 24/7 
+        <span class="ml-3 bg-orange-500 rounded-full w-12 h-12 flex items-center justify-center text-2xl">
+            <i class="fas fa-bolt"></i>
+        </span>
+    </button>
+
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async function(posicion) {
+                const lat = posicion.coords.latitude;
+                const lon = posicion.coords.longitude;
+                
+                try {
+                    const respuesta = await fetch(`https://geocode.xyz/${lat},${lon}?geoit=json`);
+                    const datos = await respuesta.json();
+                    document.getElementById("ubicacionTexto").innerText = ${datos.city}, ${datos.region};
+                } catch (error) {
+                    document.getElementById("ubicacionTexto").innerText = "Zapopan, Jalisco";
+                }
+            }, function() {
+                document.getElementById("ubicacionTexto").innerText = "Zapopan, Jalisco";
+            });
+        }
+    </script>
+<!-- FONDO OSCURECIDO -->
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeMenu()"></div>
+
+<!-- MENÚ LATERAL -->
+<nav id="sidebar" class="fixed top-0 left-0 h-full w-80 bg-white z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out">
+    
+    <!-- ENCABEZADO -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-blue-600 text-2xl font-bold">
+                <i class="fas fa-user"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg" id="menuUserName">Nombre Usuario</h3>
+                <p class="text-sm opacity-90" id="menuUserEmail">correo@ejemplo.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPCIONES -->
+    <div class="p-4 flex flex-col h-[calc(100%-140px)] justify-between">
+        
+        <ul class="space-y-2">
+            <li>
+                <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-user-circle text-blue-600 w-5 text-center"></i>
+                    <span>Mi Perfil</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-shopping-bag text-blue-600 w-5 text-center"></i>
+                    <span>Mis Pedidos</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-map-marker-alt text-blue-600 w-5 text-center"></i>
+                    <span>Direcciones</span>
+                </a>
+            </li>
+            <!-- DETALLE DE GRAN MAESTRA 👩‍🏫 -->
+            <li>
+                <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-location-arrow text-orange-500 w-5 text-center"></i>
+                    <span>Cambiar mi ubicación</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-headset text-blue-600 w-5 text-center"></i>
+                    <span>Soporte</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- BOTÓN CERRAR SESIÓN -->
+        <a href="/logout" class="flex items-center justify-center gap-2 p-3 rounded-lg bg-gray-100 hover:bg-red-50 text-red-600 font-medium mt-6">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+        </a>
+
+    </div>
+</nav>
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    // FUNCIÓN PARA ABRIR
+    function openMenu() {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // FUNCIÓN PARA CERRAR
+    function closeMenu() {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // CERRAR MENU AL DAR CLIC EN UNA OPCION
+    document.querySelectorAll('#sidebar a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+</script>
+</body>
+</html>
+
+
+

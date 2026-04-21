@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okupo - Servicio Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        * { font-family: 'Poppins', sans-serif; }
+        .btn-orange { background: linear-gradient(135deg, #ff7e00, #ff5e00); transition: all 0.3s;}
+        .btn-orange:hover { background: linear-gradient(135deg, #ff5e00, #ff7e00); transform: translateY(-2px);}
+        .option-card { transition: all 0.2s ease; }
+        .option-card.selected { border-color: #4CAF50; background-color: #f0fff4; }
+        .badge-express { background: #FFF3CD; color: #856404; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <i class="fas fa-arrow-left text-xl mr-4 cursor-pointer"></i>
+            <h1 class="text-xl font-bold">Cerrajería <span class="badge-express text-xs ml-2 px-2 py-1 rounded-full"><i class="fas fa-bolt"></i> Precio Fijo</span></h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 max-w-lg">
+        
+        <!-- IMAGEN O ICONO GRANDE -->
+        <div class="text-center mb-6">
+            <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                <i class="fas fa-key text-4xl text-red-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold mt-4">Apertura de Puerta</h2>
+        </div>
+
+        <!-- PREGUNTA CLAVE -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <h3 class="font-semibold text-lg mb-4 text-gray-700">¿Qué tipo de puerta es?</h3>
+            
+            <div class="space-y-3">
+                <!-- OPCIÓN 1: NORMAL -->
+                <div id="opt1" class="option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer" onclick="seleccionar(1, 600)">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">Puerta Normal</span>
+                        <span class="text-green-600 font-bold">$600</span>
+                    </div>
+                </div>
+
+                <!-- OPCIÓN 2: ALTA SEGURIDAD -->
+                <div id="opt2" class="option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer" onclick="seleccionar(2, 950)">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">Puerta de Alta Seguridad</span>
+                        <span class="text-green-600 font-bold">$950</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- OPCIÓN 3: CAMBIO DE CHAPA -->
+                <div id="opt3" class="option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer" onclick="seleccionar(3, 800)" p-4>
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">Cambio de Chapa / Cerradura</span>
+                        <span class="text-green-600 font-bold">$800</span>
+                    </div>
+                </div>
+
+                <!-- OPCIÓN 4: INSTALACIÓN DE CERROJO -->
+                <div id="opt4" class="option-card border-2 border-gray-200 rounded-xl p-4 cursor-pointer" onclick="seleccionar(4, 500)" p-4>
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">Instalación de Cerrojo</span>
+                        <span class="text-green-600 font-bold">$500</span>
+                    </div>
+                </div>
+        <!-- RESUMEN DE PRECIO -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <h3 class="font-semibold mb-3 text-gray-700">Resumen del Servicio</h3>
+            
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Servicio base</span>
+                    <span id="precioBase">$0.00</span>
+                </div>
+                <div class="flex justify-between text-orange-600">
+                    <span><i class="fas fa-clock mr-1"></i> Tarifa Nocturna / Urgencia</span>
+                    <span>+$350</span>
+                </div>
+                <div class="border-t border-dashed my-2"></div>
+                <div class="flex justify-between text-xl font-bold text-orange-600">
+                    <span>TOTAL A PAGAR</span>
+                    <span id="total">$0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTÓN FINAL -->
+        <button id="btnSolicitar" class="btn-orange w-full text-white font-bold py-4 rounded-xl text-lg shadow-lg opacity-50 cursor-not-allowed" disabled>
+            Selecciona una opción
+        </button>
+
+    </main>
+
+    <script>
+        let precioBase = 0;
+        const extraNocturno = 350; // Según tu Excel
+
+        function seleccionar(opcion, precio) {
+            precioBase = precio;
+            
+            // Quitar selección anterior
+            document.querySelectorAll('.option-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Marcar seleccionado
+            document.getElementById('opt'+opcion).classList.add('selected');
+            
+            // Actualizar precios
+            document.getElementById('precioBase').innerText = '$' + precio;
+            let total = precio + extraNocturno;
+            document.getElementById('total').innerText = '$' + total;
+            
+            // Activar botón
+            const btn = document.getElementById('btnSolicitar');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.innerText = 'Solicitar Ahora';
+        }
+    </script>
+
+</body>
+</html>

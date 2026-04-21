@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plomería - Okupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .btn-categoria {
+            border-radius: 999px !important;
+        }
+        .precio-caja {
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="/" class="text-gray-700 text-2xl">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="text-4xl font-black tracking-tighter">
+                <span class="text-orange-500">o</span><span class="text-blue-600">k</span><span class="text-orange-500">u</span><span class="text-blue-600">p</span><span class="text-orange-500">o</span>
+            </h1>
+            <button class="text-gray-700 text-3xl">
+                <i class="far fa-user-circle"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+        
+        <h2 class="mt-6 text-3xl font-bold text-center">🛠️ Plomería</h2>
+        <p class="text-center text-gray-500 mb-8">Elige el servicio que necesitas</p>
+
+        <!-- AQUÍ SE REPITE AUTOMÁTICO POR CADA SERVICIO -->
+        {% for serv in servicios %}
+        <div class="bg-white rounded-2xl shadow-md p-5 mb-4">
+            <h3 class="font-bold text-xl mb-3">{{ serv.nombre }}</h3>
+            
+            <div class="bg-green-50 border-2 border-green-200 precio-caja p-4 text-center mb-2">
+                <p class="text-sm text-gray-500">Precio actual</p>
+                <p class="font-black text-4xl {{ serv.color }}">${{ serv.precio }}</p>
+            </div>
+
+            {% if serv.leyenda %}
+            <p class="text-center text-orange-500 text-sm font-bold mb-3">
+                <i class="fas fa-exclamation-triangle"></i> {{ serv.leyenda }}
+            </p>
+            {% endif %}
+
+            <button class="w-full mt-2 bg-orange-500 text-white py-3 rounded-xl font-bold hover:bg-orange-600">
+                Contratar
+            </button>
+        </div>
+        {% endfor %}
+<!-- BOTÓN NO ENCUENTRO MI SERVICIO -->
+<div class="mt-4 text-center">
+    <a href="/cotizacion?categoria=plomeria" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-sm transition">
+        No encuentro mi servicio
+    </a>
+</div>
+    </main>
+
+</body>
+</html>

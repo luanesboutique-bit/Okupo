@@ -1,0 +1,153 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    text-align: center;
+    padding-top: 50px;
+    margin: 0;
+}
+
+.container {
+    background: 343a40;
+    padding: 40px;
+    border-radius: 15px;
+    max-width: 700px;
+    margin: auto;
+}
+
+h1 {
+    color: #000000;
+    font-size: 28px;
+    margin-bottom: 5px;
+    margin-top: 10 px;
+}
+
+p {
+    color: #000000;
+    font-size: 16px;
+    margin-bottom: 20px; /espacio justo antes del buscador*/
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-top: 15px;
+    color: #333;
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px;
+    background-color: #0066FF;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 2px solid #000;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background-color: #0052CC;
+}
+
+.btn-secondary {
+    background-color: #FF8800;
+}
+
+.btn-secondary:hover {
+    background-color: #E67A00;
+}
+
+/* ESTILO PARA EL LOGO */
+.logo {
+    height: 180px;  
+    width: auto;
+    margin: -20px auto; 10px auto
+    display: block;  
+    border:none;
+    background-color: white;
+    padding: 0 px;
+    border-radius: 10px;
+}
+/* ESTILO PARA EL BUSCADOR */
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 250px;
+    max-width: 80%;
+}
+
+.search-input:focus {
+    border-color: #0066FF;
+    outline: none;
+}
+
+.search-btn {
+    padding: 15px 25px;
+    background-color: #0066FF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 2px solid #0052CC;
+}
+
+.search-btn:hover {
+    background-color: #0052CC;
+}
+
+.ubicacion {
+    color: #666666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.categorias {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.cat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cat span:first-child {
+    font-size: 30px;
+    margin-bottom: 5px;
+}

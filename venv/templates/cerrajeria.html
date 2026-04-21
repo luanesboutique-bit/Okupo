@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerrajería - Okupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
+        .tarjeta-servicio {
+            background-color: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .opcion-puerta {
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        .opcion-puerta:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .nota {
+            background-color: #fff7ed;
+            border: 1px solid #ffedd5;
+            color: #c2410c;
+        }
+        .btn-contratar {
+            background-color: #f97316;
+            transition: background-color 0.2s;
+        }
+        .btn-contratar:hover {
+            background-color: #ea580c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="min-h-screen py-8 px-4 max-w-2xl mx-auto">
+   <!-- FLECHA DE REGRESO -->
+<div class="w-full mb-6">
+    <a href="/" class="text-3xl text-gray-700 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+
+    <!-- LOGO Y TITULO -->
+    <div class="text-center mb-10">
+    <h1 class="text-5xl font-bold mb-4">
+        <span style="color: #f97316;">o</span>
+        <span style="color: #3b82f6;">k</span>
+        <span style="color: #f97316;">u</span>
+        <span style="color: #3b82f6;">p</span>
+        <span style="color: #f97316;">o</span>
+    </h1>
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Cerrajería</h2>
+    <p class="text-gray-500 text-lg">Elige el servicio que necesitas</p>
+</div>
+
+    <!-- SERVICIO 1: APERTURA DE PUERTA -->
+    <div class="tarjeta-servicio p-6 mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Apertura de Puerta</h3>
+        <p class="text-sm text-gray-500 mb-4">Me quedé fuera</p>
+
+        <!-- OPCIONES DE PUERTA -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="opcion-puerta p-4 text-center">
+                <div class="text-4xl mb-2">🚪</div>
+                <h4 class="font-bold text-gray-800">Puerta Normal</h4>
+                <p class="text-xs text-gray-500">Precio base</p>
+                <p class="text-2xl font-bold text-red-600">${{ servicios[0].precio }}</p>
+            </div>
+            <div class="opcion-puerta p-4 text-center">
+                <div class="text-4xl mb-2">🔒</div>
+                <h4 class="font-bold text-gray-800">Puerta Alta Seguridad</h4>
+                <p class="text-xs text-gray-500">+50% recargo</p>
+                <p class="text-2xl font-bold text-red-600">${{ servicios[0].precio * 1.5 }}</p>
+            </div>
+        </div>
+
+        <!-- NOTAS -->
+        <div class="nota p-3 rounded-lg mb-4 text-sm font-bold text-center">
+            ⚠️ Precio por apertura no destructiva. Si requiere romper la chapa, el cambio de pieza tiene costo extra.<br>
+            📎 Se requiere identificación oficial para acreditar propiedad.
+        </div>
+
+        <!-- CHECKBOX -->
+        <label class="flex items-center text-sm text-gray-700 mb-4 cursor-pointer">
+            <input type="checkbox" class="mr-2"> ¿La llave está pegada por dentro o se extravió?
+        </label>
+
+        <button class="btn-contratar w-full text-white font-bold py-3 rounded-lg text-lg">Contratar</button>
+    </div>
+
+    <!-- SERVICIO 2: CHAPA POMO -->
+    <div class="tarjeta-servicio p-6 mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Instalación de Chapa de Pomo</h3>
+        <p class="text-sm text-gray-500 mb-2">Recámaras / Baños</p>
+        <p class="text-sm text-gray-600 italic mb-4">Precio fijo por mano de obra (quitar vieja y poner nueva).</p>
+
+        <div class="text-center mb-4">
+            <p class="text-sm text-gray-400">Precio actual</p>
+            <p class="text-5xl font-bold text-red-600">${{ servicios[1].precio }}</p>
+            {% if servicios[1].leyenda %}
+            <p class="text-sm text-gray-500 mt-1">{{ servicios[1].leyenda }}</p>
+            {% endif %}
+        </div>
+
+        <div class="nota p-3 rounded-lg mb-4 text-sm font-bold text-center">
+            El costo NO incluye el material. El cliente trae la chapa o se cotiza aparte.
+        </div>
+
+        <button class="btn-contratar w-full text-white font-bold py-3 rounded-lg text-lg">Contratar</button>
+    </div>
+
+    <!-- SERVICIO 3: CHAPA SEGURIDAD -->
+    <div class="tarjeta-servicio p-6 mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Instalación de Chapa de Seguridad</h3>
+        <p class="text-sm text-gray-500 mb-2">Entrada Principal</p>
+        <p class="text-sm text-gray-600 italic mb-4">Para puertas de calle, barras o digitales.</p>
+
+        <div class="text-center mb-4">
+            <p class="text-sm text-gray-400">Precio actual</p>
+            <p class="text-5xl font-bold text-red-600">${{ servicios[2].precio }}</p>
+            {% if servicios[2].leyenda %}
+            <p class="text-sm text-gray-500 mt-1">{{ servicios[2].leyenda }}</p>
+            {% endif %}
+        </div>
+
+        <div class="nota p-3 rounded-lg mb-4 text-sm font-bold text-center">
+            Precio por instalación y ajuste fino. Incluye perforaciones necesarias.
+        </div>
+
+        <button class="btn-contratar w-full text-white font-bold py-3 rounded-lg text-lg">Contratar</button>
+    </div>
+    <!-- BOTÓN NO ENCUENTRO MI SERVICIO -->
+<div class="mt-4 text-center">
+    <a href="/cotizacion?categoria=Cerrajeria" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-sm transition">
+        No encuentro mi servicio
+    </a>
+</div>
+
+</div>
+
+</body>
+</html>
