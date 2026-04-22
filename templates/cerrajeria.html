@@ -74,13 +74,21 @@
                 <div class="text-4xl mb-2">🚪</div>
                 <h4 class="font-bold text-gray-800">Puerta Normal</h4>
                 <p class="text-xs text-gray-500">Precio base</p>
-                <p class="text-2xl font-bold text-red-600">${{ servicios[0].precio }}</p>
+        {% if servicios and servicios|length > 0 %}
+    <p class="text-2xl font-bold text-red-600">${{ servicios[0].precio }}</p>
+{% else %}
+    <p class="text-2xl font-bold text-gray-600">Precio no disponible</p>
+{% endif %}
             </div>
             <div class="opcion-puerta p-4 text-center">
                 <div class="text-4xl mb-2">🔒</div>
                 <h4 class="font-bold text-gray-800">Puerta Alta Seguridad</h4>
                 <p class="text-xs text-gray-500">+50% recargo</p>
-                <p class="text-2xl font-bold text-red-600">${{ servicios[0].precio * 1.5 }}</p>
+         {% if servicios and servicios|length > 0 %}
+    <p class="text-2xl font-bold text-red-600">${{ servicios[0].precio * 1.5 }}</p>
+{% else %}
+    <p class="text-2xl font-bold text-gray-600">Precio no disponible</p>
+{% endif %}
             </div>
         </div>
 
@@ -106,10 +114,21 @@
 
         <div class="text-center mb-4">
             <p class="text-sm text-gray-400">Precio actual</p>
-            <p class="text-5xl font-bold text-red-600">${{ servicios[1].precio }}</p>
-            {% if servicios[1].leyenda %}
-            <p class="text-sm text-gray-500 mt-1">{{ servicios[1].leyenda }}</p>
-            {% endif %}
+         {% if servicios and servicios|length > 1 %}
+    <p class="text-5xl font-bold text-red-600">${{ servicios[1].precio }}</p>
+{% else %}
+    <p class="text-5xl font-bold text-gray-600">Precio no disponible</p>
+{% endif %}
+          {% if servicios and servicios|length > 1 %}
+    {{ servicios[1].leyenda }}
+{% else %}
+    Descripción no disponible
+{% endif %}
+  {% if servicios and servicios|length > 1 %}
+    <p class="text-sm text-gray-500 mt-1">{{ servicios[1].leyenda }}</p>
+{% else %}
+    <p class="text-sm text-gray-500 mt-1">Descripción no disponible</p>
+{% endif %}
         </div>
 
         <div class="nota p-3 rounded-lg mb-4 text-sm font-bold text-center">
@@ -127,8 +146,12 @@
 
         <div class="text-center mb-4">
             <p class="text-sm text-gray-400">Precio actual</p>
-            <p class="text-5xl font-bold text-red-600">${{ servicios[2].precio }}</p>
-            {% if servicios[2].leyenda %}
+           {% if servicios and servicios|length > 2 %}
+    <p class="text-5xl font-bold text-red-600">${{ servicios[2].precio }}</p>
+{% else %}
+    <p class="text-5xl font-bold text-gray-600">Precio no disponible</p>
+{% endif %}
+        {% if servicios and servicios|length > 2 %}
             <p class="text-sm text-gray-500 mt-1">{{ servicios[2].leyenda }}</p>
             {% endif %}
         </div>
@@ -150,3 +173,4 @@
 
 </body>
 </html>
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Servicios - Okupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f5f0;
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+<!-- BARRA DE NAVEGACIÓN -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+        <a href="{{ url_for('index') }}" class="text-2xl text-gray-700">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="text-3xl font-bold">
+            <span class="text-red-600">o</span><span class="text-blue-600">kupo</span>
+        </div>
+        <a href="{{ url_for('login') }}" class="text-3xl text-gray-700">
+            <i class="fas fa-user-circle"></i>
+        </a>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-6">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Mis Servicios</h2>
+
+    <div class="space-y-4">
+
+        {% for sol in solicitudes %}
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Servicio #{{ sol.id }}</h3>
+                    <p class="text-gray-600">{{ sol.descripcion_detallada }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Urgencia: <span class="font-semibold">{{ sol.urgencia }}</span></p>
+                </div>
+
+                <!-- Estado -->
+                <span class="px-3 py-1 rounded-full text-sm font-bold
+                           {% if sol.estado == 'pendiente' %} bg-yellow-100 text-yellow-800
+                           {% elif sol.estado == 'en_proceso' %} bg-blue-100 text-blue-800
+                           {% else %} bg-green-100 text-green-800 {% endif %}">
+                    {{ sol.estado|replace('_', ' ')|title }}
+                </span>
+            </div>
+
+        </div>
+        {% else %}
+        <p class="text-center text-gray-500">No has solicitado ningún servicio aún.</p>
+        {% endfor %}
+
+    </div>
+
+</main>
+
+</body>
+</html>
+

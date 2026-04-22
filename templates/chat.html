@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Okupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f5f0;
+        }
+        .chat-bubble {
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+<!-- BARRA DE NAVEGACIÓN -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+        <a href="{{ url_for('mis_pedidos') }}" class="text-2xl text-gray-700">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="text-3xl font-bold">
+            <span class="text-red-600">o</span><span class="text-blue-600">kupo</span>
+        </div>
+        <a href="{{ url_for('login') }}" class="text-3xl text-gray-700">
+            <i class="fas fa-user-circle"></i>
+        </a>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-6">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Chat</h2>
+
+    <div class="bg-white rounded-xl shadow-lg p-6 h-[500px] flex flex-col">
+        
+        <!-- Área de Mensajes -->
+        <div class="flex-1 overflow-y-auto space-y-4 mb-4">
+
+            {% for msg in mensajes %}
+            <div class="flex {% if msg.usuario_id == session['user_id'] %} justify-end {% else %} justify-start {% endif %}">
+                <div class="chat-bubble p-3 rounded-lg 
+                            {% if msg.usuario_id == session['user_id'] %} bg-blue-600 text-white {% else %} bg-gray-200 text-gray-800 {% endif %}">
+                    {{ msg.texto }}
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center text-gray-500">No hay mensajes aún.</p>
+            {% endfor %}
+
+        </div>
+
+        <!-- Formulario Enviar -->
+        <form method="POST" class="flex gap-2">
+            <input type="text" name="texto" placeholder="Escribe un mensaje..." required
+                   class="flex-1 px-4 py-2 border rounded-full focus:outline-none">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>

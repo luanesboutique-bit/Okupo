@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Okupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f5f0;
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+<!-- BARRA DE NAVEGACIÓN -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+        <a href="{{ url_for('index') }}" class="text-2xl text-gray-700">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="text-3xl font-bold">
+            <span class="text-red-600">o</span><span class="text-blue-600">kupo</span>
+        </div>
+        <a href="{{ url_for('login') }}" class="text-3xl text-gray-700">
+            <i class="fas fa-user-circle"></i>
+        </a>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-6">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Elige a tu Profesional</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {% for col in colaboradores %}
+        <div class="bg-white rounded-xl shadow-lg p-6 flex items-center gap-4">
+            
+            <!-- Foto o Icono -->
+            <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-3xl text-gray-600">
+                <i class="fas fa-user-tie"></i>
+            </div>
+
+            <!-- Datos -->
+            <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800">{{ col.nombre }}</h3>
+                <p class="text-sm text-gray-500">{{ col.especialidad }}</p>
+                <div class="flex items-center mt-1">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="ml-1 font-semibold">{{ col.calificacion }}</span>
+                </div>
+            </div>
+
+            <!-- Botón Contratar -->
+            <a href="{{ url_for('pedir', colaborador_id=col.id, subcategoria_id=subcat_id) }}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full font-bold transition">
+                Elegir
+            </a>
+
+        </div>
+        {% else %}
+        <p class="col-span-full text-center text-gray-500">No hay colaboradores disponibles aún.</p>
+        {% endfor %}
+
+    </div>
+
+</main>
+
+</body>
+</html>

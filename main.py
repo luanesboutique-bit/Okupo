@@ -1,170 +1,89 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import requests
-import json
-from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'okupo_secret_key' # Debería cambiarse a algo seguro
+app.secret_key = 'tu_clave_secreta_aqui'  # Necesaria para las sesiones
 
-# URL BASE DE LA API DE FINITE (Motor de búsqueda)
-# Asegúrate de que el motor finit esté corriendo en el puerto 3000
-API_URL = "http://localhost:3000"
-
-# --- HELPERS PARA CONSUMIR LA API ---
+# --- CONFIGURACIÓN DE LA API ---
+API_BASE_URL = "http://localhost:3000"
 
 def api_get(endpoint):
     try:
-        response = requests.get(f"{API_URL}{endpoint}")
+        response = requests.get(f"{API_BASE_URL}{endpoint}")
         return response.json() if response.status_code == 200 else None
-    except Exception as e:
-        print(f"Error en GET {endpoint}: {e}")
+    except:
         return None
 
 def api_post(endpoint, data):
     try:
-        response = requests.post(
-            f"{API_URL}{endpoint}",
-            json=data,
-            headers={'Content-Type': 'application/json'}
-        )
-        if response.status_code in [200, 201]:
-            try:
-                return response.json()
-            except:
-                return response.text
-        return None
-    except Exception as e:
-        print(f"Error en POST {endpoint}: {e}")
+        response = requests.post(f"{API_BASE_URL}{endpoint}", json=data)
+        return response.json() if response.status_code in [200, 201] else None
+    except:
         return None
 
-# --- RUTAS DE NAVEGACIÓN ---
+# --- VERIFICACIÓN DE SESIÓN ---
+def login_required(f):
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    decorated_function.__name__ = f.__name__
+    return decorated_function
+
+# --- RUTAS PÚBLICAS ---
 
 @app.route('/')
 def index():
-    # Podríamos obtener las categorías dinámicamente
-    # categorias = api_get("/categorias")
-    return render_template('index.html')
-
-@app.route('/servicio')
-def servicio():
-    return render_template('servicio.html')
-
-@app.route('/plomeria')
-def plomeria():
-    # ID de Plomería en la DB (Asumimos 1 según api_uso.md ejemplo)
-    # En un sistema real, buscaríamos el ID por nombre
-    categoria_id = 1 
-    subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias")
-    
-    if not subcategorias:
-        # Fallback por si la API no responde o no tiene datos
-        subcategorias = [
-            {"id": 1, "nombre": "Instalación de mezcladora", "descripcion": "Servicio estándar"},
-            {"id": 2, "nombre": "Herraje de sanitario", "descripcion": "Cambio de herrajes"},
-            {"id": 3, "nombre": "Destape drenaje (Guía)", "descripcion": "Limpieza de tubería"},
-            {"id": 4, "nombre": "Kit de regadera", "descripcion": "Instalación completa"}
-        ]
-
-    # LÓGICA DE TARIFAS (Simulada para mantener el feeling del front original)
-    ahora = datetime.now()
-    hora = ahora.hour
-    dia = ahora.weekday()
-    
-    es_noche = hora >= 20 or hora < 6
-    es_festivo = dia == 6 
-
-    servicios_con_precio = []
-    for sub in subcategorias:
-        # Aquí Finite debería darnos el precio, pero como es dinámico por colaborador,
-        # mantenemos una lógica base para el front.
-        precio_base = 450
-        if es_noche:
-            precio_final = precio_base + 200
-            leyenda = "Tarifa nocturna activa"
-            color = "text-red-600"
-        elif es_festivo:
-            precio_final = precio_base + 400
-            leyenda = "Tarifa de día festivo"
-            color = "text-red-600"
-        else:
-            precio_final = precio_base
-            leyenda = ""
-            color = "text-green-600"
-        
-        servicios_con_precio.append({
-            "id": sub.get("id"),
-            "nombre": sub.get("nombre"),
-            "precio": precio_final,
-            "leyenda": leyenda,
-            "color": color
-        })
-
-    return render_template('plomeria.html', servicios=servicios_con_precio)
-
-@app.route('/electricidad')
-def electricidad():
-    categoria_id = 2 # Asumido
-    subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias")
-    
-    if not subcategorias:
-        subcategorias = [
-            {"id": 5, "nombre": "Instalación Ventilador", "descripcion": ""},
-            {"id": 6, "nombre": "Cambio Contactos", "descripcion": ""},
-            {"id": 7, "nombre": "Instalación Lámpara", "descripcion": ""},
-            {"id": 8, "nombre": "Revisión Centro Carga", "descripcion": ""}
-        ]
-
-    # Lógica similar a plomeria...
-    return render_template('electricidad.html', servicios=subcategorias)
-
-@app.route('/cerrajeria')
-def cerrajeria():
-    categoria_id = 3 # Asumido
-    subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias")
-    return render_template('cerrajeria.html', servicios=subcategorias)
-
-# --- AUTENTICACIÓN (USANDO API FINITE) ---
+    categorias = api_get("/categorias")
+    if categorias is None:
+        categorias = []
+    return render_template('index.html', categorias=categorias)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
-        password = request.form['password']
-
-        # Consumimos el endpoint de login de finit
-        respuesta = api_post("/login", {
-            "correo": email,
-            "contrasenna": password
-        })
-
-        if respuesta:
-            # finit devuelve un token JWT en caso de éxito
-            session['token'] = respuesta 
-            session['email'] = email
+        password = request.form['contrasenna']
+        
+        # Buscamos usuario por email
+        usuarios = api_get("/usuarios")
+        usuario = next((u for u in usuarios if u['correo'] == email), None)
+        
+        if usuario and usuario['contrasenna'] == password:
+            # ✅ GUARDAMOS EN SESIÓN LOS DATOS DEL USUARIO
+            session['user_id'] = usuario['id']
+            session['nombre'] = usuario['nombre']
+            session['correo'] = usuario['correo']
             return redirect(url_for('index'))
         else:
-            return "Correo o contraseña incorrectos (API finit)"
-
+            return "Correo o contraseña incorrectos"
+            
     return render_template('login.html')
+
+
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        email = request.form['email']
-        password = request.form['password']
-        
-        # Registro en finit
-        respuesta = api_post("/usuarios", {
-            "nombre": nombre,
-            "correo": email,
-            "contrasenna": password
-        })
+        nombre = request.form.get('nombre')
+        email = request.form.get('email')
+        contrasena = request.form.get('password')
+        telefono=request.form.get('telefono')
 
+        
+        datos_usuario = {
+        "nombre": nombre,
+        "correo": email,
+        "contrasena": password,
+        "telefono": telefono, 
+    }
+
+        respuesta = api_post("/usuarios", datos_usuario)
+        
         if respuesta:
             return redirect(url_for('login'))
         else:
-            return "Error al registrar usuario en la API"
+            return "Error al registrar usuario"
 
     return render_template('registro.html')
 
@@ -173,26 +92,32 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# --- SOLICITUD DE SERVICIOS (USANDO API FINITE) ---
+# --- RUTAS PROTEGIDAS (Requieren estar logueado) ---
 
 @app.route('/pedir', methods=['GET', 'POST'])
+@login_required
 def pedir():
     if request.method == 'POST':
-        # Datos del formulario del front
         subcategoria_id = request.form.get('subcategoria_id', 1)
         descripcion = request.form.get('descripcion')
         urgencia = request.form.get('urgencia', 'media')
-        lat = request.form.get('latitud', 19.4326) # CDMX default
+        lat = request.form.get('latitud', 19.4326)
         lon = request.form.get('longitud', -99.1332)
 
-        # JSON exacto según api_uso.md de finit
+        # 🆕 MANEJO DE ARCHIVO
+        foto = request.files.get('foto')
+        ruta_foto = ""
+        if foto and foto.filename != '':
+            # Aquí podrías guardarla físicamente si quieres
+            ruta_foto = foto.filename # Por ahora guardamos solo el nombre
+
         datos_solicitud = {
-            "usuario_id": session.get('user_id', 1), # Debería venir del JWT decodificado
-            "colaborador_id": 1, # En un flujo real, se elige del Marketplace primero
+            "usuario_id": session['user_id'],
+            "colaborador_id": request.args.get('colaborador_id', 1),
             "subcategoria_id": int(subcategoria_id),
             "urgencia": urgencia,
             "descripcion_detallada": descripcion,
-            "fotos_evidencia_inicial": "",
+            "fotos_evidencia_inicial": ruta_foto, # ✅ LA MANDAMOS A LA API
             "latitud": float(lat),
             "longitud": float(lon)
         }
@@ -200,9 +125,9 @@ def pedir():
         respuesta = api_post("/solicitudes", datos_solicitud)
         
         if respuesta:
-            return f"✅ Solicitud creada con éxito en finit! ID: {respuesta.get('id')}"
+            return f"✅ Solicitud creada con éxito! ID: {respuesta.get('id')}"
         else:
-            return "❌ Error al crear la solicitud en el motor finit."
+            return "❌ Error al crear la solicitud"
 
     return render_template('pedir.html')
 
@@ -210,21 +135,61 @@ def pedir():
 def recuperar():
     if request.method == 'POST':
         email = request.form['email']
-        return f"Se ha enviado un enlace de recuperación al correo {email} (Simulado)"
+        return f"Enlace enviado a {email} (simulado)"
     return render_template('recuperar.html')
 
 @app.route('/publicar')
+@login_required
 def publicar():
     return render_template('publicar.html')
 
-# --- TEST DE CONEXIÓN ---
+# --- TEST ---
 
 @app.route('/test')
 def test():
     respuesta = api_get("/")
     if respuesta:
-        return f"🔌 Conectado a Finite: {respuesta}"
-    return "❌ No se pudo conectar al motor Finite (Puerto 3000)"
+        return f"🔌 Conectado: {respuesta}"
+    return "❌ No conectado"
+     # --- MARKETPLACE DE COLABORADORES ---
+
+@app.route('/marketplace/<int:subcategoria_id>')
+@login_required
+def marketplace(subcategoria_id):
+    # Consultamos la API para obtener los trabajadores de esa categoría
+    colaboradores = api_get(f"/subcategorias/{subcategoria_id}/colaboradores")
+    
+    if colaboradores is None:
+        colaboradores = []
+        
+    return render_template('marketplace.html', colaboradores=colaboradores, subcat_id=subcategoria_id)
+# --- DASHBOARD DE USUARIO ---
+
+@app.route('/mis_pedidos')
+@login_required
+def mis_pedidos():
+    # Consultamos las solicitudes de ESTE usuario
+    usuario_id = session['user_id']
+    solicitudes = api_get(f"/solicitudes?usuario_id={usuario_id}")
+    
+    if solicitudes is None:
+        solicitudes = []
+        
+    return render_template('mis_pedidos.html', solicitudes=solicitudes)
+# --- CHAT EN VIVO ---
+
+@app.route('/chat/<int:solicitud_id>')
+@login_required
+def chat(solicitud_id):
+    # Consultamos los mensajes de esta solicitud
+    mensajes = api_get(f"/solicitudes/{solicitud_id}/mensajes")
+    
+    if mensajes is None:
+        mensajes = []
+        
+    return render_template('chat.html', mensajes=mensajes, solicitud_id=solicitud_id)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+   
