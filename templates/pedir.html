@@ -3,78 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedir Servicio - Okupo</title>
+    <title>Solicitar Servicio - Okupo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f5f0;
-        }
+        body { background-color: #1c150f; color: #edeae3; }
+        .bg-card { background-color: #2a221b; border: 1px solid #9E8B71; }
+        .text-accent { color: #C69B6F; }
+        .bg-accent { background-color: #C69B6F; color: #1c150f; }
+        .input-field { background-color: #3d342c; border: 1px solid #9E8B71; color: #edeae3; }
+        .input-field:focus { border-color: #C69B6F; outline: none; }
     </style>
 </head>
 <body class="font-sans">
 
-<!-- BARRA DE NAVEGACIÓN -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
+<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
     <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        <a href="{{ url_for('index') }}" class="text-2xl text-gray-700">
+        <a href="javascript:history.back()" class="text-2xl text-accent">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <div class="text-3xl font-bold">
-            <span class="text-red-600">o</span><span class="text-blue-600">kupo</span>
-        </div>
-        <a href="{{ url_for('login') }}" class="text-3xl text-gray-700">
-            <i class="fas fa-user-circle"></i>
+        <a href="/" class="text-3xl font-bold tracking-tighter">
+            <span class="text-accent">o</span>kupo
         </a>
+        <div class="w-8"></div>
     </div>
 </header>
 
-<main class="max-w-4xl mx-auto px-4 py-6">
+<main class="max-w-4xl mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-8 text-center text-accent">Confirma tu Solicitud</h2>
 
-    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Solicita tu Servicio</h2>
-
-    <form method="POST" class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
+    <form method="POST" class="bg-card rounded-3xl p-8 max-w-xl mx-auto shadow-2xl">
         
-        <!-- Descripción -->
-        <div class="mb-4">
-            <label class="block text-gray-700 font-bold mb-2">¿Qué necesitas?</label>
+        <div class="mb-6">
+            <label class="block text-sm font-bold mb-2 opacity-70">¿Qué problema tienes?</label>
             <textarea name="descripcion" rows="4" required
-                      class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Describe detalladamente el problema..."></textarea>
+                      class="w-full px-4 py-3 rounded-xl input-field"
+                      placeholder="Ej: Tubería rota en la cocina..."></textarea>
         </div>
 
-        <!-- Urgencia -->
-        <div class="mb-4">
-            <label class="block text-gray-700 font-bold mb-2">Nivel de Urgencia</label>
-            <select name="urgencia" class="w-full px-4 py-2 border rounded-lg focus:outline-none">
-                <option value="baja">Baja</option>
-                <option value="media" selected>Media</option>
-                <option value="alta">Alta</option>
+        <div class="mb-6">
+            <label class="block text-sm font-bold mb-2 opacity-70">Nivel de Urgencia</label>
+            <select name="urgencia" class="w-full px-4 py-3 rounded-xl input-field">
+                <option value="baja">Baja (Puede esperar)</option>
+                <option value="media" selected>Media (Normal)</option>
+                <option value="alta">Alta (Urgente)</option>
+                <option value="critica">Crítica (¡Ahora mismo!)</option>
             </select>
         </div>
 
-        <!-- 🆕 SUBIR FOTO -->
-        <div class="mb-4">
-            <label class="block text-gray-700 font-bold mb-2">Evidencia Fotográfica</label>
-            <input type="file" name="foto" accept="image/*"
-                   class="w-full px-4 py-2 border rounded-lg focus:outline-none">
+        <div class="mb-8">
+            <label class="block text-sm font-bold mb-2 opacity-70">Sube una foto (Evidencia)</label>
+            <div class="border-2 border-dashed border-[#9E8B71] rounded-xl p-6 text-center hover:border-accent cursor-pointer transition">
+                <i class="fas fa-camera text-4xl mb-2 text-accent opacity-50"></i>
+                <p class="text-xs opacity-50">Toca para subir una foto del problema</p>
+                <input type="file" name="foto" accept="image/*" class="hidden">
+            </div>
         </div>
 
-        <!-- Campos ocultos para pasar los ID -->
-        <input type="hidden" name="subcategoria_id" value="{{ request.args.get('subcategoria_id', 1) }}">
+        <!-- Campos ocultos -->
+        <input type="hidden" name="subcategoria_id" value="{{ subcat_id }}">
+        <input type="hidden" name="colaborador_id" value="{{ colaborador_id }}">
         <input type="hidden" name="latitud" value="19.4326">
         <input type="hidden" name="longitud" value="-99.1332">
 
-        <!-- Botón Enviar -->
         <button type="submit" 
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full transition">
-            ✅ Solicitar Servicio
+                class="w-full bg-accent text-[#1c150f] font-bold py-5 rounded-2xl text-xl shadow-xl hover:opacity-90 transition">
+            <i class="fas fa-paper-plane mr-2"></i> Enviar Solicitud
         </button>
-
     </form>
-
 </main>
 
 </body>
 </html>
-

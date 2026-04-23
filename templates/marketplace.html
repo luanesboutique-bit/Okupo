@@ -7,65 +7,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f5f0;
-        }
+        body { background-color: #1c150f; color: #edeae3; }
+        .bg-card { background-color: #2a221b; border: 1px solid #9E8B71; }
+        .text-accent { color: #C69B6F; }
+        .bg-accent { background-color: #C69B6F; color: #1c150f; }
     </style>
 </head>
 <body class="font-sans">
 
-<!-- BARRA DE NAVEGACIÓN -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
+<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
     <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        <a href="{{ url_for('index') }}" class="text-2xl text-gray-700">
+        <a href="javascript:history.back()" class="text-2xl text-accent">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <div class="text-3xl font-bold">
-            <span class="text-red-600">o</span><span class="text-blue-600">kupo</span>
-        </div>
-        <a href="{{ url_for('login') }}" class="text-3xl text-gray-700">
-            <i class="fas fa-user-circle"></i>
+        <a href="/" class="text-3xl font-bold tracking-tighter">
+            <span class="text-accent">o</span>kupo
         </a>
+        <div class="w-8"></div> <!-- Espaciador -->
     </div>
 </header>
 
-<main class="max-w-4xl mx-auto px-4 py-6">
-
-    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Elige a tu Profesional</h2>
+<main class="max-w-4xl mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-8 text-center">Profesionales Disponibles</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
         {% for col in colaboradores %}
-        <div class="bg-white rounded-xl shadow-lg p-6 flex items-center gap-4">
+        <div class="bg-card rounded-2xl p-6 flex items-center gap-5">
             
-            <!-- Foto o Icono -->
-            <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-3xl text-gray-600">
-                <i class="fas fa-user-tie"></i>
+            <div class="w-16 h-16 bg-[#3d342c] rounded-full flex items-center justify-center text-3xl text-accent">
+                <i class="fas fa-user-circle"></i>
             </div>
 
-            <!-- Datos -->
             <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800">{{ col.nombre }}</h3>
-                <p class="text-sm text-gray-500">{{ col.especialidad }}</p>
-                <div class="flex items-center mt-1">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <span class="ml-1 font-semibold">{{ col.calificacion }}</span>
+                <h3 class="text-xl font-bold text-accent">{{ col.nombre }}</h3>
+                <p class="text-sm opacity-70">{{ col.descripcion_servicio or 'Experto profesional' }}</p>
+                <div class="flex items-center mt-2">
+                    <span class="text-lg font-bold mr-2">${{ col.precio_base }}</span>
+                    <span class="text-xs bg-[#3d342c] px-2 py-1 rounded text-[#ADA391]">a {{ col.distancia_km }}km</span>
                 </div>
             </div>
 
-            <!-- Botón Contratar -->
-            <a href="{{ url_for('pedir', colaborador_id=col.id, subcategoria_id=subcat_id) }}" 
-               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full font-bold transition">
+            <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" 
+               class="bg-accent px-5 py-2 rounded-xl font-bold transition hover:opacity-90">
                 Elegir
             </a>
-
         </div>
         {% else %}
-        <p class="col-span-full text-center text-gray-500">No hay colaboradores disponibles aún.</p>
+        <div class="col-span-full text-center py-20 opacity-50">
+            <i class="fas fa-search-location text-6xl mb-4"></i>
+            <p>No hay colaboradores en esta zona por el momento.</p>
+        </div>
         {% endfor %}
-
     </div>
-
 </main>
 
 </body>

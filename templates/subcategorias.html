@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subcategorías - Okupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #1c150f;
+            color: #edeae3;
+        }
+        .card-subcat {
+            background-color: #2a221b;
+            border: 1px solid #9E8B71;
+            transition: transform 0.2s;
+        }
+        .card-subcat:hover {
+            transform: translateY(-5px);
+            border-color: #C69B6F;
+        }
+        .text-accent { color: #C69B6F; }
+        .bg-accent { background-color: #C69B6F; }
+    </style>
+</head>
+<body class="font-sans">
+
+<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+        <a href="{{ url_for('index') }}" class="text-2xl text-accent">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="text-3xl font-bold tracking-tighter">
+            <span class="text-accent">o</span>kupo
+        </div>
+        <div></div> <!-- Espaciador -->
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-8 text-center">¿Qué tipo de servicio buscas?</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {% for sub in subcategorias %}
+        <a href="{{ url_for('marketplace', subcategoria_id=sub.id) }}" class="card-subcat p-6 rounded-2xl block">
+            <h3 class="text-2xl font-bold text-accent mb-2">{{ sub.nombre }}</h3>
+            <p class="text-gray-400">{{ sub.descripcion or 'Profesionales listos para ayudarte.' }}</p>
+            <div class="mt-4 flex justify-end">
+                <span class="bg-accent text-[#1c150f] px-4 py-1 rounded-full text-sm font-bold">Ver Colaboradores</span>
+            </div>
+        </a>
+        {% else %}
+        <p class="text-center text-gray-500 col-span-full">No se encontraron subcategorías para esta sección.</p>
+        {% endfor %}
+    </div>
+</main>
+
+</body>
+</html>
