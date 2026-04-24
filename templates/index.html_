@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okupo - Servicios Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600&display=swap');
+
+        body {
+            background-color: #e9e5d8;
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+            color: #4a3f35;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .logo-font {
+            font-family: 'Playfair+Display', serif;
+            color: #4a3f35;
+        }
+
+        .btn-menu { color: #8b7355; }
+        
+        /* Estilo de Piedra (Pebble) */
+        .pebble {
+            position: relative;
+            aspect-ratio: 1.8 / 1;
+            border-radius: 45% 55% 50% 50% / 55% 45% 55% 45%;
+            transition: all 0.3s ease;
+            box-shadow: 
+                2px 4px 8px rgba(0,0,0,0.3),
+                inset -2px -3px 5px rgba(0,0,0,0.4),
+                inset 2px 3px 5px rgba(255,255,255,0.2);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .pebble:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 4px 6px 10px rgba(0,0,0,0.4);
+        }
+
+        .pebble-gray-dark {
+            background: radial-gradient(circle at 30% 30%, #6e6e6e, #3a3a3a 80%);
+        }
+
+        .pebble-gray-light {
+            background: radial-gradient(circle at 30% 30%, #b8b8b8, #7a7a7a 80%);
+        }
+
+        .pebble-tan {
+            background: radial-gradient(circle at 30% 30%, #d2b48c, #8b7355 80%);
+        }
+
+        .pebble-clay {
+            background: radial-gradient(circle at 30% 30%, #c19a6b, #7d5a3c 80%);
+        }
+
+        /* Iconos Metálicos */
+        .metal-icon {
+            color: #e0e0e0;
+            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5)) brightness(1.2);
+            font-size: 1.2rem;
+        }
+
+        .pebble h4 {
+            color: #f0f0f0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-family: 'Playfair Display', serif;
+            margin-top: 2px;
+            font-size: 0.85rem;
+        }
+
+        /* Botones de Madera */
+        .wood-button {
+            background: linear-gradient(to right, #5d4037, #3e2723);
+            border: 3px solid #8b7355;
+            color: #d7ccc8;
+            border-radius: 50px;
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4);
+        }
+
+        /* Botón de Urgencia */
+        .urgency-btn {
+            background: linear-gradient(145deg, #a52a2a, #800000);
+            border-radius: 40px;
+            box-shadow: 
+                0 10px 20px rgba(128,0,0,0.4),
+                inset 2px 2px 5px rgba(255,255,255,0.3);
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .urgency-btn:hover {
+            filter: brightness(1.2);
+            transform: scale(1.02);
+        }
+
+        .search-bar {
+            background-color: rgba(255,255,255,0.6);
+            border: 2px solid #c6b79f;
+            color: #4a3f35;
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+<!-- BARRA DE NAVEGACIÓN -->
+<header class="bg-[#e9e5d8] border-b border-[#c6b79f] sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+        
+        <button id="menuBtn" class="text-2xl btn-menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <a href="/" class="text-3xl font-bold tracking-tighter logo-font">
+            okupo
+        </a>
+
+        {% if session.user_id %}
+            <a href="{{ url_for('mis_pedidos') }}" class="text-3xl btn-menu">
+                <i class="fas fa-user-circle"></i>
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="text-3xl btn-menu">
+                <i class="fas fa-sign-in-alt"></i>
+            </a>
+        {% endif %}
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-6">
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <div class="mt-4 relative">
+        <input type="text" placeholder="Buscar servicios..." 
+               class="search-bar w-full px-6 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#8b7355] italic shadow-inner">
+        <button class="absolute right-6 top-1/2 -translate-y-1/2 text-[#8b7355] text-xl">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+    <h2 class="mt-10 text-3xl font-bold mb-8 logo-font border-b-2 border-[#c6b79f] pb-2">Servicios Express</h2>
+
+    <!-- GRID DE CATEGORÍAS PRINCIPALES -->
+    <div class="grid grid-cols-2 gap-4 mb-10">
+
+        <!-- Cerrajería -->
+        <a href="{{ url_for('ver_subcategorias', categoria_id=1) }}" class="pebble pebble-gray-dark flex flex-col items-center justify-center p-2 text-center">
+            <div class="metal-icon"><i class="fas fa-key"></i></div>
+            <h4 class="font-bold">Cerrajería</h4>
+        </a>
+
+        <!-- Plomería -->
+        <a href="{{ url_for('ver_subcategorias', categoria_id=2) }}" class="pebble pebble-gray-light flex flex-col items-center justify-center p-2 text-center">
+            <div class="metal-icon"><i class="fas fa-faucet"></i></div>
+            <h4 class="font-bold">Plomería</h4>
+        </a>
+
+        <!-- Electricidad -->
+        <a href="{{ url_for('ver_subcategorias', categoria_id=3) }}" class="pebble pebble-tan flex flex-col items-center justify-center p-2 text-center">
+            <div class="metal-icon"><i class="fas fa-bolt"></i></div>
+            <h4 class="font-bold">Electricidad</h4>
+        </a>
+
+        <!-- Limpieza -->
+        <a href="{{ url_for('ver_subcategorias', categoria_id=4) }}" class="pebble pebble-clay flex flex-col items-center justify-center p-2 text-center">
+            <div class="metal-icon"><i class="fas fa-broom"></i></div>
+            <h4 class="font-bold">Limpieza</h4>
+        </a>
+
+    </div>
+
+    <h2 class="text-2xl font-bold mb-6 logo-font opacity-80 border-b border-[#c6b79f] pb-1">Mantenimiento y Confort</h2>
+
+    <!-- OTROS SERVICIOS -->
+    <div class="grid grid-cols-2 gap-4 mb-10">
+        <a href="#" class="wood-button py-4 px-4 text-center font-bold text-lg hover:brightness-125 transition">
+            Limpieza de Muebles
+        </a>
+        <a href="#" class="wood-button py-4 px-4 text-center font-bold text-lg hover:brightness-125 transition">
+            Armado de Muebles
+        </a>
+    </div>
+
+    <!-- BOTÓN URGENCIA -->
+    <a href="#" class="urgency-btn py-6 text-center font-bold text-2xl flex items-center justify-center gap-4">
+        Urgencia 24/7 <i class="fas fa-bolt text-yellow-400 drop-shadow-md"></i>
+    </a>
+
+</main>
+
+<script>
+    const menuBtn = document.getElementById('menuBtn');
+    menuBtn.addEventListener('click', function() {
+        {% if session.user_id %}
+            window.location.href = "{{ url_for('mis_pedidos') }}";
+        {% else %}
+            window.location.href = "{{ url_for('login') }}";
+        {% endif %}
+    });
+</script>
+
+</body>
+</html>

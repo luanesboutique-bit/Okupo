@@ -3,128 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Okupo - Servicios Express</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Okupo - Servicios</title>
+    
+    <!-- ICONOS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* ESTILO GENERAL */
         body {
-            background-color: #1c150f;
-            color: #edeae3;
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Georgia', serif;
+            color: #5a3e2b;
+            margin: 0;
+            padding: 20px;
+            /* 📏 LÍMITE DE ANCHO MÁXIMO */
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .btn-menu { color: #C69B6F; }
-        .logo-accent { color: #C69B6F; }
-        .bg-base-card { background-color: #2a221b; border: 1px solid #9E8B71; }
-        .search-bar { background-color: #3d342c; border: 1px solid #9E8B71; color: #edeae3; }
-        .search-bar::placeholder { color: #ADA391; }
-        
-        /* Colores específicos por categoría */
-        .cat-cerrajeria { background-color: #C69B6F; color: #1c150f; }
-        .cat-plomeria { background-color: #9E8B71; color: #1c150f; }
-        .cat-electricidad { background-color: #ADA391; color: #1c150f; }
-        .cat-limpieza { background-color: #C6B79F; color: #1c150f; }
-        .cat-fletes { background-color: #D6CCB7; color: #1c150f; }
-        .cat-albanileria { background-color: #DBD4C6; color: #1c150f; }
-        
-        .cat-card:hover { transform: scale(1.02); transition: transform 0.2s; }
+
+        /* TITULO Y MENU */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header i { 
+            font-size: clamp(24px, 5vw, 30px); 
+        }
+        .titulo {
+            font-size: clamp(32px, 6vw, 40px);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* BARRA DE BUSQUEDA */
+        .buscador {
+            background: rgba(255,255,255,0.7);
+            border-radius: 30px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #d4b89a;
+            font-size: clamp(16px, 3vw, 18px);
+        }
+        .buscador i { margin-right: 10px; }
+
+        /* UBICACION */
+        .ubicacion {
+            font-size: clamp(16px, 3vw, 18px);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        .ubicacion i { margin-right: 10px; color: #8b5a2b; }
+
+        /* SECCION SERVICIOS EXPRESS */
+        h2 {
+            font-size: clamp(24px, 5vw, 28px);
+            margin-bottom: 25px;
+        }
+
+        /* CONTENEDOR DE BOTONES GRANDES (PIEDRA) */
+        .grid-piedras {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .boton-piedra {
+            background-image: url('/static/marco_piedras.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            height: clamp(180px, 35vw, 220px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .boton-piedra .piedra-centro {
+            width: 90%;
+            height: 85%;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* ✨ EFECTO METALICO DORADO */
+            color: #d4af37;
+            text-shadow: 
+                0 1px 0 #b8860b,
+                0 2px 0 #b8860b,
+                0 3px 0 #b8860b,
+                0 4px 0 #b8860b,
+                0 5px 10px rgba(0,0,0,0.6),
+                0 0 20px rgba(255,215,0,0.5);
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: bold;
+        }
+
+        .boton-piedra i {
+            font-size: clamp(40px, 10vw, 60px);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+        }
+
+        /* CONTENEDOR DE BOTONES PEQUEÑOS (MADERA) */
+        .grid-maderas {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .boton-madera {
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            padding: 15px;
+            color: #5a3e2b;
+            font-size: clamp(14px, 3vw, 16px);
+            border: 2px solid #b89a7b;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* COLORES DE MADERA */
+        .clara { background-image: url('/static/madera_clara.jpg'); }
+        .media { background-image: url('/static/madera_media.jpg'); }
+        .oscura { 
+            background-image: url('/static/madera_oscura.jpg'); 
+            color: white; 
+            text-shadow: 1px 1px 2px black; 
+        }
+
+        /* 📱 RESPONSIVO PARA CELULAR */
+        @media (max-width: 600px) {
+            .grid-piedras {
+                grid-template-columns: 1fr;
+            }
+            .grid-maderas {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-<!-- BARRA DE NAVEGACIÓN -->
-<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        
-        <button id="menuBtn" class="text-2xl btn-menu">
+    <!-- MENU, TITULO Y USUARIO -->
+    <div class="header">
+        <a href="{{ url_for('mis_pedidos') }}" style="color: inherit; text-decoration: none;">
             <i class="fas fa-bars"></i>
-        </button>
-
-        <a href="/" class="text-3xl font-bold tracking-tighter">
-            <span class="logo-accent">o</span>kupo
         </a>
-
-        {% if session.user_id %}
-            <a href="{{ url_for('mis_pedidos') }}" class="text-3xl btn-menu">
-                <i class="fas fa-user-circle"></i>
-            </a>
-        {% else %}
-            <a href="{{ url_for('login') }}" class="text-3xl btn-menu">
-                <i class="fas fa-sign-in-alt"></i>
-            </a>
-        {% endif %}
-    </div>
-</header>
-
-<main class="max-w-4xl mx-auto px-4 py-6">
-
-    <!-- BARRA DE BÚSQUEDA -->
-    <div class="mt-4 relative">
-        <input type="text" placeholder="Buscar servicios..." 
-               class="search-bar w-full px-4 py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#C69B6F]">
-        <button class="absolute right-4 top-1/2 -translate-y-1/2 text-[#C69B6F] text-xl">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-
-    <h2 class="mt-10 text-3xl font-bold mb-6">Categorías Principales</h2>
-
-    <!-- GRID DE CATEGORÍAS PRINCIPALES -->
-    <div class="grid grid-cols-2 gap-5 mb-10">
-
-        <!-- Cerrajería -->
-        <a href="{{ url_for('ver_subcategorias', categoria_id=1) }}" class="cat-card cat-cerrajeria p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
-            <div class="text-6xl mb-4"><i class="fas fa-key"></i></div>
-            <h4 class="font-bold text-2xl">Cerrajería</h4>
-        </a>
-
-        <!-- Plomería -->
-        <a href="{{ url_for('ver_subcategorias', categoria_id=2) }}" class="cat-card cat-plomeria p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
-            <div class="text-6xl mb-4"><i class="fas fa-faucet"></i></div>
-            <h4 class="font-bold text-2xl">Plomería</h4>
-        </a>
-
-        <!-- Electricidad -->
-        <a href="{{ url_for('ver_subcategorias', categoria_id=3) }}" class="cat-card cat-electricidad p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
-            <div class="text-6xl mb-4"><i class="fas fa-bolt"></i></div>
-            <h4 class="font-bold text-2xl">Electricidad</h4>
-        </a>
-
-        <!-- Limpieza -->
-        <a href="{{ url_for('ver_subcategorias', categoria_id=4) }}" class="cat-card cat-limpieza p-8 rounded-3xl flex flex-col items-center text-center shadow-lg">
-            <div class="text-6xl mb-4"><i class="fas fa-broom"></i></div>
-            <h4 class="font-bold text-2xl">Limpieza</h4>
-        </a>
-
-    </div>
-
-    <h2 class="text-2xl font-bold mb-4 opacity-80">Otros Servicios</h2>
-
-    <!-- OTROS SERVICIOS -->
-    <div class="grid grid-cols-2 gap-4 mb-8">
-        <a href="#" class="cat-card cat-fletes py-5 px-4 rounded-2xl text-center font-bold text-lg shadow-md">
-            <i class="fas fa-truck mr-2"></i> Fletes
-        </a>
-        <a href="#" class="cat-card cat-albanileria py-5 px-4 rounded-2xl text-center font-bold text-lg shadow-md">
-            <i class="fas fa-hammer mr-2"></i> Albañilería
+        <div class="titulo">okupo</div>
+        <a href="{{ url_for('login') }}" style="color: inherit; text-decoration: none;">
+            <i class="fas fa-user-circle"></i>
         </a>
     </div>
 
-    <!-- BOTÓN URGENCIA -->
-    <a href="#" class="mt-4 block bg-red-700 text-white rounded-3xl py-6 text-center font-bold text-2xl shadow-2xl flex items-center justify-center gap-4 hover:bg-red-600 transition">
-        Urgencia 24/7 <i class="fas fa-bolt text-yellow-300"></i>
-    </a>
+    <!-- BUSCADOR -->
+    <div class="buscador">
+        <i class="fas fa-search"></i>
+        <span>Buscar</span>
+    </div>
 
-</main>
+    <!-- UBICACION -->
+    <div class="ubicacion">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Zapopan, Jalisco</span>
+        <i class="fas fa-chevron-down" style="margin-left: 10px;"></i>
+    </div>
 
-<script>
-    const menuBtn = document.getElementById('menuBtn');
-    menuBtn.addEventListener('click', function() {
-        {% if session.user_id %}
-            window.location.href = "{{ url_for('mis_pedidos') }}";
-        {% else %}
-            window.location.href = "{{ url_for('login') }}";
-        {% endif %}
-    });
-</script>
+    <!-- SERVICIOS EXPRESS -->
+    <h2>Servicios Express</h2>
+
+    <div class="grid-piedras">
+        <a href="{{ url_for('marketplace', subcategoria_id=1) }}" class="boton-piedra" style="text-decoration: none;">
+            <div class="piedra-centro">
+                <i class="fas fa-key"></i>
+                Cerrajería
+            </div>
+        </a>
+
+        <a href="{{ url_for('marketplace', subcategoria_id=2) }}" class="boton-piedra" style="text-decoration: none;">
+            <div class="piedra-centro">
+                <i class="fas fa-faucet"></i>
+                Plomería
+            </div>
+        </a>
+
+        <a href="{{ url_for('marketplace', subcategoria_id=3) }}" class="boton-piedra" style="text-decoration: none;">
+            <div class="piedra-centro">
+                <i class="fas fa-bolt"></i>
+                Electricidad
+            </div>
+        </a>
+
+        <a href="{{ url_for('marketplace', subcategoria_id=4) }}" class="boton-piedra" style="text-decoration: none;">
+            <div class="piedra-centro">
+                <i class="fas fa-spray-can"></i>
+                Limpieza
+            </div>
+        </a>
+    </div>
+
+    <!-- BOTONES DE MADERA - ORDEN CORRECTO -->
+    <div class="grid-maderas">
+        <a href="{{ url_for('marketplace', subcategoria_id=5) }}" class="boton-madera clara" style="text-decoration: none;">Limpieza de Muebles</a>
+        <a href="{{ url_for('marketplace', subcategoria_id=6) }}" class="boton-madera media" style="text-decoration: none;">Armado de Muebles</a>
+        <a href="{{ url_for('marketplace', subcategoria_id=7) }}" class="boton-madera clara" style="text-decoration: none;">Instalaciones</a>
+    </div>
+
+    <div class="grid-maderas">
+        <a href="{{ url_for('marketplace', subcategoria_id=8) }}" class="boton-madera clara" style="text-decoration: none;">Fletes y Mudanzas</a>
+        <a href="{{ url_for('marketplace', subcategoria_id=9) }}" class="boton-madera media" style="text-decoration: none;">Albañilería y Pintura</a>
+        <a href="{{ url_for('marketplace', subcategoria_id=10) }}" class="boton-madera oscura" style="text-decoration: none;">
+            Urgencia 24/7 <i class="fas fa-bolt" style="margin-left:10px;"></i>
+        </a>
+    </div>
+
+    <!-- 🚀 LAZY LOADING AUTOMATICO PARA QUE CARGUE RAPIDO -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.loading = 'lazy';
+            });
+        });
+    </script>
 
 </body>
 </html>
