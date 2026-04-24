@@ -43,10 +43,10 @@
         <div class="flex-1 overflow-y-auto space-y-4 mb-4">
 
             {% for msg in mensajes %}
-            <div class="flex {% if msg.usuario_id == session['user_id'] %} justify-end {% else %} justify-start {% endif %}">
+            <div class="flex {% if msg.emisor_id == session['user_id'] %} justify-end {% else %} justify-start {% endif %}">
                 <div class="chat-bubble p-3 rounded-lg 
-                            {% if msg.usuario_id == session['user_id'] %} bg-blue-600 text-white {% else %} bg-gray-200 text-gray-800 {% endif %}">
-                    {{ msg.texto }}
+                            {% if msg.emisor_id == session['user_id'] %} bg-blue-600 text-white {% else %} bg-gray-200 text-gray-800 {% endif %}">
+                    {{ msg.contenido }}
                 </div>
             </div>
             {% else %}
