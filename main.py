@@ -66,34 +66,46 @@ def index():
     categorias = api_get("/categorias") or []
     return render_template('index.html', categorias=categorias)
 
+@app.route('/unete')
+def landing_colaborador():
+    return render_template('landing_colaborador.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'user_id' in session:
+        return redirect(url_for('index'))
+        
+    mensaje = request.args.get('mensaje')
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('contrasenna')
         
-        print(f"DEBUG: Intentando login para {email}...")
         token = api_post("/login", {"correo": email, "contrasenna": password})
         
         if token:
             user_id = get_user_id_from_token(token)
             if user_id:
                 session.clear()
-                session['user_id'] = int(user_id) # Convertimos a int por si viene como str
-                session['nombre'] = email.split('@')[0].capitalize() # Usamos el alias del email
+                session['user_id'] = int(user_id)
+                session['nombre'] = email.split('@')[0].capitalize()
                 session['correo'] = email
                 session['token'] = token
-                print(f"DEBUG: Login exitoso para {email} (ID extraído del token: {user_id})")
+                
+                # Intentamos ver si ya tiene un perfil de colaborador
+                # (Asumiendo que hay un endpoint para buscar por usuario_id o similar)
+                # Por ahora, si venia de un flujo de registro tecnico, lo mandamos alla
                 return redirect(url_for('index'))
-            else:
-                print("DEBUG: Token recibido pero no se pudo extraer el ID (sub).")
         
         return render_template('login.html', error="Correo o contraseña incorrectos")
             
-    return render_template('login.html')
+    return render_template('login.html', mensaje=mensaje)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+    if 'user_id' in session:
+        return redirect(url_for('index'))
+        
+    rol = request.args.get('rol', 'cliente')
     if request.method == 'POST':
         datos_usuario = {
             "nombre": request.form.get('nombre'),
@@ -102,9 +114,11 @@ def registro():
         }
         respuesta = api_post("/usuarios", datos_usuario)
         if respuesta:
-            return redirect(url_for('login'))
+            if rol == 'colaborador':
+                return redirect(url_for('login', mensaje="¡Cuenta creada! Inicia sesión para configurar tu perfil técnico."))
+            return redirect(url_for('login', mensaje="Cuenta creada con éxito. Ya puedes iniciar sesión."))
         return render_template('registro.html', error="Error al registrar. Intenta con otro correo.")
-    return render_template('registro.html')
+    return render_template('registro.html', rol=rol)
 
 @app.route('/categorias/<int:categoria_id>/subcategorias')
 def ver_subcategorias(categoria_id):
@@ -147,6 +161,88 @@ def pedir():
 def mis_pedidos():
     solicitudes = api_get(f"/solicitudes?usuario_id={session['user_id']}") or []
     return render_template('mis_pedidos.html', solicitudes=solicitudes)
+
+# --- FLUJO REGISTRO TÉCNICO ---
+
+@app.route('/registro/tecnico/docs', methods=['GET', 'POST'])
+@login_required
+def registro_tecnico_docs():
+    if request.method == 'POST':
+        # Primero necesitamos asegurar que existe el colaborador en la DB de la API
+        # Si ya existe, solo actualizamos los documentos.
+        # Por ahora intentaremos registrarlo con info basica.
+        colaborador_id = session.get('colaborador_id')
+        
+        if not colaborador_id:
+            # Crear entrada basica de colaborador si no existe
+            resp = api_post("/colaboradores", {
+                "token_usuario": session['token'],
+                "telefono": request.form.get('telefono'),
+                "sitio_web": None,
+                "servicios": []
+            })
+            if resp:
+                colaborador_id = int(resp)
+                session['colaborador_id'] = colaborador_id
+
+        # Actualizar Documentacion
+        datos_docs = {
+            "ine_frontal": request.form.get('ine_frontal'),
+            "ine_trasera": request.form.get('ine_trasera'),
+            "comprobante_domicilio": request.form.get('comprobante_domicilio'),
+            "foto_selfie_ine": request.form.get('foto_selfie_ine')
+        }
+        api_post(f"/colaboradores/{colaborador_id}/documentacion", datos_docs)
+        
+        return redirect(url_for('registro_tecnico_categorias'))
+
+    return render_template('registro_tecnico_docs.html')
+
+@app.route('/registro/tecnico/categorias', methods=['GET', 'POST'])
+@login_required
+def registro_tecnico_categorias():
+    if request.method == 'POST':
+        # Aqui capturaremos las subcategorias y precios base
+        return redirect(url_for('registro_tecnico_precios'))
+    
+    categorias = api_get("/categorias") or []
+    return render_template('registro_tecnico_categorias.html', categorias=categorias)
+
+@app.route('/registro/tecnico/precios', methods=['GET', 'POST'])
+@login_required
+def registro_tecnico_precios():
+    colaborador_id = session.get('colaborador_id')
+    if request.method == 'POST':
+        datos_precios = {
+            "precio_por_kilometro": float(request.form.get('precio_km')),
+            "recargo_lluvia": float(request.form.get('recargo_lluvia')),
+            "recargo_domingo": float(request.form.get('recargo_domingo')),
+            "recargo_nocturno": float(request.form.get('recargo_nocturno'))
+        }
+        api_post(f"/colaboradores/{colaborador_id}/precios-dinamicos", datos_precios)
+        return redirect(url_for('registro_tecnico_horarios'))
+        
+    return render_template('registro_tecnico_precios.html')
+
+@app.route('/registro/tecnico/horarios', methods=['GET', 'POST'])
+@login_required
+def registro_tecnico_horarios():
+    colaborador_id = session.get('colaborador_id')
+    if request.method == 'POST':
+        horarios = []
+        for i in range(7):
+            if request.form.get(f'dia_{i}_activo'):
+                horarios.append({
+                    "colaborador_id": colaborador_id,
+                    "dia_semana": i,
+                    "hora_inicio": request.form.get(f'dia_{i}_inicio'),
+                    "hora_fin": request.form.get(f'dia_{i}_fin'),
+                    "activo": True
+                })
+        api_post(f"/colaboradores/{colaborador_id}/horarios", horarios)
+        return redirect(url_for('index', registro_exitoso=True))
+
+    return render_template('registro_tecnico_horarios.html')
 
 @app.route('/chat/<int:solicitud_id>', methods=['GET', 'POST'])
 @login_required

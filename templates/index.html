@@ -17,11 +17,28 @@
             font-family: 'Georgia', serif;
             color: #5a3e2b;
             margin: 0;
-            padding: 20px;
+            padding: 0; /* Quitamos padding del body para que el sticky sea full width */
             /* 📏 LÍMITE DE ANCHO MÁXIMO */
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .main-container {
+            padding: 20px;
+        }
+
+        /* CONTENEDOR STICKY */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            padding: 20px 20px 10px 20px;
+            border-bottom: 2px solid rgba(139, 90, 43, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* TITULO Y MENU */
@@ -29,7 +46,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .header i { 
             font-size: clamp(24px, 5vw, 30px); 
@@ -43,28 +60,32 @@
         .buscador {
             background: rgba(255,255,255,0.7);
             border-radius: 30px;
-            padding: 15px;
+            padding: 12px 15px;
             display: flex;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             border: 1px solid #d4b89a;
-            font-size: clamp(16px, 3vw, 18px);
+            font-size: clamp(14px, 3vw, 16px);
         }
         .buscador i { margin-right: 10px; }
 
         /* UBICACION */
         .ubicacion {
-            font-size: clamp(16px, 3vw, 18px);
-            margin-bottom: 30px;
+            font-size: clamp(14px, 3vw, 16px);
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .ubicacion:hover { opacity: 0.8; }
         .ubicacion i { margin-right: 10px; color: #8b5a2b; }
 
         /* SECCION SERVICIOS EXPRESS */
         h2 {
             font-size: clamp(24px, 5vw, 28px);
             margin-bottom: 25px;
+            padding: 0 20px;
         }
 
         /* CONTENEDOR DE BOTONES GRANDES (PIEDRA) */
@@ -168,86 +189,146 @@
 </head>
 <body>
 
-    <!-- MENU, TITULO Y USUARIO -->
-    <div class="header">
-        <a href="{{ url_for('mis_pedidos') }}" style="color: inherit; text-decoration: none;">
-            <i class="fas fa-bars"></i>
-        </a>
-        <div class="titulo">okupo</div>
-        <a href="{{ url_for('login') }}" style="color: inherit; text-decoration: none;">
-            <i class="fas fa-user-circle"></i>
+    <!-- CONTENEDOR FIJO (HEADER, BUSCADOR, UBICACION) -->
+    <div class="sticky-header">
+        <!-- MENU, TITULO Y USUARIO -->
+        <div class="header">
+            <a href="{{ url_for('mis_pedidos') }}" style="color: inherit; text-decoration: none;">
+                <i class="fas fa-bars"></i>
+            </a>
+            <div class="titulo">okupo</div>
+            
+            {% if session.get('user_id') %}
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-weight: bold; font-size: 14px;">Hola, {{ session.get('nombre') }}</span>
+                    <a href="{{ url_for('logout') }}" style="color: #8b5a2b; text-decoration: none;" title="Cerrar Sesión">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login') }}" style="color: inherit; text-decoration: none;" title="Iniciar Sesión">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- BUSCADOR -->
+        <div class="buscador">
+            <i class="fas fa-search"></i>
+            <span>Buscar</span>
+        </div>
+
+        <!-- UBICACION -->
+        <div class="ubicacion" onclick="obtenerUbicacion()">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="ubicacion-texto">Zapopan, Jalisco</span>
+            <i class="fas fa-chevron-down" style="margin-left: 10px;"></i>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- SERVICIOS EXPRESS -->
+        <h2>Servicios Express</h2>
+
+        <div class="grid-piedras">
+            {% for cat in categorias[:4] %}
+            <a href="{{ url_for('ver_subcategorias', categoria_id=cat.id) }}" class="boton-piedra" style="text-decoration: none;">
+                <div class="piedra-centro">
+                    <i class="{{ cat.icono or 'fas fa-tools' }}"></i>
+                    {{ cat.nombre }}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- BOTONES DE MADERA -->
+        <div class="grid-maderas">
+            {% for cat in categorias[4:7] %}
+            <a href="{{ url_for('ver_subcategorias', categoria_id=cat.id) }}" class="boton-madera {{ ['clara', 'media', 'oscura'][loop.index0 % 3] }}" style="text-decoration: none;">
+                {{ cat.nombre }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="grid-maderas">
+            {% for cat in categorias[7:10] %}
+            <a href="{{ url_for('ver_subcategorias', categoria_id=cat.id) }}" class="boton-madera {{ ['clara', 'media', 'oscura'][loop.index0 % 3] }}" style="text-decoration: none;">
+                {{ cat.nombre }}
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if categorias|length > 10 %}
+        <div class="grid-maderas">
+            {% for cat in categorias[10:] %}
+            <a href="{{ url_for('ver_subcategorias', categoria_id=cat.id) }}" class="boton-madera {{ ['clara', 'media', 'oscura'][loop.index0 % 3] }}" style="text-decoration: none;">
+                {{ cat.nombre }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    <!-- BOTON PARA COLABORADORES -->
+    <div style="margin-top: 50px; text-align: center;">
+        <a href="{{ url_for('landing_colaborador') }}" class="boton-madera media" style="text-decoration: none; display: inline-block; padding: 20px 40px; border: 3px solid #8b5a2b; font-size: 20px;">
+            <i class="fas fa-hammer" style="margin-right: 15px;"></i> ¿ERES PROFESIONAL? OFRECE TU SERVICIO <i class="fas fa-tools" style="margin-left: 15px;"></i>
         </a>
     </div>
 
-    <!-- BUSCADOR -->
-    <div class="buscador">
-        <i class="fas fa-search"></i>
-        <span>Buscar</span>
-    </div>
+    </div> <!-- FIN MAIN CONTAINER -->
 
-    <!-- UBICACION -->
-    <div class="ubicacion">
-        <i class="fas fa-map-marker-alt"></i>
-        <span>Zapopan, Jalisco</span>
-        <i class="fas fa-chevron-down" style="margin-left: 10px;"></i>
-    </div>
-
-    <!-- SERVICIOS EXPRESS -->
-    <h2>Servicios Express</h2>
-
-    <div class="grid-piedras">
-        <a href="{{ url_for('marketplace', subcategoria_id=1) }}" class="boton-piedra" style="text-decoration: none;">
-            <div class="piedra-centro">
-                <i class="fas fa-key"></i>
-                Cerrajería
-            </div>
-        </a>
-
-        <a href="{{ url_for('marketplace', subcategoria_id=2) }}" class="boton-piedra" style="text-decoration: none;">
-            <div class="piedra-centro">
-                <i class="fas fa-faucet"></i>
-                Plomería
-            </div>
-        </a>
-
-        <a href="{{ url_for('marketplace', subcategoria_id=3) }}" class="boton-piedra" style="text-decoration: none;">
-            <div class="piedra-centro">
-                <i class="fas fa-bolt"></i>
-                Electricidad
-            </div>
-        </a>
-
-        <a href="{{ url_for('marketplace', subcategoria_id=4) }}" class="boton-piedra" style="text-decoration: none;">
-            <div class="piedra-centro">
-                <i class="fas fa-spray-can"></i>
-                Limpieza
-            </div>
-        </a>
-    </div>
-
-    <!-- BOTONES DE MADERA - ORDEN CORRECTO -->
-    <div class="grid-maderas">
-        <a href="{{ url_for('marketplace', subcategoria_id=5) }}" class="boton-madera clara" style="text-decoration: none;">Limpieza de Muebles</a>
-        <a href="{{ url_for('marketplace', subcategoria_id=6) }}" class="boton-madera media" style="text-decoration: none;">Armado de Muebles</a>
-        <a href="{{ url_for('marketplace', subcategoria_id=7) }}" class="boton-madera clara" style="text-decoration: none;">Instalaciones</a>
-    </div>
-
-    <div class="grid-maderas">
-        <a href="{{ url_for('marketplace', subcategoria_id=8) }}" class="boton-madera clara" style="text-decoration: none;">Fletes y Mudanzas</a>
-        <a href="{{ url_for('marketplace', subcategoria_id=9) }}" class="boton-madera media" style="text-decoration: none;">Albañilería y Pintura</a>
-        <a href="{{ url_for('marketplace', subcategoria_id=10) }}" class="boton-madera oscura" style="text-decoration: none;">
-            Urgencia 24/7 <i class="fas fa-bolt" style="margin-left:10px;"></i>
-        </a>
-    </div>
-
-    <!-- 🚀 LAZY LOADING AUTOMATICO PARA QUE CARGUE RAPIDO -->
+    <!-- 🚀 SCRIPTS -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const images = document.querySelectorAll('img');
             images.forEach(img => {
                 img.loading = 'lazy';
             });
+
+            // Cargar ubicacion guardada si existe
+            const savedLoc = localStorage.getItem('okupo_ubicacion_nombre');
+            if (savedLoc) {
+                document.getElementById('ubicacion-texto').innerText = savedLoc;
+            }
         });
+
+        function obtenerUbicacion() {
+            const span = document.getElementById('ubicacion-texto');
+            span.innerText = "Obteniendo...";
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        // Guardamos coordenadas
+                        localStorage.setItem('okupo_lat', lat);
+                        localStorage.setItem('okupo_lon', lon);
+
+                        // Aquí podríamos hacer reverse geocoding con alguna API gratuita como OpenStreetMap
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const ciudad = data.address.city || data.address.town || data.address.village || "Ubicación detectada";
+                                const estado = data.address.state || "";
+                                const nombreUbicacion = `${ciudad}${estado ? ', ' + estado : ''}`;
+                                span.innerText = nombreUbicacion;
+                                localStorage.setItem('okupo_ubicacion_nombre', nombreUbicacion);
+                            })
+                            .catch(err => {
+                                span.innerText = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                            });
+                    },
+                    (error) => {
+                        console.error(error);
+                        span.innerText = "Zapopan, Jalisco (Default)";
+                        alert("No pudimos obtener tu ubicación. Se usará la predeterminada.");
+                    }
+                );
+            } else {
+                alert("Tu navegador no soporta geolocalización.");
+            }
+        }
     </script>
 
 </body>
