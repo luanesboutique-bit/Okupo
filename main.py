@@ -8,32 +8,41 @@ app = Flask(__name__)
 app.secret_key = 'clave_secreta_okupo_2024'
 
 # --- CONFIGURACIÓN DE LA API ---
-API_BASE_URL = "http://localhost:3000"
+API_BASE_URL = "https://0d078abf91f17ed8-189-203-204-127.serveousercontent.com"
+
 
 @app.route('/favicon.ico')
 def favicon():
     return "", 204
 
+def get_headers():
+    headers = {'Content-Type': 'application/json'}
+    if 'token' in session:
+        headers['Authorization'] = f"Bearer {session['token']}"
+    return headers
+
 def api_get(endpoint):
     try:
-        response = requests.get(f"{API_BASE_URL}{endpoint}")
+        response = requests.get(f"{API_BASE_URL}{endpoint}", headers=get_headers())
         if response.status_code == 200:
             return response.json()
+        if response.status_code == 401:
+            session.clear()
+            return "UNAUTHORIZED"
         return None
-    except Exception as e:
-        print(f"DEBUG ERROR: GET {endpoint} -> {e}")
+    except:
         return None
 
 def api_post(endpoint, data):
     try:
-        response = requests.post(f"{API_BASE_URL}{endpoint}", json=data)
+        response = requests.post(f"{API_BASE_URL}{endpoint}", json=data, headers=get_headers())
         if response.status_code in [200, 201]:
-            # Limpiamos comillas del token si vienen como string JSON
             return response.text.strip('"')
-        print(f"DEBUG ERROR: POST {endpoint} ({response.status_code}) -> {response.text}")
+        if response.status_code == 401:
+            session.clear()
+            return "UNAUTHORIZED"
         return None
-    except Exception as e:
-        print(f"DEBUG ERROR: POST {endpoint} -> {e}")
+    except:
         return None
 
 # Función para extraer el ID del Token JWT (sin librerías extras)
@@ -63,8 +72,10 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    categorias = api_get("/categorias") or []
-    return render_template('index.html', categorias=categorias)
+    categorias = api_get("/categorias")
+    if categorias == "UNAUTHORIZED":
+        return redirect(url_for('login', mensaje="Sesión expirada. Inicia sesión de nuevo."))
+    return render_template('index.html', categorias=categorias or [])
 
 @app.route('/unete')
 def landing_colaborador():

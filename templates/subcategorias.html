@@ -3,58 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subcategorías - Okupo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Servicios - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body {
-            background-color: #1c150f;
-            color: #edeae3;
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
         }
+
+        body {
+            background-color: var(--color-crema);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: var(--color-crema);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 30px;
+        }
+
+        .header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(139, 90, 43, 0.1);
+        }
+        .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
+        .header h1 { font-size: 20px; margin: 0; font-weight: 700; }
+
+        .list-container {
+            padding: 20px;
+        }
+
         .card-subcat {
-            background-color: #2a221b;
-            border: 1px solid #9E8B71;
+            background-image: url('/static/madera_clara.jpg');
+            background-size: cover;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: block;
+            text-decoration: none;
+            color: var(--color-texto);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(139, 90, 43, 0.2);
             transition: transform 0.2s;
         }
-        .card-subcat:hover {
-            transform: translateY(-5px);
-            border-color: #C69B6F;
+        .card-subcat:active { transform: scale(0.98); }
+
+        .card-subcat h3 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 800;
         }
-        .text-accent { color: #C69B6F; }
-        .bg-accent { background-color: #C69B6F; }
+
+        .card-subcat p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .btn-ver {
+            margin-top: 15px;
+            display: inline-block;
+            background: rgba(139, 90, 43, 0.8);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="{{ url_for('index') }}" class="text-2xl text-accent">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <div class="text-3xl font-bold tracking-tighter">
-            <span class="text-accent">o</span>kupo
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>¿Qué necesitas hoy?</h1>
         </div>
-        <div></div> <!-- Espaciador -->
-    </div>
-</header>
 
-<main class="max-w-4xl mx-auto px-4 py-8">
-    <h2 class="text-3xl font-bold mb-8 text-center">¿Qué tipo de servicio buscas?</h2>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {% for sub in subcategorias %}
-        <a href="{{ url_for('marketplace', subcategoria_id=sub.id) }}" class="card-subcat p-6 rounded-2xl block">
-            <h3 class="text-2xl font-bold text-accent mb-2">{{ sub.nombre }}</h3>
-            <p class="text-gray-400">{{ sub.descripcion or 'Profesionales listos para ayudarte.' }}</p>
-            <div class="mt-4 flex justify-end">
-                <span class="bg-accent text-[#1c150f] px-4 py-1 rounded-full text-sm font-bold">Ver Colaboradores</span>
+        <div class="list-container">
+            {% for sub in subcategorias %}
+            <a href="{{ url_for('marketplace', subcategoria_id=sub.id) }}" class="card-subcat">
+                <h3>{{ sub.nombre }}</h3>
+                <p>{{ sub.descripcion or 'Contamos con expertos certificados listos para ayudarte con este servicio de inmediato.' }}</p>
+                <div class="btn-ver">Ver Disponibles</div>
+            </a>
+            {% else %}
+            <div style="text-align: center; margin-top: 50px; opacity: 0.5;">
+                <i class="fas fa-search" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
+                No hay servicios disponibles en esta categoría por ahora.
             </div>
-        </a>
-        {% else %}
-        <p class="text-center text-gray-500 col-span-full">No se encontraron subcategorías para esta sección.</p>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</main>
 
 </body>
 </html>

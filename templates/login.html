@@ -3,60 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Okupo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Ingresar - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #1c150f; color: #edeae3; font-family: 'Inter', sans-serif; }
-        .bg-card { background-color: #2a221b; border: 1px solid #9E8B71; }
-        .text-accent { color: #C69B6F; }
-        .bg-accent { background-color: #C69B6F; color: #1c150f; }
-        .input-field { background-color: #3d342c; border: 1px solid #9E8B71; color: #edeae3; }
-        .input-field:focus { border-color: #C69B6F; outline: none; }
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        body {
+            background-color: var(--color-crema);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.7;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            margin-left: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .input-group input:focus {
+            border-color: var(--color-texto);
+            outline: none;
+            background: white;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 15px;
+            color: var(--color-texto);
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-top: 10px;
+        }
+
+        .error-msg {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .footer-links a {
+            color: var(--color-texto);
+            font-weight: bold;
+            text-decoration: none;
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
 
-<header class="p-6">
-    <a href="/" class="text-4xl font-bold tracking-tighter text-center block">
-        <span class="text-accent">o</span>kupo
-    </a>
-</header>
-
-<div class="flex-1 flex items-center justify-center px-4">
-    <div class="w-full max-w-md bg-card p-8 rounded-3xl shadow-2xl">
-        
-        <h2 class="text-3xl font-bold mb-6 text-center text-accent">Bienvenido</h2>
+    <div class="login-card">
+        <div class="logo">okupo</div>
+        <h2>Tu experto de confianza</h2>
 
         {% if error %}
-        <div class="bg-red-900 border border-red-600 text-white px-4 py-2 rounded-lg mb-6 text-sm text-center">
-            {{ error }}
-        </div>
+        <div class="error-msg">{{ error }}</div>
         {% endif %}
 
         <form action="/login" method="POST">
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-1 opacity-70">Correo Electrónico</label>
-                <input type="email" name="email" required 
-                    class="w-full px-4 py-3 rounded-xl input-field">
+            <div class="input-group">
+                <label>Correo Electrónico</label>
+                <input type="email" name="email" placeholder="ejemplo@correo.com" required>
             </div>
 
-            <div class="mb-8">
-                <label class="block text-sm font-medium mb-1 opacity-70">Contraseña</label>
-                <input type="password" name="contrasenna" required 
-                    class="w-full px-4 py-3 rounded-xl input-field">
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" name="contrasenna" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="w-full bg-accent font-bold py-4 rounded-xl text-lg hover:opacity-90 transition">
-                Ingresar
-            </button>
+            <button type="submit" class="btn-login">Ingresar</button>
         </form>
 
-        <p class="text-center text-sm mt-8 opacity-70">
-            ¿No tienes cuenta? <a href="/registro" class="text-accent font-bold">Regístrate</a>
-        </p>
+        <div class="footer-links">
+            ¿No tienes cuenta? <a href="/registro">Regístrate aquí</a>
+        </div>
     </div>
-</div>
 
 </body>
 </html>

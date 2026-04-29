@@ -3,74 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Solicitudes - Okupo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Mis Pedidos - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #1c150f; color: #edeae3; }
-        .bg-card { background-color: #2a221b; border: 1px solid #9E8B71; }
-        .text-accent { color: #C69B6F; }
-        .bg-accent { background-color: #C69B6F; color: #1c150f; }
-        .badge { background-color: #3d342c; border: 1px solid #9E8B71; color: #edeae3; }
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        body {
+            background-color: var(--color-crema);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: var(--color-crema);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 30px;
+        }
+
+        .header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(139, 90, 43, 0.1);
+        }
+        .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
+        .header h1 { font-size: 20px; margin: 0; font-weight: 700; }
+
+        .list-container {
+            padding: 15px;
+        }
+
+        .card-solicitud {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-solicitud::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-image: url('/static/madera_media.jpg');
+        }
+
+        .sol-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .sol-header .status {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .sol-header .id {
+            font-size: 11px;
+            opacity: 0.5;
+            font-weight: bold;
+        }
+
+        .sol-body h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .sol-body p {
+            font-size: 14px;
+            margin: 8px 0;
+            opacity: 0.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .sol-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-chat {
+            background-image: url('/static/madera_clara.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            padding: 8px 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        <a href="/" class="text-2xl text-accent">
-            <i class="fas fa-home"></i>
-        </a>
-        <a href="/" class="text-3xl font-bold tracking-tighter">
-            <span class="text-accent">o</span>kupo
-        </a>
-        {% if session.user_id %}
-        <a href="{{ url_for('logout') }}" class="text-2xl text-red-500">
-            <i class="fas fa-sign-out-alt"></i>
-        </a>
-        {% else %}
-        <div class="w-8"></div>
-        {% endif %}
-    </div>
-</header>
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>Mis Solicitudes</h1>
+        </div>
 
-<main class="max-w-4xl mx-auto px-4 py-8">
-    <h2 class="text-3xl font-bold mb-8 text-center text-accent">Tus Solicitudes</h2>
-
-    <div class="space-y-6">
-        {% for sol in solicitudes %}
-        <div class="bg-card rounded-3xl p-6 shadow-xl border-l-4 border-accent">
-            
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <span class="text-xs uppercase tracking-widest opacity-50 font-bold">Solicitud #{{ sol.id }}</span>
-                    <h3 class="text-xl font-bold text-accent">{{ sol.estado | replace('_', ' ') | title }}</h3>
+        <div class="list-container">
+            {% for sol in solicitudes %}
+            <div class="card-solicitud">
+                <div class="sol-header">
+                    <span class="id">SOL-#{{ sol.id }}</span>
+                    <span class="status">{{ sol.estado or 'Pendiente' }}</span>
                 </div>
-                <div class="badge px-3 py-1 rounded-full text-xs font-bold uppercase">
-                    {{ sol.urgencia }}
+                <div class="sol-body">
+                    <h3>Servicio Solicitado</h3>
+                    <p>{{ sol.descripcion_detallada or 'Sin descripción proporcionada.' }}</p>
+                </div>
+                <div class="sol-footer">
+                    <span style="font-size: 11px; opacity: 0.5;">{{ sol.fecha_creacion or 'Hoy' }}</span>
+                    <a href="{{ url_for('chat', solicitud_id=sol.id) }}" class="btn-chat">
+                        <i class="fas fa-comments" style="margin-right: 5px;"></i> Ver Chat
+                    </a>
                 </div>
             </div>
-
-            <p class="text-gray-400 mb-6 line-clamp-2">
-                {{ sol.descripcion_detallada }}
-            </p>
-
-            <div class="flex justify-between items-center border-t border-[#3d342c] pt-4">
-                <span class="text-sm opacity-50">{{ sol.fecha_creacion }}</span>
-                <a href="{{ url_for('chat', solicitud_id=sol.id) }}" 
-                   class="bg-accent px-6 py-2 rounded-xl font-bold text-sm shadow-lg hover:opacity-90 transition">
-                    <i class="fas fa-comments mr-2"></i> Ver Chat
-                </a>
+            {% else %}
+            <div style="text-align: center; margin-top: 80px; opacity: 0.5;">
+                <i class="fas fa-clipboard-list" style="font-size: 60px; margin-bottom: 20px; display: block;"></i>
+                Todavía no has realizado ninguna solicitud.
             </div>
+            {% endfor %}
         </div>
-        {% else %}
-        <div class="text-center py-20 opacity-50">
-            <i class="fas fa-clipboard-list text-6xl mb-4"></i>
-            <p>No tienes solicitudes activas por ahora.</p>
-        </div>
-        {% endfor %}
     </div>
-</main>
 
 </body>
 </html>

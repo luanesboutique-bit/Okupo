@@ -3,63 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace - Okupo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Profesionales - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-color: #1c150f; color: #edeae3; }
-        .bg-card { background-color: #2a221b; border: 1px solid #9E8B71; }
-        .text-accent { color: #C69B6F; }
-        .bg-accent { background-color: #C69B6F; color: #1c150f; }
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        body {
+            background-color: var(--color-crema);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: var(--color-crema);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 30px;
+        }
+
+        .header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(139, 90, 43, 0.1);
+        }
+        .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
+        .header h1 { font-size: 20px; margin: 0; font-weight: 700; }
+
+        .list-container {
+            padding: 15px;
+        }
+
+        .card-colaborador {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dorado);
+            font-size: 30px;
+            border: 2px solid var(--color-texto);
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .info h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info .rating {
+            color: #f1c40f;
+            font-size: 12px;
+            margin: 3px 0;
+        }
+
+        .info .distancia {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .btn-elegir {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            padding: 8px 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-<header class="bg-[#1c150f] shadow-md border-b border-[#9E8B71] sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        <a href="javascript:history.back()" class="text-2xl text-accent">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-        <a href="/" class="text-3xl font-bold tracking-tighter">
-            <span class="text-accent">o</span>kupo
-        </a>
-        <div class="w-8"></div> <!-- Espaciador -->
-    </div>
-</header>
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Elegir Profesional</h1>
+        </div>
 
-<main class="max-w-4xl mx-auto px-4 py-8">
-    <h2 class="text-3xl font-bold mb-8 text-center">Profesionales Disponibles</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {% for col in colaboradores %}
-        <div class="bg-card rounded-2xl p-6 flex items-center gap-5">
-            
-            <div class="w-16 h-16 bg-[#3d342c] rounded-full flex items-center justify-center text-3xl text-accent">
-                <i class="fas fa-user-circle"></i>
-            </div>
-
-            <div class="flex-1">
-                <h3 class="text-xl font-bold text-accent">{{ col.nombre }}</h3>
-                <p class="text-sm opacity-70">{{ col.descripcion_servicio or 'Experto profesional' }}</p>
-                <div class="flex items-center mt-2">
-                    <span class="text-lg font-bold mr-2">${{ col.precio_base }}</span>
-                    <span class="text-xs bg-[#3d342c] px-2 py-1 rounded text-[#ADA391]">a {{ col.distancia_km }}km</span>
+        <div class="list-container">
+            {% for col in colaboradores %}
+            <div class="card-colaborador">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
                 </div>
+                <div class="info">
+                    <h3>{{ col.nombre }}</h3>
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span style="color: var(--color-texto); opacity: 0.6; margin-left: 5px;">4.5</span>
+                    </div>
+                    <div class="distancia">
+                        <i class="fas fa-map-marker-alt"></i> a {{ col.distancia_km or '2.5' }}km de ti
+                    </div>
+                </div>
+                <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-elegir">
+                    Elegir
+                </a>
             </div>
-
-            <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" 
-               class="bg-accent px-5 py-2 rounded-xl font-bold transition hover:opacity-90">
-                Elegir
-            </a>
+            {% else %}
+            <div style="text-align: center; margin-top: 50px; opacity: 0.5;">
+                <i class="fas fa-user-slash" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
+                No hay profesionales disponibles en tu zona ahora mismo.
+            </div>
+            {% endfor %}
         </div>
-        {% else %}
-        <div class="col-span-full text-center py-20 opacity-50">
-            <i class="fas fa-search-location text-6xl mb-4"></i>
-            <p>No hay colaboradores en esta zona por el momento.</p>
-        </div>
-        {% endfor %}
     </div>
-</main>
 
 </body>
 </html>
