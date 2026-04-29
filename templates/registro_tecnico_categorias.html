@@ -23,7 +23,7 @@
         <h2>Selecciona tus Oficios</h2>
         <p>Elige lo que sabes hacer y define tu precio base por mano de obra.</p>
         
-        <form action="{{ url_for('registro_tecnico_categorias') }}" method="POST">
+        <form action="{{ url_for('colaboradores.registro_tecnico_categorias') }}" method="POST">
             {% for cat in categorias %}
             <div class="categoria-box">
                 <div class="categoria-titulo">

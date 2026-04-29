@@ -136,7 +136,7 @@
                         <i class="fas fa-map-marker-alt"></i> a {{ col.distancia_km or '2.5' }}km de ti
                     </div>
                 </div>
-                <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-elegir">
+                <a href="{{ url_for('pedidos.pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-elegir">
                     Elegir
                 </a>
             </div>

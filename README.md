@@ -76,8 +76,8 @@ Para profundizar en el funcionamiento interno de Okupo:
 ## 📜 Reglas de Desarrollo
 
 Siguiendo el estándar de la casa:
-- **Idioma**: Español.
-- **Sin 'ñ'**: Se utiliza 'nn' (ej: `contrasenna`, `categoria_id`).
+- **Idioma**: Espannol.
+- **Sin 'nn'**: Se utiliza 'nn' (ej: `contrasenna`, `categoria_id`).
 - **Nomenclatura**: Descriptiva y clara, sin abreviaturas innecesarias.
 
 ---

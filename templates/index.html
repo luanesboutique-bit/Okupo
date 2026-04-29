@@ -30,7 +30,7 @@
 
         .app-container {
             width: 100%;
-            max-width: 450px; /* Tamaño móvil ideal */
+            max-width: 450px; /* Tamanno móvil ideal */
             min-height: 100vh;
             background: var(--color-crema);
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -276,9 +276,9 @@
             <i class="fas fa-bars"></i>
             <div class="logo">okupo</div>
             {% if session.get('user_id') %}
-                <a href="{{ url_for('logout') }}" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="{{ url_for('autenticacion.logout') }}" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></a>
             {% else %}
-                <a href="{{ url_for('login') }}"><i class="fas fa-user-circle"></i></a>
+                <a href="{{ url_for('autenticacion.login') }}"><i class="fas fa-user-circle"></i></a>
             {% endif %}
         </div>
 
@@ -320,7 +320,7 @@
         <div class="grid-maderas">
             <a href="/categorias/5/subcategorias" class="btn-madera madera-clara">Limpieza de Muebles</a>
             <a href="/categorias/6/subcategorias" class="btn-madera madera-media">Armado de Muebles</a>
-            <a href="/categorias/7/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
+            <a href="/categorias/7/subcategorias" class="btn-madera madera-clara">Albannilería y Pintura</a>
             <a href="/categorias/8/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
         </div>
 
@@ -370,7 +370,7 @@
             
             // Verificación de Token / Redirección (Simulado aquí, manejado por Flask)
             {% if session.get('token') == 'UNAUTHORIZED' %}
-                window.location.href = "{{ url_for('login') }}";
+                window.location.href = "{{ url_for('autenticacion.login') }}";
             {% endif %}
         });
     </script>

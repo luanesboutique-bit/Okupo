@@ -29,7 +29,7 @@ def seed():
         {"nombre": "Fletes", "icono": "fas fa-truck"},
         {"nombre": "Jardinería", "icono": "fas fa-leaf"},
         {"nombre": "Pintura", "icono": "fas fa-paint-roller"},
-        {"nombre": "Albañilería", "icono": "fas fa-hammer"},
+        {"nombre": "Albannilería", "icono": "fas fa-hammer"},
         {"nombre": "Computación", "icono": "fas fa-laptop"}
     ]
 

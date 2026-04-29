@@ -58,12 +58,12 @@
         </div>
 
         {% if session.get('user_id') %}
-            <a href="{{ url_for('registro_tecnico_docs') }}" class="boton">CONTINUAR REGISTRO TÉCNICO</a>
+            <a href="{{ url_for('colaboradores.registro_tecnico_docs') }}" class="boton">CONTINUAR REGISTRO TÉCNICO</a>
         {% else %}
-            <a href="{{ url_for('registro', rol='colaborador') }}" class="boton">¡REGÍSTRATE AHORA!</a>
+            <a href="{{ url_for('autenticacion.registro', rol='colaborador') }}" class="boton">¡REGÍSTRATE AHORA!</a>
         {% endif %}
         <br><br>
-        <a href="{{ url_for('index') }}" style="color: #5a3e2b; font-weight: bold;">Volver al inicio</a>
+        <a href="{{ url_for('principal.index') }}" style="color: #5a3e2b; font-weight: bold;">Volver al inicio</a>
     </div>
 </body>
 </html>

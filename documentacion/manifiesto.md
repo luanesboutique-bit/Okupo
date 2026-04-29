@@ -31,7 +31,7 @@ En Okupo siempre sabrás cómo se distribuye tu pago:
 ## 📅 Innovación en la Gestión
 
 ### Agenda Automática
-Diseñada para eliminar la fricción:
+Disennada para eliminar la fricción:
 - **Para Colaboradores**: Enfoque total en el trabajo, cero estrés por coordinar citas.
 - **Para Usuarios**: Disponibilidad real en tiempo real, sin llamadas ni esperas.
 

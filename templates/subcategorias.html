@@ -92,13 +92,13 @@
 
     <div class="app-container">
         <div class="header">
-            <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ url_for('principal.index') }}"><i class="fas fa-arrow-left"></i></a>
             <h1>¿Qué necesitas hoy?</h1>
         </div>
 
         <div class="list-container">
             {% for sub in subcategorias %}
-            <a href="{{ url_for('marketplace', subcategoria_id=sub.id) }}" class="card-subcat">
+            <a href="{{ url_for('principal.marketplace', subcategoria_id=sub.id) }}" class="card-subcat">
                 <h3>{{ sub.nombre }}</h3>
                 <p>{{ sub.descripcion or 'Contamos con expertos certificados listos para ayudarte con este servicio de inmediato.' }}</p>
                 <div class="btn-ver">Ver Disponibles</div>
