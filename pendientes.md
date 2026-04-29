@@ -17,8 +17,10 @@ Esta lista contiene las tareas necesarias para completar la integración del Fro
 ## ⚙️ Infraestructura y Limpieza
 - [x] **Renombrar archivo principal**: Cambiado de `app.py` a `main.py` y movido a la raíz.
 - [x] **Organización de Carpetas**: Movidos `templates/` y `static/` fuera de `venv/`.
-- [ ] **Archivo de Dependencias**: Crear un `requirements.txt` con `flask`, `requests`, etc.
-- [ ] **Variables de Entorno**: Mover la `API_URL` y `secret_key` a un archivo `.env`.
+- [x] **Archivo de Dependencias**: Crear un `requirements.txt` con `flask`, `requests`, etc.
+- [x] **Variables de Entorno**: Mover la `API_URL` y `secret_key` a un archivo `.env` (implementado en `src/infraestructura/configuracion.py` con `os.environ`).
+- [x] **Arquitectura Limpia**: Refactorización del código en capas (`src/infraestructura`, `src/aplicacion`, `src/web`).
+- [x] **Corrección de Idioma**: Aplicada la regla de no usar 'ñ' (reemplazada por 'nn') y eliminar abreviaturas en el código.
 
 ## 🧪 Pruebas
 - [ ] **Validar Registro**: Probar el flujo completo de registro de usuario y verificar en la DB de Finite.

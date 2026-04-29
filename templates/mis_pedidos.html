@@ -133,7 +133,7 @@
 
     <div class="app-container">
         <div class="header">
-            <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ url_for('principal.index') }}"><i class="fas fa-arrow-left"></i></a>
             <h1>Mis Solicitudes</h1>
         </div>
 
@@ -150,7 +150,7 @@
                 </div>
                 <div class="sol-footer">
                     <span style="font-size: 11px; opacity: 0.5;">{{ sol.fecha_creacion or 'Hoy' }}</span>
-                    <a href="{{ url_for('chat', solicitud_id=sol.id) }}" class="btn-chat">
+                    <a href="{{ url_for('pedidos.chat', solicitud_id=sol.id) }}" class="btn-chat">
                         <i class="fas fa-comments" style="margin-right: 5px;"></i> Ver Chat
                     </a>
                 </div>
