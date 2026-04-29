@@ -3,7 +3,7 @@
 Esta lista contiene las tareas necesarias para completar la integración del Frontend `Okupo` con el motor backend `Finite`.
 
 ## 🛠️ Integración con la API (Finite)
-- [ ] **Renderizado Dinámico de Categorías**: Modificar `index.html` para que cargue las categorías principales desde `/categorias` en lugar de tenerlas hardcodeadas.
+- [x] **Renderizado Dinámico de Categorías**: Modificar `index.html` para que cargue las categorías principales desde `/categorias` en lugar de tenerlas hardcodeadas.
 - [ ] **Manejo de Sesión (JWT)**: Implementar la decodificación del token JWT recibido en `/login` para obtener el `usuario_id` y permisos.
 - [ ] **Marketplace de Colaboradores**: Crear una vista de "Marketplace" que consuma `/subcategorias/:id/colaboradores` para que el usuario pueda elegir un profesional antes de crear la solicitud.
 - [ ] **Flujo de Solicitudes**: Actualizar la ruta `/pedir` para que esté vinculada a un `colaborador_id` real seleccionado del Marketplace.

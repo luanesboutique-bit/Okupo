@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Técnico - Precios</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; font-family: 'Georgia', serif; color: #5a3e2b; padding: 20px; }
+        .contenedor { max-width: 500px; margin: auto; background-image: url('/static/madera_clara.jpg'); padding: 30px; border-radius: 20px; border: 3px solid #b89a7b; }
+        .paso { font-size: 14px; font-weight: bold; color: #8b5a2b; margin-bottom: 10px; }
+        .campo { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d4b89a; box-sizing: border-box; }
+        .boton { background-image: url('/static/madera_media.jpg'); color: #5a3e2b; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; border: 2px solid #8b5a2b; }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="paso">PASO 2 DE 3</div>
+        <h2>Configuración de Tarifas</h2>
+        <p>Define cuánto quieres ganar por traslados y recargos especiales.</p>
+        
+        <form action="{{ url_for('registro_tecnico_precios') }}" method="POST">
+            <div class="campo">
+                <label>Precio por Kilómetro de Traslado ($)</label>
+                <input type="number" step="0.01" name="precio_km" value="10.00" required>
+            </div>
+            <div class="campo">
+                <label>Recargo por Lluvia ($)</label>
+                <input type="number" step="0.01" name="recargo_lluvia" value="100.00" required>
+            </div>
+            <div class="campo">
+                <label>Recargo por Domingo / Festivo ($)</label>
+                <input type="number" step="0.01" name="recargo_domingo" value="150.00" required>
+            </div>
+            <div class="campo">
+                <label>Recargo Nocturno (20:00 - 06:00) ($)</label>
+                <input type="number" step="0.01" name="recargo_nocturno" value="200.00" required>
+            </div>
+            
+            <button type="submit" class="boton">SIGUIENTE: HORARIOS <i class="fas fa-chevron-right"></i></button>
+        </form>
+    </div>
+</body>
+</html>

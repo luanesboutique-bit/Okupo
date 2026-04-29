@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Técnico - Oficios</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; font-family: 'Georgia', serif; color: #5a3e2b; padding: 20px; }
+        .contenedor { max-width: 600px; margin: auto; background-image: url('/static/madera_clara.jpg'); padding: 30px; border-radius: 20px; border: 3px solid #b89a7b; }
+        .paso { font-size: 14px; font-weight: bold; color: #8b5a2b; margin-bottom: 10px; }
+        .categoria-box { background: rgba(255,255,255,0.4); border: 2px solid #8b5a2b; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
+        .categoria-titulo { font-weight: bold; font-size: 20px; margin-bottom: 10px; display: flex; align-items: center; }
+        .categoria-titulo i { margin-right: 10px; }
+        .subcategoria { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .precio-input { width: 100px; padding: 5px; border-radius: 5px; border: 1px solid #d4b89a; }
+        .boton { background-image: url('/static/madera_media.jpg'); color: #5a3e2b; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; border: 2px solid #8b5a2b; }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="paso">PASO 2 DE 4</div>
+        <h2>Selecciona tus Oficios</h2>
+        <p>Elige lo que sabes hacer y define tu precio base por mano de obra.</p>
+        
+        <form action="{{ url_for('registro_tecnico_categorias') }}" method="POST">
+            {% for cat in categorias %}
+            <div class="categoria-box">
+                <div class="categoria-titulo">
+                    <i class="fas fa-tools"></i> {{ cat.nombre }}
+                </div>
+                
+                <!-- Aqui simularemos subcategorias para la demo, en produccion vendrian de la API -->
+                <div class="subcategoria">
+                    <label><input type="checkbox" name="sub_{{cat.id}}_1"> Instalación Estándar</label>
+                    <input type="number" class="precio-input" placeholder="$ Precio">
+                </div>
+                <div class="subcategoria">
+                    <label><input type="checkbox" name="sub_{{cat.id}}_2"> Reparación Básica</label>
+                    <input type="number" class="precio-input" placeholder="$ Precio">
+                </div>
+                <div class="subcategoria">
+                    <label><input type="checkbox" name="sub_{{cat.id}}_3"> Mantenimiento Preventivo</label>
+                    <input type="number" class="precio-input" placeholder="$ Precio">
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="categoria-box" style="border-style: dashed; text-align: center; cursor: pointer;">
+                <i class="fas fa-plus"></i> Solicitar nueva categoría
+            </div>
+            
+            <button type="submit" class="boton">SIGUIENTE: TARIFAS <i class="fas fa-chevron-right"></i></button>
+        </form>
+    </div>
+</body>
+</html>
