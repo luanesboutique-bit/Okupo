@@ -12,6 +12,7 @@
             --color-crema: #fdfaf5;
             --color-texto: #5a3e2b;
             --color-dorado: #d4af37;
+            --color-dorado-oscuro: #b8860b;
         }
 
         body {
@@ -31,7 +32,7 @@
             min-height: 100vh;
             background: var(--color-crema);
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            padding-bottom: 30px;
+            padding-bottom: 50px;
         }
 
         .header {
@@ -39,53 +40,124 @@
             display: flex;
             align-items: center;
             border-bottom: 1px solid rgba(139, 90, 43, 0.1);
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
-        .header h1 { font-size: 20px; margin: 0; font-weight: 700; }
+        .header h1 { font-size: 18px; margin: 0; font-weight: 800; text-transform: uppercase; }
 
         .list-container {
-            padding: 20px;
+            padding: 15px;
         }
 
-        .card-subcat {
-            background-image: url('/static/madera_clara.jpg');
-            background-size: cover;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: block;
-            text-decoration: none;
+        /* CARD DE SERVICIO CON PRECIOS TRIPLES */
+        .card-servicio {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            position: relative;
+        }
+
+        .card-servicio h3 {
+            margin: 0 0 12px 0;
+            font-size: 19px;
+            font-weight: 900;
             color: var(--color-texto);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border: 1px solid rgba(139, 90, 43, 0.2);
+            border-bottom: 2px solid var(--color-crema);
+            padding-bottom: 5px;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .price-item {
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 12px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+        }
+        .price-item .label {
+            display: block;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .price-item .value {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--color-texto);
+        }
+
+        .normal { border-left: 4px solid #4caf50; }
+        .noche { border-left: 4px solid #ff9800; }
+        .urgente { border-left: 4px solid #f44336; }
+
+        .info-nota {
+            font-size: 11px;
+            opacity: 0.6;
+            font-style: italic;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+            text-align: center;
+            text-transform: uppercase;
             transition: transform 0.2s;
         }
-        .card-subcat:active { transform: scale(0.98); }
+        .btn-action:active { transform: scale(0.95); }
 
-        .card-subcat h3 {
-            margin: 0 0 8px 0;
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .card-subcat p {
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.8;
-            line-height: 1.4;
-        }
-
-        .btn-ver {
-            margin-top: 15px;
-            display: inline-block;
-            background: rgba(139, 90, 43, 0.8);
+        .btn-ahora {
+            background: var(--color-texto);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
         }
+        .btn-ver {
+            background-image: url('/static/madera_clara.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* BOTON COTIZAR ESPECIAL */
+        .btn-especial {
+            margin: 20px 0;
+            background: linear-gradient(135deg, #2c3e50, #000);
+            color: #d4af37;
+            padding: 20px;
+            border-radius: 20px;
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            border: 2px solid #d4af37;
+        }
+        .btn-especial i { font-size: 24px; margin-bottom: 10px; display: block; }
+        .btn-especial span { font-weight: 900; font-size: 16px; text-transform: uppercase; }
+
     </style>
 </head>
 <body>
@@ -93,22 +165,91 @@
     <div class="app-container">
         <div class="header">
             <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
-            <h1>¿Qué necesitas hoy?</h1>
+            <h1>Servicios Disponibles</h1>
         </div>
 
         <div class="list-container">
             {% for sub in subcategorias %}
-            <a href="{{ url_for('marketplace', subcategoria_id=sub.id) }}" class="card-subcat">
+            <div class="card-servicio">
                 <h3>{{ sub.nombre }}</h3>
-                <p>{{ sub.descripcion or 'Contamos con expertos certificados listos para ayudarte con este servicio de inmediato.' }}</p>
-                <div class="btn-ver">Ver Disponibles</div>
-            </a>
-            {% else %}
-            <div style="text-align: center; margin-top: 50px; opacity: 0.5;">
-                <i class="fas fa-search" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
-                No hay servicios disponibles en esta categoría por ahora.
+                
+                <div class="price-grid" id="price-grid-{{ sub.id }}">
+                    <div class="price-item normal" id="normal-{{ sub.id }}">
+                        <span class="label">Normal</span>
+                        <span class="value">${{ sub.precio_normal or '720' }}</span>
+                    </div>
+                    <div class="price-item noche" id="noche-{{ sub.id }}">
+                        <span class="label">Noche</span>
+                        <span class="value">${{ sub.precio_noche or '1,080' }}</span>
+                    </div>
+                    <div class="price-item urgente" id="urgente-{{ sub.id }}">
+                        <span class="label">Urgente</span>
+                        <span class="value">${{ sub.precio_urgente or '1,450' }}</span>
+                    </div>
+                </div>
+
+                <div class="info-nota">
+                    <i class="fas fa-info-circle"></i> 
+                    {% if cat_id == 1 %} Chapa no incluida. {% elif cat_id == 2 or cat_id == 3 %} Materiales no incluidos. {% else %} Incluye químicos básicos. {% endif %}
+                </div>
+
+                <div class="actions">
+                    <a href="{{ url_for('pedir', subcategoria_id=sub.id) }}" class="btn-action btn-ahora" id="btn-ahora-{{ sub.id }}">Solicitar Ahora</a>
+                    <a href="{{ url_for('marketplace', subcategoria_id=sub.id) }}" class="btn-action btn-ver">Ver Expertos</a>
+                </div>
             </div>
             {% endfor %}
+
+            <!-- SCRIPTS DE TARIFA DINÁMICA -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const ahora = new Date();
+                    const hora = ahora.getHours();
+                    const dia = ahora.getDay(); // 0 es Domingo
+                    
+                    let tipoTarifa = "normal";
+                    let colorTarifa = "#4caf50";
+
+                    // Lógica de visualización (Frontend)
+                    if (dia === 0) {
+                        tipoTarifa = "urgente";
+                        colorTarifa = "#f44336";
+                    } else if (hora >= 20 || hora < 6) {
+                        tipoTarifa = "noche";
+                        colorTarifa = "#ff9800";
+                    }
+
+                    // Aplicar a todos los servicios
+                    {% for sub in subcategorias %}
+                        const item = document.getElementById(`${tipoTarifa}-{{ sub.id }}`);
+                        const btn = document.getElementById(`btn-ahora-{{ sub.id }}`);
+                        
+                        if (item) {
+                            item.style.background = colorTarifa + "22"; // Fondo traslúcido
+                            item.style.borderColor = colorTarifa;
+                            item.style.transform = "scale(1.05)";
+                            item.querySelector('.label').style.fontSize = "11px";
+                        }
+                        
+                        if (btn) {
+                            btn.innerText = `Solicitar (${tipoTarifa.toUpperCase()})`;
+                            if (tipoTarifa !== 'normal') btn.style.background = colorTarifa;
+                        }
+                    {% endfor %}
+                });
+            </script>
+
+            <!-- BOTON COTIZAR TRABAJO ESPECIAL -->
+            <a href="/categorias" class="btn-especial">
+                <i class="fas fa-bolt"></i>
+                <span>⚡ ¿NO ESTÁ LO QUE BUSCAS?<br>COTIZAR TRABAJO ESPECIAL</span>
+            </a>
+
+            <div style="text-align: center; font-size: 11px; opacity: 0.5; padding: 20px;">
+                🟢 NORMAL: Lun-Sab 6AM-8PM<br>
+                🟠 NOCHE: Lun-Sab 8PM-6AM<br>
+                🔴 URGENTE: Dom/Fest/Lluvia
+            </div>
         </div>
     </div>
 

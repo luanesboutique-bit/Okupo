@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingresar - Okupo</title>
+    <title>Bienvenido - Okupo</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,7 +11,8 @@
         :root {
             --color-crema: #fdfaf5;
             --color-texto: #5a3e2b;
-            --color-dorado: #d4af37;
+            --color-google: #ea4335;
+            --color-facebook: #1877f2;
         }
 
         body {
@@ -27,124 +28,176 @@
             min-height: 100vh;
         }
 
-        .login-card {
+        .welcome-container {
             width: 100%;
-            max-width: 400px;
-            background: white;
+            max-width: 420px;
             padding: 40px 30px;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            border: 1px solid #eee;
         }
 
-        .logo {
-            font-size: 40px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+        .logo-main {
+            font-size: 60px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 5px;
+            color: var(--color-texto);
         }
 
-        h2 {
-            font-size: 20px;
-            margin-bottom: 30px;
-            opacity: 0.7;
-        }
-
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            margin-left: 5px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 15px 20px;
-            border-radius: 15px;
-            border: 1px solid #ddd;
-            background: #f9f9f9;
-            box-sizing: border-box;
+        .slogan {
             font-size: 16px;
+            opacity: 0.6;
+            margin-bottom: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .input-group input:focus {
-            border-color: var(--color-texto);
-            outline: none;
-            background: white;
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .btn-login {
+        .btn-social {
             width: 100%;
-            padding: 18px;
-            background-image: url('/static/madera_media.jpg');
-            background-size: cover;
-            border: none;
+            padding: 16px;
             border-radius: 15px;
-            color: var(--color-texto);
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            margin-top: 10px;
-        }
-
-        .error-msg {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .footer-links {
-            margin-top: 30px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        .footer-links a {
-            color: var(--color-texto);
-            font-weight: bold;
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 16px;
+            font-weight: 700;
             text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
+        .btn-social:active { transform: scale(0.98); }
+
+        .btn-google { color: var(--color-google); }
+        .btn-facebook { color: var(--color-facebook); }
+        .btn-email { 
+            background-image: url('/static/madera_media.jpg'); 
+            background-size: cover;
+            color: var(--color-texto);
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            opacity: 0.4;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--color-texto);
+        }
+
+        .professional-link {
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(139, 90, 43, 0.05);
+            border: 1px dashed rgba(139, 90, 43, 0.3);
+        }
+
+        .professional-link p {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .professional-link a {
+            color: var(--color-texto);
+            font-weight: 800;
+            text-decoration: underline;
+            font-size: 15px;
+        }
+
+        /* Modal simple para Login de Correo (Simulado para diseño) */
+        .login-form {
+            display: none; /* Se activaría con JS */
+            text-align: left;
+            margin-top: 20px;
+        }
+        .login-form.active { display: block; }
+        
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
+
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="logo">okupo</div>
-        <h2>Tu experto de confianza</h2>
+    <div class="welcome-container">
+        <div class="logo-main">okupo</div>
+        <div class="slogan">Tu experto a un clic</div>
 
         {% if error %}
-        <div class="error-msg">{{ error }}</div>
+            <div style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px;">
+                {{ error }}
+            </div>
         {% endif %}
 
-        <form action="/login" method="POST">
-            <div class="input-group">
-                <label>Correo Electrónico</label>
-                <input type="email" name="email" placeholder="ejemplo@correo.com" required>
+        <div id="social-view">
+            <div class="social-buttons">
+                <a href="#" class="btn-social btn-google">
+                    <i class="fab fa-google"></i> Entrar con Google
+                </a>
+                <a href="#" class="btn-social btn-facebook">
+                    <i class="fab fa-facebook-f"></i> Entrar con Facebook
+                </a>
+                <a href="javascript:void(0)" onclick="showEmailLogin()" class="btn-social btn-email">
+                    <i class="fas fa-envelope"></i> Entrar con Correo / Teléfono
+                </a>
             </div>
-
-            <div class="input-group">
-                <label>Contraseña</label>
-                <input type="password" name="contrasenna" placeholder="••••••••" required>
-            </div>
-
-            <button type="submit" class="btn-login">Ingresar</button>
-        </form>
-
-        <div class="footer-links">
-            ¿No tienes cuenta? <a href="/registro">Regístrate aquí</a>
         </div>
+
+        <div id="email-view" class="login-form">
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <label>Correo o Teléfono</label>
+                    <input type="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="contrasenna" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-social btn-email" style="cursor: pointer;">Ingresar</button>
+                <a href="javascript:void(0)" onclick="hideEmailLogin()" style="display: block; margin-top: 15px; font-size: 13px; opacity: 0.6; color: var(--color-texto);">
+                    <i class="fas fa-arrow-left"></i> Volver a opciones sociales
+                </a>
+            </form>
+        </div>
+
+        <div class="professional-link">
+            <p>¿Eres un profesional del hogar?</p>
+            <a href="/registro?rol=colaborador">Regístrate como Técnico Aquí</a>
+        </div>
+        
+        <p style="margin-top: 30px; font-size: 13px; opacity: 0.5;">
+            ¿No tienes cuenta? <a href="/registro" style="color: var(--color-texto); font-weight: 700;">Regístrate como cliente</a>
+        </p>
     </div>
 
+    <script>
+        function showEmailLogin() {
+            document.getElementById('social-view').style.display = 'none';
+            document.getElementById('email-view').classList.add('active');
+        }
+        function hideEmailLogin() {
+            document.getElementById('social-view').style.display = 'block';
+            document.getElementById('email-view').classList.remove('active');
+        }
+    </script>
 </body>
 </html>

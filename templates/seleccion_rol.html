@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Rol - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+        }
+
+        body {
+            background-color: var(--color-crema);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .role-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 25px;
+            text-decoration: none;
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-card:active { transform: scale(0.96); }
+
+        .role-card.technician {
+            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/static/madera_media.jpg');
+            background-size: cover;
+        }
+
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: #d4af37;
+            border: 2px solid var(--color-texto);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .role-card h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .role-card p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+
+        .btn-start {
+            margin-top: 10px;
+            padding: 8px 25px;
+            border-radius: 20px;
+            background: var(--color-texto);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="role-container">
+        <h2>¿Cómo quieres usar Okupo?</h2>
+
+        <a href="/registro?rol=cliente" class="role-card">
+            <div class="role-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <h3>Quiero Solicitar Servicios</h3>
+            <p>Busca expertos, cotiza reparaciones y mantén tu hogar en perfecto estado.</p>
+            <div class="btn-start">Soy Cliente</div>
+        </a>
+
+        <a href="/registro?rol=colaborador" class="role-card technician">
+            <div class="role-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h3>Quiero Trabajar</h3>
+            <p>Únete a nuestra red de expertos, define tus precios y haz crecer tu negocio.</p>
+            <div class="btn-start">Soy Técnico</div>
+        </a>
+
+        <div style="margin-top: 40px;">
+            <a href="/" style="color: var(--color-texto); font-size: 14px; text-decoration: none; opacity: 0.6;">
+                <i class="fas fa-times"></i> Omitir por ahora
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

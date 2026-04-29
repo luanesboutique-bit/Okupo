@@ -55,8 +55,100 @@
             justify-content: space-between;
             align-items: center;
         }
-        .header i { font-size: 24px; color: var(--color-texto); cursor: pointer; }
+        .header i { font-size: 24px; color: var(--color-texto); cursor: pointer; transition: transform 0.2s; }
+        .header i:active { transform: scale(0.9); }
         .logo { font-size: 32px; font-weight: bold; letter-spacing: 2px; }
+
+        /* SIDEBAR / MENÚ LATERAL */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px; /* Oculto por defecto */
+            width: 300px;
+            height: 100%;
+            background-color: var(--color-crema);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            z-index: 2000;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+            transition: left 0.3s ease-in-out;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 2px solid var(--color-dorado-oscuro);
+        }
+        .sidebar-header .user-avatar {
+            width: 70px;
+            height: 70px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--color-dorado);
+            border: 2px solid var(--color-texto);
+        }
+
+        .sidebar-content {
+            padding: 15px 0;
+            flex-grow: 1;
+        }
+        .menu-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--color-texto);
+            font-weight: 600;
+            font-size: 15px;
+            transition: background 0.2s;
+            border-left: 4px solid transparent;
+        }
+        .menu-item i {
+            width: 25px;
+            margin-right: 15px;
+            font-size: 18px;
+            color: var(--color-dorado-oscuro);
+            text-align: center;
+        }
+        .menu-item:hover {
+            background: rgba(139, 90, 43, 0.05);
+            border-left: 4px solid var(--color-dorado);
+        }
+        .menu-item.highlight {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--color-dorado-oscuro);
+        }
+
+        /* OVERLAY / FONDO OSCURO AL ABRIR MENÚ */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
+        }
+        .overlay.active {
+            display: block;
+        }
 
         /* BUSCADOR */
         .search-box {
@@ -267,18 +359,66 @@
 <body>
 
     <div class="app-container">
+        <!-- Menú Lateral (Sidebar) -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div style="font-weight: 800; font-size: 18px;">
+                    {% if session.get('user_id') %} {{ session.get('nombre') }} {% else %} Invitado {% endif %}
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <a href="/" class="menu-item"><i class="fas fa-home"></i> 1. Inicio</a>
+                <a href="/categorias/1/subcategorias" class="menu-item"><i class="fas fa-key"></i> 2. Cerrajería</a>
+                <a href="/categorias/2/subcategorias" class="menu-item"><i class="fas fa-faucet"></i> 3. Plomería</a>
+                <a href="/categorias/3/subcategorias" class="menu-item"><i class="fas fa-bolt"></i> 4. Electricidad</a>
+                <a href="/categorias/4/subcategorias" class="menu-item"><i class="fas fa-spray-can-sparkles"></i> 5. Limpieza</a>
+                <a href="/categorias/5/subcategorias" class="menu-item"><i class="fas fa-couch"></i> 6. Limpieza de Muebles</a>
+                <a href="/categorias/6/subcategorias" class="menu-item"><i class="fas fa-hammer"></i> 7. Armado de Muebles</a>
+                <a href="/categorias/7/subcategorias" class="menu-item"><i class="fas fa-truck-moving"></i> 8. Fletes y Mudanzas</a>
+                <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 9. Albañilería y Construcción</a>
+                <a href="/categorias/9/subcategorias" class="menu-item"><i class="fas fa-paint-roller"></i> 10. Pintura y Acabados</a>
+                
+                <a href="/categorias" class="menu-item highlight" style="margin-top: 10px;">
+                    <i class="fas fa-plus-circle"></i> 11. COTIZAR OTRO SERVICIO
+                </a>
+                
+                <a href="#" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 12. Urgencia 24/7</a>
+                <a href="#" class="menu-item"><i class="fas fa-info-circle"></i> 13. Información y Políticas</a>
+                <a href="{{ url_for('mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 14. Mi Perfil / Historial</a>
+                <a href="#" class="menu-item"><i class="fas fa-star"></i> 15. Calificaciones</a>
+                <a href="#" class="menu-item"><i class="fas fa-shield-alt"></i> 16. Centro de Ayuda / Soporte</a>
+                
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('logout') }}" class="menu-item" style="border-top: 1px solid #ddd; margin-top: 10px;">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="menu-item highlight" style="border-top: 1px solid #ddd; margin-top: 10px;">
+                        <i class="fas fa-sign-in-alt"></i> 17. Iniciar Sesión / Registrarse
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
         <!-- Decoraciones -->
         <svg class="decoracion-esquina top-left" viewBox="0 0 100 100"><path d="M0,0 Q50,0 50,50 T100,100" fill="none" stroke="#5a3e2b" stroke-width="0.5"/></svg>
         <svg class="decoracion-esquina bottom-right" viewBox="0 0 100 100"><path d="M0,0 Q50,0 50,50 T100,100" fill="none" stroke="#5a3e2b" stroke-width="0.5"/></svg>
 
         <!-- Header -->
         <div class="header">
-            <i class="fas fa-bars"></i>
+            <i class="fas fa-bars" onclick="toggleMenu()"></i>
             <div class="logo">okupo</div>
             {% if session.get('user_id') %}
-                <a href="{{ url_for('logout') }}" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="{{ url_for('logout') }}" title="Cerrar Sesión" style="color: inherit; text-decoration: none;"><i class="fas fa-sign-out-alt"></i></a>
             {% else %}
-                <a href="{{ url_for('login') }}"><i class="fas fa-user-circle"></i></a>
+                <a href="{{ url_for('login') }}" style="color: inherit; text-decoration: none;"><i class="fas fa-user-circle"></i></a>
             {% endif %}
         </div>
 
@@ -302,7 +442,7 @@
                 <i class="fas fa-key"></i>
                 <span>Cerrajería</span>
             </a>
-            <a href="/categorias/2/subcategorias" class="btn-piedra">
+            <a href="/categorias/2/subcategorias" class="btn-piedra silver">
                 <i class="fas fa-faucet"></i>
                 <span>Plomería</span>
             </a>
@@ -310,7 +450,7 @@
                 <i class="fas fa-bolt"></i>
                 <span>Electricidad</span>
             </a>
-            <a href="/categorias/4/subcategorias" class="btn-piedra">
+            <a href="/categorias/4/subcategorias" class="btn-piedra silver">
                 <i class="fas fa-spray-can-sparkles"></i>
                 <span>Limpieza</span>
             </a>
@@ -339,6 +479,13 @@
 
     <!-- SCRIPTS -->
     <script>
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
         function obtenerUbicacion() {
             const span = document.getElementById('ubicacion-texto');
             if (navigator.geolocation) {

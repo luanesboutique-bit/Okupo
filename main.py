@@ -8,10 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'clave_secreta_okupo_2024'
 
 # --- CONFIGURACIÓN DE LA API ---
-API_BASE_URL = "https://0d078abf91f17ed8-189-203-204-127.serveousercontent.com"
-
-
-@app.route('/favicon.ico')
+API_BASE_URL = "https://9082b7e621b98b48-189-203-204-127.serveousercontent.com"
 def favicon():
     return "", 204
 
@@ -155,8 +152,8 @@ def pedir():
             "urgencia": request.form.get('urgencia', 'media'),
             "descripcion_detallada": request.form.get('descripcion'),
             "fotos_evidencia_inicial": "placeholder.jpg",
-            "latitud": 19.4326,
-            "longitud": -99.1332
+            "latitud": float(request.form.get('latitud', 19.4326)),
+            "longitud": float(request.form.get('longitud', -99.1332))
         }
         respuesta = api_post("/solicitudes", datos_solicitud)
         if respuesta:

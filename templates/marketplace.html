@@ -51,26 +51,28 @@
             background: white;
             border-radius: 20px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             border: 1px solid #eee;
+            position: relative;
         }
 
         .avatar {
-            width: 60px;
-            height: 60px;
-            background-image: url('/static/piedra_boton.png');
+            width: 70px;
+            height: 70px;
+            background-image: url('/static/madera_clara.jpg');
             background-size: cover;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--color-dorado);
-            font-size: 30px;
+            color: var(--color-texto);
+            font-size: 35px;
             border: 2px solid var(--color-texto);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
         }
 
         .info {
@@ -79,32 +81,61 @@
 
         .info h3 {
             margin: 0;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 19px;
+            font-weight: 900;
+            color: var(--color-texto);
         }
 
         .info .rating {
             color: #f1c40f;
-            font-size: 12px;
-            margin: 3px 0;
+            font-size: 13px;
+            margin: 4px 0;
         }
 
         .info .distancia {
             font-size: 12px;
             opacity: 0.6;
+            font-weight: 600;
         }
 
-        .btn-elegir {
+        /* 🪵 TAG DE PRECIO DEL SOCIO */
+        .price-tag {
             background-image: url('/static/madera_media.jpg');
             background-size: cover;
-            color: var(--color-texto);
-            padding: 8px 15px;
+            padding: 10px 15px;
             border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+            min-width: 80px;
+        }
+        .price-tag .amount {
+            display: block;
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--color-texto);
+        }
+        .price-tag .label {
+            display: block;
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 800;
+            opacity: 0.7;
+        }
+
+        .btn-seleccionar {
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            background: var(--color-texto);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 20px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 13px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -113,37 +144,39 @@
     <div class="app-container">
         <div class="header">
             <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
-            <h1>Elegir Profesional</h1>
+            <h1>Expertos Disponibles</h1>
         </div>
 
         <div class="list-container">
             {% for col in colaboradores %}
-            <div class="card-colaborador">
+            <div class="card-colaborador" style="margin-bottom: 30px;">
                 <div class="avatar">
-                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="info">
                     <h3>{{ col.nombre }}</h3>
                     <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <span style="color: var(--color-texto); opacity: 0.6; margin-left: 5px;">4.5</span>
+                        <i class="fas fa-star"></i> {{ col.reputacion or '4.8' }}
+                        <span style="color: #888; font-size: 11px; margin-left: 5px;">({{ col.trabajos or '12' }} trabajos)</span>
                     </div>
                     <div class="distancia">
-                        <i class="fas fa-map-marker-alt"></i> a {{ col.distancia_km or '2.5' }}km de ti
+                        <i class="fas fa-map-marker-alt"></i> a {{ col.distancia_km or '1.2' }} km
                     </div>
                 </div>
-                <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-elegir">
-                    Elegir
+                
+                <div class="price-tag">
+                    <span class="label">Desde</span>
+                    <span class="amount">${{ col.precio_base or '850' }}</span>
+                </div>
+
+                <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-seleccionar">
+                    Elegir Experto
                 </a>
             </div>
             {% else %}
             <div style="text-align: center; margin-top: 50px; opacity: 0.5;">
                 <i class="fas fa-user-slash" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
-                No hay profesionales disponibles en tu zona ahora mismo.
+                No hay profesionales cerca en este momento.
             </div>
             {% endfor %}
         </div>
