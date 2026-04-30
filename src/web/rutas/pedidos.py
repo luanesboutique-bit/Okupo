@@ -43,9 +43,14 @@ def finalizar_pedido():
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
     
     if respuesta:
-        return redirect(url_for('pedidos.mis_pedidos'))
+        return redirect(url_for('pedidos.mostrar_asignacion'))
         
     return "Error al procesar la solicitud", 500
+
+@blueprint.route('/asignacion')
+@login_requerido
+def mostrar_asignacion():
+    return render_template('asignacion.html')
 
 @blueprint.route('/mis_pedidos')
 @login_requerido

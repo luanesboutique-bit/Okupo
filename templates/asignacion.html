@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscando Experto - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo-searching {
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 50px;
+            color: var(--color-texto);
+            text-shadow: 0 0 10px white;
+        }
+
+        /* 📡 ANIMACIÓN DE RADAR / PIEDRA */
+        .radar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 50px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--color-dorado);
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulse 3s infinite;
+        }
+
+        .radar-circle:nth-child(2) { animation-delay: 1s; }
+        .radar-circle:nth-child(3) { animation-delay: 2s; }
+
+        .stone-core {
+            width: 100px;
+            height: 100px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            border: 3px solid var(--color-texto);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--color-dorado);
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: rotateStone 10s linear infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        @keyframes rotateStone {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px white;
+        }
+
+        .searching-text {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.8;
+            max-width: 250px;
+            margin: 0 auto;
+            line-height: 1.5;
+            text-shadow: 0 0 5px white;
+        }
+
+        /* Puntos suspensivos animados */
+        .dots::after {
+            content: '';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .btn-cancelar {
+            margin-top: 60px;
+            display: inline-block;
+            color: #c0392b;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 13px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(192, 57, 43, 0.3);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="logo-searching">okupo</div>
+
+        <div class="radar-container">
+            <div class="radar-circle"></div>
+            <div class="radar-circle"></div>
+            <div class="radar-circle"></div>
+            <div class="stone-core">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+        </div>
+
+        <h2>Buscando Experto<span class="dots"></span></h2>
+        <p class="searching-text">Estamos localizando al mejor profesional cerca de tu ubicación para atender tu solicitud.</p>
+
+        <a href="{{ url_for('pedidos.mis_pedidos') }}" class="btn-cancelar">Cancelar Búsqueda</a>
+    </div>
+
+    <script>
+        // Simulación de redirección automática después de 5 segundos
+        // En un caso real, esto esperaría la confirmación de la API
+        setTimeout(() => {
+            window.location.href = "{{ url_for('pedidos.mis_pedidos') }}";
+        }, 5000);
+    </script>
+</body>
+</html>

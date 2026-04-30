@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control Técnico - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* HEADER TÉCNICO */
+        .tech-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .tech-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tech-avatar {
+            width: 50px;
+            height: 50px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            border: 2px solid var(--color-texto);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dorado);
+            font-size: 24px;
+        }
+
+        .tech-info h2 { margin: 0; font-size: 18px; font-weight: 900; text-shadow: 0 0 5px white; }
+        
+        .badge-verificado {
+            background: var(--color-dorado);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* RESUMEN DE GANANCIAS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            padding: 15px;
+            border-radius: 20px;
+            color: var(--color-texto);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .stat-card span { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.7; }
+        .stat-card h3 { margin: 5px 0 0 0; font-size: 20px; font-weight: 900; }
+
+        /* LISTADO DE TRABAJOS */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--color-texto);
+            text-shadow: 0 0 5px white;
+        }
+        .section-header h4 { margin: 0; font-size: 16px; font-weight: 900; text-transform: uppercase; }
+
+        .job-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 2px solid rgba(139, 90, 43, 0.2);
+            text-align: left;
+            position: relative;
+        }
+
+        .job-urgencia {
+            position: absolute;
+            top: 0; right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 12px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .job-body h5 { margin: 0; font-size: 18px; font-weight: 900; color: var(--color-texto); }
+        .job-distancia { font-size: 12px; font-weight: 700; opacity: 0.6; margin: 5px 0; }
+        .job-desc { font-size: 13px; opacity: 0.8; line-height: 1.4; margin: 10px 0; }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .job-precio { font-size: 18px; font-weight: 900; color: var(--color-verde); }
+
+        .btn-aceptar {
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            color: var(--color-dorado);
+            padding: 10px 25px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 14px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-texto);
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header Técnico -->
+        <div class="tech-header">
+            <div class="tech-profile">
+                <div class="tech-avatar"><i class="fas fa-user-cog"></i></div>
+                <div class="tech-info">
+                    <h2>{{ session.get('nombre') or 'Técnico Experto' }}</h2>
+                    <div class="badge-verificado"><i class="fas fa-check-circle"></i> Verificado</div>
+                </div>
+            </div>
+            <a href="/" style="color: var(--color-texto); font-size: 24px;"><i class="fas fa-cog"></i></a>
+        </div>
+
+        <!-- Estadísticas Rápidas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span>Ganado Hoy</span>
+                <h3>$2,450</h3>
+            </div>
+            <div class="stat-card">
+                <span>Trabajos</span>
+                <h3>12</h3>
+            </div>
+        </div>
+
+        <!-- Nuevas Solicitudes -->
+        <div class="section-header">
+            <h4>Nuevas Solicitudes</h4>
+            <span style="font-size: 12px; font-weight: 800; color: var(--color-dorado);">Ver todas</span>
+        </div>
+
+        {% for i in range(2) %}
+        <div class="job-card">
+            <div class="job-urgencia">Urgente</div>
+            <div class="job-body">
+                <h5>Instalación de Chapa Alta Seguridad</h5>
+                <div class="job-distancia"><i class="fas fa-map-marker-alt"></i> a 2.4 km de tu zona</div>
+                <p class="job-desc">Se requiere cambio de cilindro y ajuste de marco en puerta principal de madera...</p>
+            </div>
+            <div class="job-footer">
+                <div class="job-precio">$1,450</div>
+                <a href="#" class="btn-aceptar">Aceptar</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Trabajos en Curso -->
+        <div class="section-header" style="margin-top: 30px;">
+            <h4>En Curso</h4>
+        </div>
+
+        <div class="job-card" style="border-left: 6px solid var(--color-verde);">
+            <div class="job-body">
+                <h5>Reparación de Fuga en Cocina</h5>
+                <div class="job-distancia">Cliente: Maria García</div>
+            </div>
+            <div class="job-footer">
+                <span style="font-size: 11px; font-weight: 800; color: var(--color-verde);">TRABAJO ACTIVO</span>
+                <a href="{{ url_for('pedidos.chat', solicitud_id=1) }}" style="color: var(--color-texto); font-weight: 800; font-size: 13px;">
+                    <i class="fas fa-comments"></i> Ir al Chat
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

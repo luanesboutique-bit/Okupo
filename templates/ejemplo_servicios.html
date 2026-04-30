@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla de Servicios - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+            --color-naranja: #f39c12;
+            --color-rojo: #e74c3c;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; }
+
+        /* LISTADO DE SERVICIOS */
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .service-card-mock {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 2px solid rgba(139, 90, 43, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+
+        .service-info-mock h3 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--color-texto);
+        }
+
+        .info-note {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 5px;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 🏷️ TAG DE PRECIO ACTIVO (UN SOLO PRECIO) */
+        .active-price-tag {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            padding: 10px 15px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 90px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .active-price-tag .tier-label {
+            display: block;
+            font-size: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .active-price-tag .amount {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--color-texto);
+        }
+
+        /* Colores dinámicos para el label */
+        .bg-normal { background: var(--color-verde); }
+        .bg-noche { background: var(--color-naranja); }
+        .bg-urgente { background: var(--color-rojo); }
+
+        .btn-select {
+            margin-top: 25px;
+            display: block;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            padding: 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 900;
+            text-transform: uppercase;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="#"><i class="fas fa-arrow-left"></i></a>
+            <h1>Cerrajería</h1>
+        </div>
+
+        <div class="services-list">
+            
+            <!-- EJEMPLO 1: MOSTRANDO TARIFA NORMAL -->
+            <div class="service-card-mock">
+                <div class="service-info-mock">
+                    <h3>Apertura de Puerta</h3>
+                    <div class="info-note"><i class="fas fa-info-circle"></i> Chapa no incluida</div>
+                </div>
+                <div class="active-price-tag">
+                    <span class="tier-label bg-normal">Tarifa Normal</span>
+                    <span class="amount">$870</span>
+                </div>
+            </div>
+
+            <!-- EJEMPLO 2: MOSTRANDO TARIFA NOCHE -->
+            <div class="service-card-mock">
+                <div class="service-info-mock">
+                    <h3>Chapa Alta Seguridad</h3>
+                    <div class="info-note"><i class="fas fa-info-circle"></i> Mano de obra</div>
+                </div>
+                <div class="active-price-tag">
+                    <span class="tier-label bg-noche">Tarifa Noche</span>
+                    <span class="amount">$1,450</span>
+                </div>
+            </div>
+
+            <!-- EJEMPLO 3: MOSTRANDO TARIFA URGENTE -->
+            <div class="service-card-mock">
+                <div class="service-info-mock">
+                    <h3>Instalación de Pomo</h3>
+                    <div class="info-note"><i class="fas fa-info-circle"></i> Ajuste incluido</div>
+                </div>
+                <div class="active-price-tag">
+                    <span class="tier-label bg-urgente">Tarifa Urgente</span>
+                    <span class="amount">$1,450</span>
+                </div>
+            </div>
+
+        </div>
+
+        <a href="#" class="btn-select">Solicitar ahora</a>
+
+        <div style="margin-top: 30px; text-align: center; color: white; text-shadow: 1px 1px 2px black; opacity: 0.8; font-size: 11px; line-height: 1.4;">
+            <p>En este ejemplo solo aparece el precio de la <b>Tarifa Activa</b>.<br>
+            Tu amigo programará cuál de estos tres estados se debe mostrar según la hora, día o clima real.</p>
+        </div>
+    </div>
+
+</body>
+</html>

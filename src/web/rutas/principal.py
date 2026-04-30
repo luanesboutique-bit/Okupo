@@ -14,6 +14,10 @@ def index():
 def bienvenida_seleccion_rol():
     return render_template('seleccion_rol.html')
 
+@blueprint.route('/ejemplo')
+def ver_ejemplo():
+    return render_template('ejemplo_servicios.html')
+
 @blueprint.route('/unete')
 def landing_colaborador():
     return render_template('landing_colaborador.html')

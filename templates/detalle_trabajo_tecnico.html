@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Trabajo - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        /* CARD DE DETALLE */
+        .detail-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .detail-card h2 { margin: 0 0 15px 0; font-size: 22px; font-weight: 900; border-bottom: 2px solid rgba(139, 90, 43, 0.1); padding-bottom: 10px; }
+
+        .info-row { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; }
+        .info-row i { color: var(--color-dorado); font-size: 18px; margin-top: 3px; }
+        .info-row div { font-size: 14px; line-height: 1.4; }
+        .info-row b { display: block; font-size: 11px; text-transform: uppercase; opacity: 0.6; margin-bottom: 2px; }
+
+        /* MAPA MOCK */
+        .map-mock {
+            width: 100%;
+            height: 120px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 12px;
+            font-weight: 800;
+            border: 1px solid #ccc;
+            background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png');
+        }
+
+        /* EVIDENCIA FOTOGRÁFICA */
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .evidence-photo {
+            aspect-ratio: 1;
+            background: #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+        .evidence-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* GANANCIA DESTACADA */
+        .earnings-badge {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .earnings-badge span { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--color-texto); opacity: 0.8; }
+        .earnings-badge h4 { margin: 5px 0 0 0; font-size: 28px; font-weight: 900; color: var(--color-texto); }
+
+        /* ACCIONES */
+        .actions-tech {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-tech {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .btn-tech:active { transform: scale(0.95); }
+
+        .btn-accept {
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            color: var(--color-dorado);
+            border: 2px solid var(--color-texto);
+        }
+
+        .btn-visit {
+            background-image: url('/static/madera_clara.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Detalle del Trabajo</h1>
+        </div>
+
+        <div class="earnings-badge">
+            <span>Tu Ganancia Estimada</span>
+            <h4>$1,450.00</h4>
+        </div>
+
+        <div class="detail-card">
+            <h2>Instalación de Chapa</h2>
+            
+            <div class="info-row">
+                <i class="fas fa-user"></i>
+                <div>
+                    <b>Cliente</b>
+                    Roberto Mayoral
+                </div>
+            </div>
+
+            <div class="info-row">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                    <b>Ubicación</b>
+                    Colonia Arcos Vallarta, Guadalajara.<br>
+                    <span style="color: var(--color-dorado); font-weight: 800;">A 2.4 km de ti</span>
+                </div>
+            </div>
+
+            <div class="map-mock">
+                <i class="fas fa-map-marked-alt" style="margin-right: 10px;"></i> Ver Mapa Interactivo
+            </div>
+
+            <div class="info-row">
+                <i class="fas fa-align-left"></i>
+                <div>
+                    <b>Descripción del Problema</b>
+                    "La chapa principal se trabó y la llave no gira. Necesito cambio total de chapa por una de alta seguridad que yo ya compré."
+                </div>
+            </div>
+
+            <div class="info-row">
+                <i class="fas fa-camera"></i>
+                <div><b>Evidencia</b></div>
+            </div>
+            <div class="evidence-grid">
+                <div class="evidence-photo"><img src="https://images.pexels.com/photos/101808/pexels-photo-101808.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Evidencia 1"></div>
+                <div class="evidence-photo"><img src="https://images.pexels.com/photos/4246196/pexels-photo-4246196.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Evidencia 2"></div>
+            </div>
+        </div>
+
+        <div class="actions-tech">
+            <a href="#" class="btn-tech btn-accept">
+                Aceptar Trabajo Ahora
+            </a>
+            <a href="#" class="btn-tech btn-visit">
+                Solicitar Visita Técnica
+            </a>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 11px; text-align: center; color: white; opacity: 0.6; text-shadow: 1px 1px 2px black;">
+            Al aceptar, el cliente recibirá una notificación y se abrirá el chat de coordinación.
+        </p>
+    </div>
+
+</body>
+</html>
