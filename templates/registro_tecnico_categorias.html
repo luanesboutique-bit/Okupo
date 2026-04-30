@@ -3,55 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Técnico - Oficios</title>
+    <title>Registro Técnico - Seleccionar Oficios - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; font-family: 'Georgia', serif; color: #5a3e2b; padding: 20px; }
-        .contenedor { max-width: 600px; margin: auto; background-image: url('/static/madera_clara.jpg'); padding: 30px; border-radius: 20px; border: 3px solid #b89a7b; }
-        .paso { font-size: 14px; font-weight: bold; color: #8b5a2b; margin-bottom: 10px; }
-        .categoria-box { background: rgba(255,255,255,0.4); border: 2px solid #8b5a2b; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
-        .categoria-titulo { font-weight: bold; font-size: 20px; margin-bottom: 10px; display: flex; align-items: center; }
-        .categoria-titulo i { margin-right: 10px; }
-        .subcategoria { background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .precio-input { width: 100px; padding: 5px; border-radius: 5px; border: 1px solid #d4b89a; }
-        .boton { background-image: url('/static/madera_media.jpg'); color: #5a3e2b; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; border: 2px solid #8b5a2b; }
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ FUERZA EL FONDO Y ELIMINA NEGRO */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registro-container {
+            width: 90%;
+            max-width: 450px;
+            background: var(--color-crema) !important;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png') !important;
+            border-radius: 30px;
+            padding: 40px 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 2px solid rgba(139, 90, 43, 0.3);
+            position: relative;
+            margin: 20px;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        h2 { font-size: 24px; font-weight: 900; margin-bottom: 10px; text-align: center; color: var(--color-texto) !important; }
+        p.sub-guia { text-align: center; font-size: 14px; opacity: 0.7; margin-bottom: 30px; color: var(--color-texto) !important; }
+
+        .oficios-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .oficio-card {
+            position: relative;
+            background: rgba(255,255,255,0.6);
+            border: 2px solid #d4c5b3;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .oficio-card i { font-size: 30px; color: var(--color-texto); opacity: 0.6; }
+        .oficio-card span { font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--color-texto); }
+
+        .oficio-card input[type="checkbox"] { position: absolute; opacity: 0; }
+
+        .oficio-card:has(input:checked) {
+            border-color: var(--color-dorado);
+            background: white;
+            box-shadow: 0 5px 15px rgba(139, 90, 43, 0.1);
+        }
+
+        .oficio-card:has(input:checked) i { color: var(--color-dorado); opacity: 1; }
+
+        .btn-continuar {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            color: var(--color-texto);
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-retroceder {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--color-texto);
+            opacity: 0.6;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
     </style>
 </head>
 <body>
-    <div class="contenedor">
-        <div class="paso">PASO 2 DE 4</div>
-        <h2>Selecciona tus Oficios</h2>
-        <p>Elige lo que sabes hacer y define tu precio base por mano de obra.</p>
-        
-        <form action="{{ url_for('colaboradores.registro_tecnico_categorias') }}" method="POST">
-            {% for cat in categorias %}
-            <div class="categoria-box">
-                <div class="categoria-titulo">
-                    <i class="fas fa-tools"></i> {{ cat.nombre }}
-                </div>
-                
-                <!-- Aqui simularemos subcategorias para la demo, en produccion vendrian de la API -->
-                <div class="subcategoria">
-                    <label><input type="checkbox" name="sub_{{cat.id}}_1"> Instalación Estándar</label>
-                    <input type="number" class="precio-input" placeholder="$ Precio">
-                </div>
-                <div class="subcategoria">
-                    <label><input type="checkbox" name="sub_{{cat.id}}_2"> Reparación Básica</label>
-                    <input type="number" class="precio-input" placeholder="$ Precio">
-                </div>
-                <div class="subcategoria">
-                    <label><input type="checkbox" name="sub_{{cat.id}}_3"> Mantenimiento Preventivo</label>
-                    <input type="number" class="precio-input" placeholder="$ Precio">
-                </div>
-            </div>
-            {% endfor %}
 
-            <div class="categoria-box" style="border-style: dashed; text-align: center; cursor: pointer;">
-                <i class="fas fa-plus"></i> Solicitar nueva categoría
+    <div class="registro-container">
+        <div class="step-indicator">Paso 3 de 5</div>
+        
+        <h2>¿Qué sabes hacer?</h2>
+        <p class="sub-guia">Selecciona tus áreas de especialidad.</p>
+
+        <form action="{{ url_for('colaboradores.registro_tecnico_precios') }}" method="POST">
+            <div class="oficios-grid">
+                <label class="oficio-card">
+                    <input type="checkbox" name="categorias_seleccionadas" value="1">
+                    <i class="fas fa-key"></i>
+                    <span>Cerrajería</span>
+                </label>
+                <label class="oficio-card">
+                    <input type="checkbox" name="categorias_seleccionadas" value="2">
+                    <i class="fas fa-faucet"></i>
+                    <span>Plomería</span>
+                </label>
+                <label class="oficio-card">
+                    <input type="checkbox" name="categorias_seleccionadas" value="3">
+                    <i class="fas fa-bolt"></i>
+                    <span>Electricidad</span>
+                </label>
+                <label class="oficio-card">
+                    <input type="checkbox" name="categorias_seleccionadas" value="4">
+                    <i class="fas fa-spray-can-sparkles"></i>
+                    <span>Limpieza</span>
+                </label>
             </div>
-            
-            <button type="submit" class="boton">SIGUIENTE: TARIFAS <i class="fas fa-chevron-right"></i></button>
+
+            <button type="submit" class="btn-continuar">Definir Ganancias</button>
+            <a href="javascript:history.back()" class="btn-retroceder">
+                <i class="fas fa-arrow-left"></i> Volver al paso anterior
+            </a>
         </form>
     </div>
+
 </body>
 </html>

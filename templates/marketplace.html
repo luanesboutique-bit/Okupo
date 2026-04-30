@@ -15,8 +15,10 @@
         }
 
         body {
-            background-color: var(--color-crema);
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--color-texto);
             margin: 0;
@@ -169,7 +171,7 @@
                     <span class="amount">${{ col.precio_base or '850' }}</span>
                 </div>
 
-                <a href="{{ url_for('pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-seleccionar">
+                <a href="{{ url_for('pedidos.pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcat_id) }}" class="btn-seleccionar">
                     Elegir Experto
                 </a>
             </div>

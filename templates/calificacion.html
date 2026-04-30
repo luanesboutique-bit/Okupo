@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calificar Servicio - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-estrella: #f1c40f;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .feedback-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 40px;
+            padding: 35px 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            border: 2px solid var(--color-dorado);
+            position: relative;
+        }
+
+        .avatar-tecnico {
+            width: 90px;
+            height: 90px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            margin: -80px auto 20px auto;
+            border: 4px solid var(--color-dorado);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            color: var(--color-dorado);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        h2 { font-size: 24px; font-weight: 900; margin-bottom: 10px; }
+        p.subtitulo { font-size: 14px; opacity: 0.7; margin-bottom: 30px; line-height: 1.4; }
+
+        /* ESTRELLAS */
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 35px;
+        }
+
+        .star-btn {
+            font-size: 35px;
+            color: #ddd;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+        }
+        .star-btn.active {
+            color: var(--color-estrella);
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
+            transform: scale(1.2);
+        }
+
+        /* ASPECTOS A CALIFICAR */
+        .aspectos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .aspecto-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            opacity: 0.6;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 15px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .aspecto-item i { font-size: 20px; color: var(--color-texto); }
+        .aspecto-item.selected {
+            background: white;
+            border-color: var(--color-dorado);
+            opacity: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* COMENTARIO */
+        .comment-box {
+            width: 100%;
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+            outline: none;
+            resize: none;
+        }
+
+        /* BOTON FINAL */
+        .btn-enviar {
+            width: 100%;
+            padding: 20px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 20px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div style="height: 60px;"></div> <!-- Espacio para el avatar -->
+
+        <form action="{{ url_for('principal.index') }}" class="feedback-card">
+            <div class="avatar-tecnico">
+                <i class="fas fa-user-check"></i>
+            </div>
+
+            <h2>¡Trabajo Terminado!</h2>
+            <p class="subtitulo">Tu opinión es muy importante para mantener la calidad en Okupo. ¿Cómo calificarías a tu experto?</p>
+
+            <div class="stars-container" id="stars">
+                <i class="fas fa-star star-btn" data-value="1"></i>
+                <i class="fas fa-star star-btn" data-value="2"></i>
+                <i class="fas fa-star star-btn" data-value="3"></i>
+                <i class="fas fa-star star-btn" data-value="4"></i>
+                <i class="fas fa-star star-btn" data-value="5"></i>
+            </div>
+
+            <div class="aspectos-grid">
+                <div class="aspecto-item" onclick="toggleAspecto(this)">
+                    <i class="fas fa-clock"></i>
+                    <span>Puntualidad</span>
+                </div>
+                <div class="aspecto-item" onclick="toggleAspecto(this)">
+                    <i class="fas fa-broom"></i>
+                    <span>Limpieza</span>
+                </div>
+                <div class="aspecto-item" onclick="toggleAspecto(this)">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Calidad</span>
+                </div>
+            </div>
+
+            <textarea class="comment-box" rows="3" placeholder="Escribe un breve comentario sobre el servicio..."></textarea>
+
+            <button type="submit" class="btn-enviar">Enviar Calificación</button>
+            
+            <a href="{{ url_for('principal.index') }}" style="display: block; margin-top: 20px; font-size: 13px; opacity: 0.5; color: var(--color-texto); text-decoration: none; font-weight: 700;">
+                Omitir por ahora
+            </a>
+        </form>
+    </div>
+
+    <script>
+        // Lógica de estrellas
+        const stars = document.querySelectorAll('.star-btn');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = star.getAttribute('data-value');
+                stars.forEach(s => {
+                    if(s.getAttribute('data-value') <= val) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Lógica de aspectos
+        function toggleAspecto(el) {
+            el.classList.toggle('selected');
+        }
+    </script>
+</body>
+</html>

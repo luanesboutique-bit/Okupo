@@ -3,44 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Técnico - Precios</title>
+    <title>Registro Técnico - Definir Tarifas - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; font-family: 'Georgia', serif; color: #5a3e2b; padding: 20px; }
-        .contenedor { max-width: 500px; margin: auto; background-image: url('/static/madera_clara.jpg'); padding: 30px; border-radius: 20px; border: 3px solid #b89a7b; }
-        .paso { font-size: 14px; font-weight: bold; color: #8b5a2b; margin-bottom: 10px; }
-        .campo { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #d4b89a; box-sizing: border-box; }
-        .boton { background-image: url('/static/madera_media.jpg'); color: #5a3e2b; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; border: 2px solid #8b5a2b; }
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ FUERZA EL FONDO Y ELIMINA NEGRO */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registro-container {
+            width: 90%;
+            max-width: 480px;
+            background: var(--color-crema) !important;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png') !important;
+            border-radius: 30px;
+            padding: 40px 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 2px solid rgba(139, 90, 43, 0.3);
+            position: relative;
+            margin: 20px;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        h2 { font-size: 24px; font-weight: 900; margin-bottom: 10px; text-align: center; color: var(--color-texto) !important; }
+        p.sub-guia { text-align: center; font-size: 14px; opacity: 0.7; margin-bottom: 30px; color: var(--color-texto) !important; }
+
+        .servicio-config {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid #d4c5b3;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .servicio-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .servicio-header h3 { margin: 0; font-size: 16px; font-weight: 800; text-transform: uppercase; color: var(--color-texto); }
+
+        .tarifa-row { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .tarifa-label { font-size: 13px; font-weight: 700; color: var(--color-texto); }
+
+        .input-precio { position: relative; }
+        .input-precio span { position: absolute; left: 10px; top: 8px; font-weight: 800; opacity: 0.5; }
+        .input-precio input { width: 100%; padding: 8px 8px 8px 25px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-weight: 800; }
+
+        .btn-continuar {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            color: var(--color-texto);
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-retroceder {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--color-texto);
+            opacity: 0.6;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
     </style>
 </head>
 <body>
-    <div class="contenedor">
-        <div class="paso">PASO 2 DE 3</div>
-        <h2>Configuración de Tarifas</h2>
-        <p>Define cuánto quieres ganar por traslados y recargos especiales.</p>
+
+    <div class="registro-container">
+        <div class="step-indicator">Paso 4 de 5</div>
         
-        <form action="{{ url_for('colaboradores.registro_tecnico_precios') }}" method="POST">
-            <div class="campo">
-                <label>Precio por Kilómetro de Traslado ($)</label>
-                <input type="number" step="0.01" name="precio_km" value="10.00" required>
+        <h2>Define tus Ganancias</h2>
+        <p class="sub-guia">Tú decides cuánto cobrar por tu trabajo.</p>
+
+        <form action="{{ url_for('colaboradores.registro_tecnico_horarios') }}" method="POST">
+            <div class="servicio-config">
+                <div class="servicio-header">
+                    <i class="fas fa-tools" style="color: var(--color-dorado);"></i>
+                    <h3>Configuración de Precios</h3>
+                </div>
+                <div class="tarifa-row">
+                    <div class="tarifa-label">Día Normal</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_normal" required></div>
+                </div>
+                <div class="tarifa-row">
+                    <div class="tarifa-label">Horario Noche</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_noche" required></div>
+                </div>
+                <div class="tarifa-row">
+                    <div class="tarifa-label">Urgente/Festivo</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_urgente" required></div>
+                </div>
             </div>
-            <div class="campo">
-                <label>Recargo por Lluvia ($)</label>
-                <input type="number" step="0.01" name="recargo_lluvia" value="100.00" required>
-            </div>
-            <div class="campo">
-                <label>Recargo por Domingo / Festivo ($)</label>
-                <input type="number" step="0.01" name="recargo_domingo" value="150.00" required>
-            </div>
-            <div class="campo">
-                <label>Recargo Nocturno (20:00 - 06:00) ($)</label>
-                <input type="number" step="0.01" name="recargo_nocturno" value="200.00" required>
-            </div>
-            
-            <button type="submit" class="boton">SIGUIENTE: HORARIOS <i class="fas fa-chevron-right"></i></button>
+
+            <button type="submit" class="btn-continuar">Configurar Horarios</button>
+            <a href="javascript:history.back()" class="btn-retroceder">
+                <i class="fas fa-arrow-left"></i> Volver al paso anterior
+            </a>
         </form>
     </div>
+
 </body>
 </html>

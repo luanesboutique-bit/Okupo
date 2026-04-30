@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Pedido - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-rojo: #e74c3c;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header a { 
+            color: var(--color-texto); 
+            font-size: 24px; 
+            text-shadow: 0 0 8px white; 
+        }
+        .header h1 { 
+            flex: 1; 
+            font-size: 20px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 10px white;
+            margin: 0;
+        }
+
+        /* RESUMEN DEL PEDIDO */
+        .resumen-card {
+            background: rgba(253, 250, 245, 0.9);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .resumen-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 22px;
+            font-weight: 900;
+            border-bottom: 2px solid rgba(139, 90, 43, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .detalle-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .detalle-item span:first-child { font-weight: 800; opacity: 0.6; }
+        .detalle-item span:last-child { font-weight: 900; }
+
+        /* POLÍTICA DE MATERIALES */
+        .politica-box {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 30px;
+            text-align: left;
+            border: 1px solid var(--color-rojo);
+        }
+
+        .politica-box h4 {
+            color: var(--color-rojo);
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .politica-box p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .politica-box ul {
+            padding-left: 20px;
+            margin: 10px 0 0 0;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* BOTON FINAL */
+        .btn-confirmar {
+            width: 100%;
+            padding: 20px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 20px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 20px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+        }
+        .btn-confirmar:active { transform: scale(0.95); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Confirmación</h1>
+        </div>
+
+        <div class="resumen-card">
+            <h3>Resumen del Servicio</h3>
+            
+            <div class="detalle-item">
+                <span>Servicio:</span>
+                <span>{{ nombre_servicio or 'Apertura de Puerta' }}</span>
+            </div>
+            <div class="detalle-item">
+                <span>Tarifa Aplicada:</span>
+                <span style="color: #27ae60;">{{ tarifa_tipo or 'Normal' }}</span>
+            </div>
+            <div class="detalle-item">
+                <span>Precio Mano de Obra:</span>
+                <span style="font-size: 20px;">${{ precio or '870' }}</span>
+            </div>
+            <div class="detalle-item" style="margin-top: 15px; border-top: 1px dashed #ddd; padding-top: 15px;">
+                <span>Experto:</span>
+                <span>{{ nombre_colaborador or 'Asignación Rápida' }}</span>
+            </div>
+        </div>
+
+        <div class="politica-box">
+            <h4><i class="fas fa-exclamation-triangle"></i> IMPORTANTE</h4>
+            <p>Este precio <b>SOLO INCLUYE</b> la mano de obra y el uso de herramientas profesionales.</p>
+            <ul>
+                <li>Los materiales (chapas, tubos, cables, etc.) NO están incluidos.</li>
+                <li>El técnico te enviará la lista de materiales por el chat.</li>
+                <li>Puedes comprarlos tú o pedirlos al técnico (pago directo).</li>
+            </ul>
+        </div>
+
+        <form action="{{ url_for('pedidos.finalizar_pedido') }}" method="POST">
+            <!-- Datos ocultos para la API -->
+            <input type="hidden" name="subcategoria_id" value="{{ subcat_id }}">
+            <input type="hidden" name="colaborador_id" value="{{ colaborador_id }}">
+            <input type="hidden" name="descripcion" value="{{ descripcion }}">
+            <input type="hidden" name="latitud" value="{{ latitud }}">
+            <input type="hidden" name="longitud" value="{{ longitud }}">
+            
+            <button type="submit" class="btn-confirmar">Confirmar y Pedir</button>
+        </form>
+
+        <p style="margin-top: 20px; font-size: 11px; opacity: 0.5; color: white;">
+            Al confirmar, aceptas que el pago se realizará al finalizar el servicio.
+        </p>
+    </div>
+
+</body>
+</html>

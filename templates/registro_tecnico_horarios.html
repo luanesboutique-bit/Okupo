@@ -3,45 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Técnico - Horarios</title>
+    <title>Registro Técnico - Horarios - Okupo</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; font-family: 'Georgia', serif; color: #5a3e2b; padding: 20px; }
-        .contenedor { max-width: 600px; margin: auto; background-image: url('/static/madera_clara.jpg'); padding: 30px; border-radius: 20px; border: 3px solid #b89a7b; }
-        .paso { font-size: 14px; font-weight: bold; color: #8b5a2b; margin-bottom: 10px; }
-        .grid-dias { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 30px; }
-        .dia { background: rgba(255,255,255,0.5); padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #d4b89a; }
-        .dia input[type="checkbox"] { margin-bottom: 10px; }
-        input[type="time"] { width: 100%; border-radius: 5px; border: 1px solid #d4b89a; }
-        .boton { background-image: url('/static/madera_media.jpg'); color: #5a3e2b; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; border: 2px solid #8b5a2b; }
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ FUERZA EL FONDO Y ELIMINA NEGRO */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registro-container {
+            width: 90%;
+            max-width: 480px;
+            background: var(--color-crema) !important;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png') !important;
+            border-radius: 30px;
+            padding: 40px 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 2px solid rgba(139, 90, 43, 0.3);
+            position: relative;
+            margin: 20px;
+        }
+
+        .step-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        h2 { font-size: 24px; font-weight: 900; margin-bottom: 10px; text-align: center; color: var(--color-texto) !important; }
+        p.sub-guia { text-align: center; font-size: 14px; opacity: 0.7; margin-bottom: 30px; color: var(--color-texto) !important; }
+
+        .horarios-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; }
+        .dia-row { display: grid; grid-template-columns: 100px 1fr; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.5); border-radius: 15px; border: 1px solid #d4c5b3; }
+        .dia-label { font-weight: 800; font-size: 14px; text-transform: capitalize; color: var(--color-texto); }
+        .time-inputs { display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
+        .time-inputs input { padding: 5px; border-radius: 8px; border: 1px solid #ddd; font-size: 12px; font-weight: 800; }
+
+        .btn-finalizar {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-radius: 15px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
     </style>
 </head>
 <body>
-    <div class="contenedor">
-        <div class="paso">PASO 3 DE 3</div>
-        <h2>Horario Semanal</h2>
-        <p>Selecciona los días y horas en los que estarás disponible para recibir trabajos.</p>
+
+    <div class="registro-container">
+        <div class="step-indicator">Paso 5 de 5</div>
         
-        <form action="{{ url_for('colaboradores.registro_tecnico_horarios') }}" method="POST">
-            <div class="grid-dias">
-                {% for i in range(1, 7) %}
-                <div class="dia">
-                    <label>{{ ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"][i-1] }}</label><br>
-                    <input type="checkbox" name="dia_{{i}}_activo" checked> Activo<br>
-                    <input type="time" name="dia_{{i}}_inicio" value="08:00"><br>
-                    <input type="time" name="dia_{{i}}_fin" value="18:00">
+        <h2>Tu Disponibilidad</h2>
+        <p class="sub-guia">Define tus horarios de servicio.</p>
+
+        <form action="{{ url_for('colaboradores.finalizar_registro') }}" method="POST">
+            <div class="horarios-list">
+                {% set dias = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'] %}
+                {% for dia in dias %}
+                <div class="dia-row">
+                    <div class="dia-label">{{ dia }}</div>
+                    <div class="time-inputs">
+                        <input type="time" name="dia_{{ loop.index0 }}_inicio" value="08:00">
+                        <span style="font-weight: 800; opacity: 0.5;">-</span>
+                        <input type="time" name="dia_{{ loop.index0 }}_fin" value="18:00">
+                    </div>
                 </div>
                 {% endfor %}
-                <div class="dia">
-                    <label>Domingo</label><br>
-                    <input type="checkbox" name="dia_0_activo"> Activo<br>
-                    <input type="time" name="dia_0_inicio" value="09:00"><br>
-                    <input type="time" name="dia_0_fin" value="14:00">
-                </div>
             </div>
-            
-            <button type="submit" class="boton">FINALIZAR REGISTRO <i class="fas fa-check-circle"></i></button>
+
+            <button type="submit" class="btn-finalizar">Finalizar Registro</button>
         </form>
     </div>
+
 </body>
 </html>

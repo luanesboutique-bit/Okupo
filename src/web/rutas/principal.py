@@ -10,6 +10,10 @@ def index():
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada. Inicia sesión de nuevo."))
     return render_template('index.html', categorias=categorias or [])
 
+@blueprint.route('/bienvenida')
+def bienvenida_seleccion_rol():
+    return render_template('seleccion_rol.html')
+
 @blueprint.route('/unete')
 def landing_colaborador():
     return render_template('landing_colaborador.html')

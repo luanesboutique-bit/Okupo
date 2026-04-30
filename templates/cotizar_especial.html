@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización Especial - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; }
+
+        .form-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            color: var(--color-texto);
+            padding-left: 5px;
+        }
+
+        .input-group textarea, .input-group input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            background: white;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-group textarea:focus { border-color: var(--color-dorado); }
+
+        /* CARGA DE FOTOS */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .photo-upload {
+            aspect-ratio: 1;
+            border: 2px dashed #d4af37;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.2s;
+        }
+        .photo-upload:hover { background: white; }
+        .photo-upload i { font-size: 24px; color: var(--color-dorado); margin-bottom: 5px; }
+        .photo-upload span { font-size: 10px; font-weight: 700; opacity: 0.6; }
+
+        /* BOTON FINAL */
+        .btn-enviar {
+            width: 100%;
+            padding: 20px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 20px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Cotización Especial</h1>
+        </div>
+
+        <form action="{{ url_for('pedidos.mis_pedidos') }}" method="POST" class="form-card">
+            <div class="input-group">
+                <label>¿Qué necesitas reparar?</label>
+                <textarea name="descripcion_trabajo" rows="4" placeholder="Describe a detalle el problema o trabajo que requieres..." required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Fotos del Problema (Opcional)</label>
+                <div class="photo-grid">
+                    <div class="photo-upload" onclick="alert('Funcionalidad de cámara')">
+                        <i class="fas fa-camera"></i>
+                        <span>Foto 1</span>
+                    </div>
+                    <div class="photo-upload" onclick="alert('Funcionalidad de cámara')">
+                        <i class="fas fa-camera"></i>
+                        <span>Foto 2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Presupuesto Estimado (Opcional)</label>
+                <div style="position: relative;">
+                    <span style="position: absolute; left: 15px; top: 15px; font-weight: 800; opacity: 0.5;">$</span>
+                    <input type="number" name="presupuesto_estimado" placeholder="Cantidad que planeas invertir" style="padding-left: 30px;">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Urgencia</label>
+                <select name="nivel_urgencia" style="width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #ddd; background: white; font-family: inherit; font-weight: 700;">
+                    <option value="baja">Puedo esperar (Cotizar con calma)</option>
+                    <option value="media" selected>Normal (Próximos días)</option>
+                    <option value="alta">Urgente (Hoy mismo)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-enviar">Solicitar Cotizaciones</button>
+        </form>
+
+        <p style="margin-top: 30px; font-size: 12px; opacity: 0.8; line-height: 1.4; color: white; text-shadow: 1px 1px 2px black;">
+            Expertos cercanos revisarán tu solicitud y te enviarán sus propuestas económicas directamente al chat.
+        </p>
+    </div>
+
+</body>
+</html>

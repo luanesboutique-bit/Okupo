@@ -18,8 +18,10 @@
 
         /* ESTILO GENERAL */
         body {
-            background-color: var(--color-crema);
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); /* Textura sutil */
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--color-texto);
             margin: 0;
@@ -32,8 +34,7 @@
             width: 100%;
             max-width: 450px; /* Tamaño móvil ideal */
             min-height: 100vh;
-            background: var(--color-crema);
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: transparent !important;
             position: relative;
             padding-bottom: 30px;
         }
@@ -42,7 +43,7 @@
         .decoracion-esquina {
             position: absolute;
             width: 100px;
-            opacity: 0.15;
+            opacity: 0.3;
             pointer-events: none;
         }
         .top-left { top: 0; left: 0; transform: rotate(0deg); }
@@ -55,9 +56,21 @@
             justify-content: space-between;
             align-items: center;
         }
-        .header i { font-size: 24px; color: var(--color-texto); cursor: pointer; transition: transform 0.2s; }
+        .header i { 
+            font-size: 24px; 
+            color: #5a3e2b; /* Café Oscuro */
+            cursor: pointer; 
+            transition: transform 0.2s; 
+            text-shadow: 0 0 8px rgba(255,255,255,0.4); 
+        }
         .header i:active { transform: scale(0.9); }
-        .logo { font-size: 32px; font-weight: bold; letter-spacing: 2px; }
+        .logo { 
+            font-size: 32px; 
+            font-weight: bold; 
+            letter-spacing: 2px; 
+            color: #5a3e2b; /* Café Oscuro */
+            text-shadow: 0 0 8px rgba(255,255,255,0.4); 
+        }
 
         /* SIDEBAR / MENÚ LATERAL */
         .sidebar {
@@ -153,13 +166,13 @@
         /* BUSCADOR */
         .search-box {
             margin: 0 20px 15px 20px;
-            background: rgba(255,255,255,0.9);
-            border: 1px solid #e0d5c5;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 25px;
             padding: 10px 20px;
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
         .search-box i { color: #a09080; margin-right: 10px; }
         .search-box span { color: #a09080; font-size: 16px; }
@@ -171,16 +184,20 @@
             align-items: center;
             font-size: 14px;
             cursor: pointer;
+            color: #5a3e2b; /* Café Oscuro */
+            text-shadow: 0 0 8px rgba(255,255,255,0.4);
         }
-        .location i:first-child { color: #8b5a2b; margin-right: 8px; }
-        .location span { font-weight: 600; }
+        .location i:first-child { color: var(--color-dorado-oscuro); margin-right: 8px; }
+        .location span { font-weight: 800; }
         .location i:last-child { margin-left: 5px; font-size: 12px; }
 
         /* SECCIONES */
         .section-title {
             margin: 0 20px 20px 20px;
             font-size: 22px;
-            font-weight: 700;
+            font-weight: 800;
+            color: #5a3e2b; /* Café Oscuro */
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
         }
 
         /* GRID PIEDRAS (Servicios Express) */
@@ -338,15 +355,19 @@
         }
 
         .urgencia {
-            background: linear-gradient(135deg, #e65c00, #f9d423); /* Naranja/Rojizo madera */
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            color: #ffff00; /* Amarillo brillante para máximo impacto */
+            text-shadow: 2px 2px 3px rgba(0,0,0,1); /* Sombra negra definida */
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            border: 2px solid #3d2b1f;
+            font-size: 20px; /* Tamaño de letra aumentado */
+            font-weight: 900; /* Negrita extra */
         }
-        .urgencia i { font-size: 20px; }
+        .urgencia i { font-size: 22px; color: #ffff00; filter: drop-shadow(0 0 5px rgba(0,0,0,1)); }
 
         .cotizar {
             background-image: url('/static/madera_clara.jpg');
@@ -388,16 +409,16 @@
                 
                 <a href="#" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 12. Urgencia 24/7</a>
                 <a href="#" class="menu-item"><i class="fas fa-info-circle"></i> 13. Información y Políticas</a>
-                <a href="{{ url_for('mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 14. Mi Perfil / Historial</a>
+                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 14. Mi Perfil / Historial</a>
                 <a href="#" class="menu-item"><i class="fas fa-star"></i> 15. Calificaciones</a>
                 <a href="#" class="menu-item"><i class="fas fa-shield-alt"></i> 16. Centro de Ayuda / Soporte</a>
                 
                 {% if session.get('user_id') %}
-                    <a href="{{ url_for('logout') }}" class="menu-item" style="border-top: 1px solid #ddd; margin-top: 10px;">
+                    <a href="{{ url_for('autenticacion.logout') }}" class="menu-item" style="border-top: 1px solid #ddd; margin-top: 10px;">
                         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                     </a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="menu-item highlight" style="border-top: 1px solid #ddd; margin-top: 10px;">
+                    <a href="{{ url_for('autenticacion.login') }}" class="menu-item highlight" style="border-top: 1px solid #ddd; margin-top: 10px;">
                         <i class="fas fa-sign-in-alt"></i> 17. Iniciar Sesión / Registrarse
                     </a>
                 {% endif %}
@@ -416,9 +437,9 @@
             <i class="fas fa-bars" onclick="toggleMenu()"></i>
             <div class="logo">okupo</div>
             {% if session.get('user_id') %}
-                <a href="{{ url_for('logout') }}" title="Cerrar Sesión" style="color: inherit; text-decoration: none;"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="{{ url_for('autenticacion.logout') }}" title="Cerrar Sesión" style="color: inherit; text-decoration: none;"><i class="fas fa-sign-out-alt"></i></a>
             {% else %}
-                <a href="{{ url_for('login') }}" style="color: inherit; text-decoration: none;"><i class="fas fa-user-circle"></i></a>
+                <a href="{{ url_for('autenticacion.login') }}" style="color: inherit; text-decoration: none;"><i class="fas fa-user-circle"></i></a>
             {% endif %}
         </div>
 
@@ -517,7 +538,7 @@
             
             // Verificación de Token / Redirección (Simulado aquí, manejado por Flask)
             {% if session.get('token') == 'UNAUTHORIZED' %}
-                window.location.href = "{{ url_for('login') }}";
+                window.location.href = "{{ url_for('autenticacion.login') }}";
             {% endif %}
         });
     </script>

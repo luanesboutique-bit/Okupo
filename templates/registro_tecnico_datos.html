@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Técnico - Datos Personales - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ FUERZA EL FONDO DE PARED Y ELIMINA CUALQUIER NEGRO */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registro-container {
+            width: 90%;
+            max-width: 450px;
+            background: var(--color-crema) !important;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png') !important;
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 2px solid rgba(139, 90, 43, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Paso del Registro */
+        .step-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            text-align: center;
+            color: var(--color-texto) !important;
+        }
+
+        p.sub-guia {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            color: var(--color-texto) !important;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-texto);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: var(--color-dorado);
+            font-size: 18px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 15px;
+            border: 1px solid #d4c5b3;
+            background: rgba(255,255,255,0.7);
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.2s;
+            color: var(--color-texto);
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--color-texto);
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.1);
+        }
+
+        .btn-continuar {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            color: var(--color-texto);
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-top: 10px;
+            text-transform: uppercase;
+            transition: transform 0.2s;
+        }
+        .btn-continuar:active { transform: scale(0.98); }
+
+        .footer-info {
+            margin-top: 25px;
+            font-size: 11px;
+            text-align: center;
+            opacity: 0.6;
+            line-height: 1.4;
+            color: var(--color-texto);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="registro-container">
+        <div class="step-indicator">Paso 1 de 5</div>
+        
+        <h2>Datos Personales</h2>
+        <p class="sub-guia">Completa tu perfil para que podamos verificarte.</p>
+
+        <form action="{{ url_for('colaboradores.registro_tecnico_documentos') }}" method="POST">
+            <div class="input-group">
+                <label>Nombre Completo</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="nombre_completo" placeholder="Nombre y Apellidos" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Teléfono de Contacto</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-phone-alt"></i>
+                    <input type="tel" name="telefono_verificacion" placeholder="10 dígitos" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="correo_electronico" placeholder="correo@ejemplo.com" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Zona de Trabajo</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" name="zona_trabajo" placeholder="Ciudad o Municipio" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-continuar">Siguiente Paso</button>
+        </form>
+
+        <div class="footer-info">
+            Tus datos están protegidos por nuestras políticas de seguridad. Al continuar, aceptas los términos de servicio.
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información y Políticas - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; }
+
+        /* SECCIONES DE POLÍTICA */
+        .policy-card {
+            background: rgba(253, 250, 245, 0.9);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border: 1px solid rgba(139, 90, 43, 0.2);
+            text-align: left;
+        }
+
+        .policy-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            padding: 10px 15px;
+            border-radius: 15px;
+            color: var(--color-texto);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .policy-header i { font-size: 20px; color: var(--color-dorado); filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5)); }
+        .policy-header h3 { margin: 0; font-size: 16px; font-weight: 900; text-transform: uppercase; }
+
+        .policy-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--color-texto);
+        }
+
+        .policy-content ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .policy-content li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            font-weight: 800;
+            color: #c0392b;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            opacity: 0.8;
+            padding-bottom: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Políticas Okupo</h1>
+        </div>
+
+        <!-- Materiales -->
+        <div class="policy-card">
+            <div class="policy-header">
+                <i class="fas fa-box-open"></i>
+                <h3>Sobre los Materiales</h3>
+            </div>
+            <div class="policy-content">
+                <p>En Okupo, buscamos transparencia total. Por ello, es importante recordar:</p>
+                <ul>
+                    <li>Los precios listados <span class="highlight">NO INCLUYEN</span> materiales (tubos, cables, chapas, pintura, etc.).</li>
+                    <li>El pago cubre exclusivamente la <span style="font-weight: 800;">mano de obra experta</span> y el uso de herramientas especializadas.</li>
+                    <li>El técnico te enviará una lista detallada por el chat una vez evaluado el problema.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Proceso de Compra -->
+        <div class="policy-card">
+            <div class="policy-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>¿Cómo comprar materiales?</h3>
+            </div>
+            <div class="policy-content">
+                <p>Tienes dos opciones sencillas:</p>
+                <ol>
+                    <li style="margin-bottom: 10px;"><b>Tú los compras:</b> Puedes ir a la ferretería de tu preferencia con la lista que te dé el técnico.</li>
+                    <li><b>El técnico los compra:</b> Puedes pedirle al experto que los adquiera por ti. En este caso, el pago de materiales es <span style="font-weight: 800;">directo al técnico</span> contra entrega de ticket.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Garantía -->
+        <div class="policy-card">
+            <div class="policy-header">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Garantía de Servicio</h3>
+            </div>
+            <div class="policy-content">
+                <p>Tu tranquilidad es nuestra prioridad:</p>
+                <ul>
+                    <li>Todos nuestros colaboradores han pasado por un proceso de <span style="font-weight: 800;">verificación de identidad</span>.</li>
+                    <li>Los trabajos realizados a través de la plataforma cuentan con respaldo en caso de incidencias técnicas.</li>
+                    <li>Te recomendamos calificar siempre al finalizar para mantener el estándar de calidad.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Okupo — Conectando confianza con soluciones.<br>
+            v1.0.2 - 2026
+        </div>
+    </div>
+
+</body>
+</html>

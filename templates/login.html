@@ -16,8 +16,10 @@
         }
 
         body {
-            background-color: var(--color-crema);
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--color-texto);
             margin: 0;
@@ -181,11 +183,11 @@
 
         <div class="professional-link">
             <p>¿Eres un profesional del hogar?</p>
-            <a href="/registro?rol=colaborador">Regístrate como Técnico Aquí</a>
+            <a href="{{ url_for('autenticacion.registro', rol='colaborador') }}">Regístrate como Técnico Aquí</a>
         </div>
         
         <p style="margin-top: 30px; font-size: 13px; opacity: 0.5;">
-            ¿No tienes cuenta? <a href="/registro" style="color: var(--color-texto); font-weight: 700;">Regístrate como cliente</a>
+            ¿No tienes cuenta? <a href="{{ url_for('autenticacion.registro') }}" style="color: var(--color-texto); font-weight: 700;">Regístrate como cliente</a>
         </p>
     </div>
 
