@@ -101,3 +101,20 @@ def finalizar_registro():
     for clave in claves_a_limpiar: session.pop(clave, None)
 
     return redirect(url_for('principal.index', registro_exitoso=True))
+
+@blueprint.route('/dashboard')
+@login_requerido
+def dashboard_tecnico():
+    # En un entorno real, aquí buscaríamos los trabajos asignados al colaborador
+    return render_template('dashboard_tecnico.html')
+
+@blueprint.route('/evidencia/<int:solicitud_id>')
+@login_requerido
+def evidencia_fotografica(solicitud_id):
+    return render_template('evidencia_fotografica.html', solicitud_id=solicitud_id)
+
+@blueprint.route('/trabajo/<int:solicitud_id>')
+@login_requerido
+def ver_trabajo(solicitud_id):
+    # Simula la vista de un trabajo para cotizar
+    return render_template('ver_trabajo_tecnico.html', solicitud_id=solicitud_id)

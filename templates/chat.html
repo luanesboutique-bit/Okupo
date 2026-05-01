@@ -12,26 +12,28 @@
             --color-crema: #fdfaf5;
             --color-texto: #5a3e2b;
             --color-dorado: #d4af37;
-            --color-mensaje-usuario: #e0d5c5;
-            --color-mensaje-otro: #ffffff;
+            --color-seguridad: #2980b9;
         }
 
-        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        /* 🛠️ ESTILO UNIFICADO "OKUPO" */
         html, body {
             background-color: var(--color-crema) !important;
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; /* Evita scroll en body, usamos el contenedor */
         }
 
         body {
             background-image: url('/static/fondo_pared.jpg') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
-            background-position: center !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--color-texto);
             display: flex;
             justify-content: center;
+        }
+
+        /* MODO URGENCIA ACTIVO */
+        .modo-urgencia-activo, .modo-urgencia-activo html, .modo-urgencia-activo body {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
         }
 
         .app-container {
@@ -44,180 +46,271 @@
             position: relative;
         }
 
-        /* HEADER */
-        .header {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            background: rgba(253, 250, 245, 0.9);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-        .header a { color: var(--color-texto); font-size: 20px; margin-right: 15px; }
-        .header .user-info { flex: 1; display: flex; align-items: center; gap: 10px; }
-        .header .user-info .avatar { width: 35px; height: 35px; background: var(--color-dorado); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; border: 1px solid var(--color-texto); }
-        .header .user-info span { font-weight: 800; font-size: 16px; }
-
-        /* HERRAMIENTAS ESPECIALES (Lista/Indicaciones) */
-        .chat-tools {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 10px 15px;
-            background: rgba(0,0,0,0.05);
-            backdrop-filter: blur(5px);
+        .modo-urgencia-activo .app-container {
+            background-color: #ff8c00 !important;
+            padding-top: 40px;
         }
 
-        .tool-btn {
-            background-image: url('/static/madera_clara.jpg');
-            background-size: cover;
-            border-radius: 12px;
-            padding: 8px;
-            text-decoration: none;
-            color: var(--color-texto);
-            font-size: 11px;
-            font-weight: 800;
+        .banner-urgencia {
+            display: none;
+            background: #ff0000;
+            color: #ffffff;
+            padding: 8px 10px;
             text-align: center;
+            font-weight: 900;
+            font-size: 12px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 4000;
+            text-transform: uppercase;
+        }
+
+        .modo-urgencia-activo .banner-urgencia { display: block; }
+
+        /* BANNER DE SEGURIDAD */
+        .seguridad-chat {
+            background: var(--color-seguridad);
+            color: white;
+            padding: 10px;
+            font-size: 11px;
+            text-align: center;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* ÁREA DE MENSAJES */
+        .header {
+            padding: 15px 20px;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .header a { color: var(--color-texto); font-size: 20px; }
+        .header .user-info { flex: 1; }
+        .header .user-info h2 { margin: 0; font-size: 16px; font-weight: 900; }
+        .header .user-info span { font-size: 11px; opacity: 0.6; font-weight: 700; }
+
+        .btn-call {
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dorado);
+            border: 2px solid var(--color-texto);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
         .messages-area {
             flex: 1;
+            padding: 20px;
             overflow-y: auto;
-            padding: 20px 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        .bubble {
+        .message {
             max-width: 80%;
-            padding: 12px 16px;
+            padding: 12px 18px;
             border-radius: 20px;
-            font-size: 15px;
+            font-size: 14px;
+            font-weight: 600;
             line-height: 1.4;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .mine {
-            align-self: flex-end;
-            background: var(--color-mensaje-usuario);
-            color: var(--color-texto);
-            border-bottom-right-radius: 4px;
-        }
-
-        .other {
+        .received {
             align-self: flex-start;
-            background: var(--color-mensaje-otro);
+            background: white;
             color: var(--color-texto);
-            border-bottom-left-radius: 4px;
-            border: 1px solid #eee;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .timestamp {
-            font-size: 9px;
-            opacity: 0.5;
-            margin-top: 5px;
-            display: block;
-            text-align: right;
+        .sent {
+            align-self: flex-end;
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* BARRA DE ENTRADA */
-        .input-bar {
-            padding: 15px;
-            background: rgba(253, 250, 245, 0.95);
+        /* FILTRO DE SEGURIDAD PARA DATOS SENSIBLES */
+        .data-blocked {
+            background: #eee;
+            color: #e74c3c;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        .chat-tools {
+            padding: 10px 20px;
+            display: flex;
+            gap: 10px;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .tool-btn {
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: white;
+            border: 1px solid var(--color-dorado);
+            color: var(--color-texto);
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            gap: 5px;
         }
 
-        .input-bar input {
+        .input-area {
+            padding: 15px 20px;
+            background: white;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-area input {
             flex: 1;
-            padding: 12px 20px;
+            padding: 15px;
             border-radius: 25px;
             border: 1px solid #ddd;
-            font-size: 15px;
             outline: none;
+            font-family: inherit;
+            font-weight: 600;
         }
 
         .btn-send {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background-image: url('/static/piedra_boton.png');
-            background-size: cover;
-            border: 2px solid var(--color-texto);
-            color: var(--color-dorado);
+            background: var(--color-texto);
+            color: white;
+            border: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 20px;
         }
 
     </style>
 </head>
 <body>
 
+    <div class="banner-urgencia" id="banner-urgencia">
+        ⚠️ CHAT DE PRIORIDAD MÁXIMA - ATENCIÓN INMEDIATA
+    </div>
+
     <div class="app-container">
-        <!-- Header -->
+        <div class="seguridad-chat">
+            <i class="fas fa-user-shield"></i>
+            PROTECCIÓN OKUPO: Datos de contacto bloqueados automáticamente.
+        </div>
+
         <div class="header">
             <a href="{{ url_for('pedidos.mis_pedidos') }}"><i class="fas fa-arrow-left"></i></a>
             <div class="user-info">
-                <div class="avatar"><i class="fas fa-tools"></i></div>
-                <span>Técnico Asignado</span>
+                <h2>Experto Asignado</h2>
+                <span>Socio Certificado • Online</span>
             </div>
-            <i class="fas fa-phone-alt" style="opacity: 0.5;"></i>
+            <div class="btn-call" onclick="alert('Iniciando Llamada Oculta... Tu número real no será visible para el técnico.')">
+                <i class="fas fa-phone-alt"></i>
+            </div>
         </div>
 
-        <!-- Herramientas -->
-        <div class="chat-tools">
-            <a href="#" class="tool-btn">
-                <i class="fas fa-clipboard-list"></i> Lista de Materiales
-            </a>
-            <a href="#" class="tool-btn">
-                <i class="fas fa-pen-nib"></i> Indicaciones
-            </a>
-        </div>
-
-        <!-- Mensajes -->
-        <div class="messages-area">
+        <div class="messages-area" id="chat-box">
             {% for msg in mensajes %}
-            <div class="bubble {% if msg.emisor_id == session['user_id'] %} mine {% else %} other {% endif %}">
+            <div class="message {% if msg.emisor_id == session['user_id'] %}sent{% else %}received{% endif %}">
                 {{ msg.contenido }}
-                <span class="timestamp">{{ msg.fecha or 'Hace un momento' }}</span>
-            </div>
-            {% else %}
-            <div style="text-align: center; margin-top: 50px; opacity: 0.5; color: white;">
-                <i class="fas fa-comments" style="font-size: 40px; margin-bottom: 10px; display: block;"></i>
-                Inicia la conversación con tu experto.
             </div>
             {% endfor %}
+            
+            <div class="message received">
+                Hola, ya recibí tu solicitud. Voy para allá.
+            </div>
         </div>
 
-        <!-- Entrada -->
-        <form action="{{ url_for('pedidos.chat', solicitud_id=solicitud_id) }}" method="POST" class="input-bar">
-            <i class="fas fa-camera" style="font-size: 20px; opacity: 0.4;"></i>
-            <input type="text" name="texto" placeholder="Escribe un mensaje..." required>
-            <button type="submit" class="btn-send">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </form>
+        <div class="chat-tools">
+            <button class="tool-btn"><i class="fas fa-list-ul"></i> Lista Materiales</button>
+            <button class="tool-btn"><i class="fas fa-pen-nib"></i> Indicaciones</button>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="msg-input" placeholder="Escribe un mensaje seguro..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+            <button class="btn-send" onclick="enviarMensaje()"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
     <script>
-        // Auto-scroll al final al cargar
-        const area = document.querySelector('.messages-area');
-        area.scrollTop = area.scrollHeight;
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('okupo_urgencia_247') === 'true') {
+                document.body.classList.add('modo-urgencia-activo');
+            }
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        function enviarMensaje() {
+            const input = document.getElementById('msg-input');
+            const textoOriginal = input.value.trim();
+            if (!textoOriginal) return;
+
+            // 🛡️ LÓGICA DE CENSURA AGRESIVA (Seguridad Okupo)
+            let textoFiltrado = textoOriginal;
+            
+            // 1. Palabras clave prohibidas (incluye variaciones y caracteres especiales intermedios)
+            const palabrasProhibidas = [
+                'whatsapp', 'watsap', 'wapp', 'wa', 'cel', 'celular', 'tel', 'telefono', 
+                'numero', 'num', 'correo', 'email', 'mail', 'contacto', 'face', 'insta'
+            ];
+
+            palabrasProhibidas.forEach(palabra => {
+                // Regex que detecta la palabra aunque pongan puntos, espacios o símbolos entre letras (ej: w.h.a.t.s)
+                const regexPalabra = new RegExp(palabra.split('').join('[\\W_]*'), 'gi');
+                textoFiltrado = textoFiltrado.replace(regexPalabra, " <span class='data-blocked'>[DATO BLOQUEADO]</span> ");
+            });
+
+            // 2. Censura de secuencias numéricas (evita intercambio de teléfonos)
+            // Detecta 7 o más números aunque estén separados por puntos, guiones o espacios
+            const regexNumeros = /(\d[\W_]*){7,}/g;
+            textoFiltrado = textoFiltrado.replace(regexNumeros, " <span class='data-blocked'>[NUMERO PROTEGIDO]</span> ");
+            
+            // 3. Censura de correos electrónicos
+            const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+            textoFiltrado = textoFiltrado.replace(regexEmail, " <span class='data-blocked'>[CORREO BLOQUEADO]</span> ");
+
+            // Mostrar mensaje en la UI
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message sent';
+            msgDiv.innerHTML = textoFiltrado;
+            
+            document.getElementById('chat-box').appendChild(msgDiv);
+            input.value = '';
+            
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
 </body>
 </html>

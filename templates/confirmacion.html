@@ -32,6 +32,15 @@
             justify-content: center;
         }
 
+        /* MODO URGENCIA ACTIVO */
+        .modo-urgencia-activo, 
+        .modo-urgencia-activo html, 
+        .modo-urgencia-activo body {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            min-height: 100vh;
+        }
+
         .app-container {
             width: 100%;
             max-width: 450px;
@@ -41,6 +50,33 @@
             padding: 20px;
             box-sizing: border-box;
             text-align: center;
+        }
+
+        .modo-urgencia-activo .app-container {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            padding-top: 45px;
+        }
+
+        .banner-urgencia {
+            display: none;
+            background: #ff0000;
+            color: #ffffff;
+            padding: 8px 10px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 13px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 4000;
+            text-transform: uppercase;
+        }
+
+        .modo-urgencia-activo .banner-urgencia {
+            display: block;
         }
 
         .header {
@@ -150,6 +186,10 @@
 </head>
 <body>
 
+    <div class="banner-urgencia" id="banner-urgencia">
+        ⚠️ ATENCIÓN INMEDIATA ACTIVADA - PRIORIDAD MÁXIMA
+    </div>
+
     <div class="app-container">
         <div class="header">
             <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
@@ -187,6 +227,36 @@
             </ul>
         </div>
 
+        {% if "Apertura" in (nombre_servicio or "") %}
+        <div style="background: rgba(255, 255, 255, 0.95); border: 2px solid var(--color-rojo); border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: left;">
+            <p style="color: var(--color-rojo); font-weight: 900; font-size: 14px; margin: 0 0 10px 0; text-transform: uppercase;">
+                <i class="fas fa-id-card"></i> Validación Legal Obligatoria
+            </p>
+            <p style="font-size: 12px; font-weight: 600; line-height: 1.4; margin-bottom: 15px; color: #444;">
+                Por tu seguridad y cumplimiento legal, para servicios de apertura es requisito mostrar tu identificación oficial (INE) vigente al técnico para acreditar propiedad.
+            </p>
+            <label style="display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; font-weight: 800; color: var(--color-texto);">
+                <input type="checkbox" id="check-ine" style="width: 22px; height: 22px; margin-top: -2px;" onchange="validarCheck()">
+                Confirmo que tengo mi INE lista para mostrarla al llegar el técnico.
+            </label>
+        </div>
+        {% endif %}
+
+        {% if "Tinaco" in (nombre_servicio or "") %}
+        <div style="background: rgba(255, 255, 255, 0.95); border: 2px solid #2980b9; border-radius: 20px; padding: 20px; margin-bottom: 25px; text-align: left;">
+            <p style="color: #2980b9; font-weight: 900; font-size: 14px; margin: 0 0 10px 0; text-transform: uppercase;">
+                <i class="fas fa-faucet-dotted"></i> Preparación Obligatoria
+            </p>
+            <p style="font-size: 12px; font-weight: 600; line-height: 1.4; margin-bottom: 15px; color: #444;">
+                Para evitar el desperdicio de agua y permitir un lavado eficiente, es necesario que el tinaco tenga un nivel bajo de agua.
+            </p>
+            <label style="display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13px; font-weight: 800; color: var(--color-texto);">
+                <input type="checkbox" id="check-tinaco" style="width: 22px; height: 22px; margin-top: -2px;" onchange="validarCheck()">
+                Confirmo que cerré la llave de paso 24 horas antes para bajar el nivel del agua.
+            </label>
+        </div>
+        {% endif %}
+
         <form action="{{ url_for('pedidos.finalizar_pedido') }}" method="POST">
             <!-- Datos ocultos para la API -->
             <input type="hidden" name="subcategoria_id" value="{{ subcat_id }}">
@@ -195,7 +265,7 @@
             <input type="hidden" name="latitud" value="{{ latitud }}">
             <input type="hidden" name="longitud" value="{{ longitud }}">
             
-            <button type="submit" class="btn-confirmar">Confirmar y Pedir</button>
+            <button type="submit" class="btn-confirmar" id="btn-confirmar-final">Confirmar y Pedir</button>
         </form>
 
         <p style="margin-top: 20px; font-size: 11px; opacity: 0.5; color: white;">
@@ -203,5 +273,33 @@
         </p>
     </div>
 
+    <script>
+        function validarCheck() {
+            const checkIne = document.getElementById('check-ine');
+            const checkTinaco = document.getElementById('check-tinaco');
+            const btn = document.getElementById('btn-confirmar-final');
+            
+            let habilitado = true;
+            
+            if (checkIne && !checkIne.checked) habilitado = false;
+            if (checkTinaco && !checkTinaco.checked) habilitado = false;
+            
+            if (btn) {
+                btn.disabled = !habilitado;
+                btn.style.opacity = habilitado ? "1" : "0.5";
+                btn.style.pointerEvents = habilitado ? "auto" : "none";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('okupo_urgencia_247') === 'true') {
+                document.body.classList.add('modo-urgencia-activo');
+            }
+            // Inicializar estado si existen checks
+            if (document.getElementById('check-ine') || document.getElementById('check-tinaco')) {
+                validarCheck();
+            }
+        });
+    </script>
 </body>
 </html>

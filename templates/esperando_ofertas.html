@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esperando Ofertas - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-naranja: #ff8c00;
+        }
+
+        /* 🛠️ ESTILO "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        /* MODO URGENCIA ACTIVO */
+        .modo-urgencia-activo, 
+        .modo-urgencia-activo html, 
+        .modo-urgencia-activo body {
+            background-color: var(--color-naranja) !important;
+            background-image: none !important;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .modo-urgencia-activo .app-container {
+            background-color: var(--color-naranja) !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            padding-top: 60px;
+        }
+
+        .banner-urgencia {
+            display: none;
+            background: #ff0000;
+            color: #ffffff;
+            padding: 8px 10px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 13px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 4000;
+            text-transform: uppercase;
+        }
+
+        .modo-urgencia-activo .banner-urgencia {
+            display: block;
+        }
+
+        /* ANIMACIÓN DE RADAR / BÚSQUEDA */
+        .radar-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--color-dorado);
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulse-radar 2.5s infinite;
+        }
+        .radar-circle:nth-child(2) { animation-delay: 0.8s; }
+        .radar-circle:nth-child(3) { animation-delay: 1.6s; }
+
+        @keyframes pulse-radar {
+            0% { transform: scale(0.2); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .radar-icon {
+            font-size: 40px;
+            color: var(--color-texto);
+            z-index: 10;
+            background: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 3px solid var(--color-dorado);
+        }
+
+        .status-text {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px white;
+        }
+
+        .sub-status {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        /* CARD DE RESUMEN */
+        .summary-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .summary-card h4 {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(139, 90, 43, 0.1);
+            padding-bottom: 10px;
+            color: var(--color-texto);
+        }
+
+        .summary-item {
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .summary-item b { display: block; font-size: 10px; opacity: 0.6; text-transform: uppercase; }
+
+        /* BOTONES */
+        .btn-largo {
+            width: 100%;
+            padding: 18px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            display: block;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-largo:active { transform: scale(0.95); }
+
+        .btn-home {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+        }
+
+        .btn-cancelar {
+            background: transparent;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            font-size: 14px;
+            padding: 12px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="banner-urgencia" id="banner-urgencia">
+        ⚠️ BUSCANDO EXPERTOS CON PRIORIDAD MÁXIMA
+    </div>
+
+    <div class="app-container">
+        <div class="radar-container">
+            <div class="radar-circle"></div>
+            <div class="radar-circle"></div>
+            <div class="radar-circle"></div>
+            <div class="radar-icon">
+                <i class="fas fa-search-location"></i>
+            </div>
+        </div>
+
+        <div class="status-text">Buscando Expertos</div>
+        <div class="sub-status">Estamos enviando tu solicitud a los mejores técnicos cercanos.</div>
+
+        <div class="summary-card">
+            <h4>Tu Solicitud Especial</h4>
+            
+            <div class="summary-item">
+                <b>Descripción</b>
+                {{ descripcion or 'Instalación de tina de hidromasaje y conexión de tubería de cobre...' }}
+            </div>
+
+            <div class="summary-item">
+                <b>Fecha y Hora</b>
+                <i class="fas fa-calendar-day"></i> {{ fecha or '15/05/2026' }} a las <i class="fas fa-clock"></i> {{ hora or '10:00 AM' }}
+            </div>
+
+            <div class="summary-item">
+                <b>Presupuesto Estimado</b>
+                <span style="font-weight: 900; color: var(--color-naranja);">${{ presupuesto or '0.00' }}</span>
+            </div>
+        </div>
+
+        <a href="{{ url_for('principal.index') }}" class="btn-largo btn-home">Volver al Inicio</a>
+        <a href="#" class="btn-largo btn-cancelar">Cancelar Solicitud</a>
+
+        <p style="margin-top: 20px; font-size: 11px; opacity: 0.6; color: white; text-shadow: 1px 1px 2px black;">
+            Te notificaremos por correo y en la app cuando recibas una oferta.
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('okupo_urgencia_247') === 'true') {
+                document.body.classList.add('modo-urgencia-activo');
+            }
+        });
+    </script>
+</body>
+</html>

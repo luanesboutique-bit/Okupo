@@ -233,9 +233,11 @@
                 <div class="job-distancia">Cliente: Maria García</div>
             </div>
             <div class="job-footer">
-                <span style="font-size: 11px; font-weight: 800; color: var(--color-verde);">TRABAJO ACTIVO</span>
-                <a href="{{ url_for('pedidos.chat', solicitud_id=1) }}" style="color: var(--color-texto); font-weight: 800; font-size: 13px;">
-                    <i class="fas fa-comments"></i> Ir al Chat
+                <a href="{{ url_for('colaboradores.evidencia_fotografica', solicitud_id=1) }}" style="color: var(--color-dorado); font-weight: 800; font-size: 13px; text-decoration: none;">
+                    <i class="fas fa-camera"></i> Subir Evidencia
+                </a>
+                <a href="{{ url_for('pedidos.chat', solicitud_id=1) }}" style="color: var(--color-texto); font-weight: 800; font-size: 13px; text-decoration: none;">
+                    <i class="fas fa-comments"></i> Chat
                 </a>
             </div>
         </div>

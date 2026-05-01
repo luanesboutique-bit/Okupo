@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información y Políticas - Okupo</title>
+    <title>Políticas de Servicio - Okupo</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -12,9 +12,11 @@
             --color-crema: #fdfaf5;
             --color-texto: #5a3e2b;
             --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+            --color-rojo: #e74c3c;
         }
 
-        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        /* 🛠️ ESTILO UNIFICADO "OKUPO" */
         html, body {
             background-color: var(--color-crema) !important;
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -24,7 +26,6 @@
             background-image: url('/static/fondo_pared.jpg') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
-            background-position: center !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--color-texto);
             display: flex;
@@ -44,69 +45,101 @@
         .header {
             display: flex;
             align-items: center;
-            margin-bottom: 30px;
-            text-align: center;
+            margin-bottom: 25px;
         }
         .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
-        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
 
-        /* SECCIONES DE POLÍTICA */
-        .policy-card {
-            background: rgba(253, 250, 245, 0.9);
+        .politica-card {
+            background: rgba(253, 250, 245, 0.95);
             background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
-            border-radius: 25px;
-            padding: 20px;
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--color-dorado);
             margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            border: 1px solid rgba(139, 90, 43, 0.2);
-            text-align: left;
         }
 
-        .policy-header {
+        .seccion-titulo {
+            font-size: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid rgba(139, 90, 43, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
             gap: 12px;
-            margin-bottom: 15px;
-            background-image: url('/static/madera_media.jpg');
-            background-size: cover;
-            padding: 10px 15px;
-            border-radius: 15px;
-            color: var(--color-texto);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .policy-header i { font-size: 20px; color: var(--color-dorado); filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5)); }
-        .policy-header h3 { margin: 0; font-size: 16px; font-weight: 900; text-transform: uppercase; }
-
-        .policy-content {
+            margin-bottom: 12px;
             font-size: 14px;
-            line-height: 1.5;
-            color: var(--color-texto);
+            font-weight: 700;
+            line-height: 1.4;
         }
 
-        .policy-content ul {
-            padding-left: 20px;
-            margin-top: 10px;
+        .checklist i { margin-top: 3px; }
+        .fa-check-circle { color: var(--color-verde); }
+        .fa-times-circle { color: var(--color-rojo); }
+
+        .proceso-step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
         }
 
-        .policy-content li {
-            margin-bottom: 8px;
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dorado);
+            font-weight: 900;
+            font-size: 14px;
+            flex-shrink: 0;
+            border: 1px solid var(--color-texto);
         }
 
-        .highlight {
-            font-weight: 800;
-            color: #c0392b;
+        .step-content {
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.3;
         }
+        .step-content b { display: block; text-transform: uppercase; font-size: 11px; color: var(--color-dorado); margin-bottom: 3px; }
 
-        .footer-note {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 12px;
-            color: white;
+        .btn-entendido {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 20px;
+            color: #ffff00;
             text-shadow: 1px 1px 2px black;
-            opacity: 0.8;
-            padding-bottom: 40px;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
         }
+        .btn-entendido:active { transform: scale(0.95); }
 
     </style>
 </head>
@@ -115,60 +148,59 @@
     <div class="app-container">
         <div class="header">
             <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
-            <h1>Políticas Okupo</h1>
+            <h1>Políticas de Servicio</h1>
         </div>
 
-        <!-- Materiales -->
-        <div class="policy-card">
-            <div class="policy-header">
-                <i class="fas fa-box-open"></i>
-                <h3>Sobre los Materiales</h3>
+        <div class="politica-card">
+            <div class="seccion-titulo">
+                <i class="fas fa-info-circle"></i> Importante
             </div>
-            <div class="policy-content">
-                <p>En Okupo, buscamos transparencia total. Por ello, es importante recordar:</p>
-                <ul>
-                    <li>Los precios listados <span class="highlight">NO INCLUYEN</span> materiales (tubos, cables, chapas, pintura, etc.).</li>
-                    <li>El pago cubre exclusivamente la <span style="font-weight: 800;">mano de obra experta</span> y el uso de herramientas especializadas.</li>
-                    <li>El técnico te enviará una lista detallada por el chat una vez evaluado el problema.</li>
-                </ul>
+            
+            <ul class="checklist">
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span><b>INCLUYE:</b> Mano de obra calificada, herramientas necesarias y garantía de servicio.</span>
+                </li>
+                <li>
+                    <i class="fas fa-times-circle"></i>
+                    <span><b>NO INCLUYE:</b> Materiales (tubos, cables, pintura, chapas, etc.). Estos corren por cuenta del cliente.</span>
+                </li>
+            </ul>
+
+            <div class="seccion-titulo">
+                <i class="fas fa-tasks"></i> Proceso de Trabajo
             </div>
+
+            <div class="proceso-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <b>Confirmación</b>
+                    El técnico acepta tu solicitud y se dirige a tu ubicación para iniciar.
+                </div>
+            </div>
+
+            <div class="proceso-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <b>Lista de Materiales</b>
+                    Tras evaluar, el experto enviará una 📋 LISTA e ✍️ INDICACIONES por el chat seguro.
+                </div>
+            </div>
+
+            <div class="proceso-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <b>Compra e Instalación</b>
+                    Adquieres los materiales sugeridos y el socio procede con la instalación inmediata.
+                </div>
+            </div>
+
+            <button class="btn-entendido" onclick="history.back()">Entendido</button>
         </div>
 
-        <!-- Proceso de Compra -->
-        <div class="policy-card">
-            <div class="policy-header">
-                <i class="fas fa-shopping-cart"></i>
-                <h3>¿Cómo comprar materiales?</h3>
-            </div>
-            <div class="policy-content">
-                <p>Tienes dos opciones sencillas:</p>
-                <ol>
-                    <li style="margin-bottom: 10px;"><b>Tú los compras:</b> Puedes ir a la ferretería de tu preferencia con la lista que te dé el técnico.</li>
-                    <li><b>El técnico los compra:</b> Puedes pedirle al experto que los adquiera por ti. En este caso, el pago de materiales es <span style="font-weight: 800;">directo al técnico</span> contra entrega de ticket.</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- Garantía -->
-        <div class="policy-card">
-            <div class="policy-header">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Garantía de Servicio</h3>
-            </div>
-            <div class="policy-content">
-                <p>Tu tranquilidad es nuestra prioridad:</p>
-                <ul>
-                    <li>Todos nuestros colaboradores han pasado por un proceso de <span style="font-weight: 800;">verificación de identidad</span>.</li>
-                    <li>Los trabajos realizados a través de la plataforma cuentan con respaldo en caso de incidencias técnicas.</li>
-                    <li>Te recomendamos calificar siempre al finalizar para mantener el estándar de calidad.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="footer-note">
-            Okupo — Conectando confianza con soluciones.<br>
-            v1.0.2 - 2026
-        </div>
+        <p style="margin-top: 20px; font-size: 11px; text-align: center; color: white; opacity: 0.7; text-shadow: 1px 1px 2px black;">
+            Okupo garantiza la seguridad en tus pagos y la calidad de nuestros socios certificados.
+        </p>
     </div>
 
 </body>

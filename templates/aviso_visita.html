@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviso de Visita Técnica - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-rojo: #e74c3c;
+            --color-verde: #27ae60;
+        }
+
+        /* 🛠️ ESTILO UNIFICADO "OKUPO" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; }
+
+        .aviso-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 40px;
+            padding: 40px 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            border: 2px solid var(--color-rojo);
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .icon-warning {
+            font-size: 60px;
+            color: var(--color-rojo);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.3));
+        }
+
+        h2 { font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; line-height: 1.2; }
+        
+        .precio-visita {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--color-texto);
+            margin: 20px 0;
+            display: block;
+        }
+
+        .politicas-visita {
+            text-align: left;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid #eee;
+        }
+
+        .politica-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+        .politica-item i { margin-top: 3px; }
+        .si { color: var(--color-verde); }
+        .no { color: var(--color-rojo); }
+
+        .btn-pagar {
+            width: 100%;
+            padding: 20px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 25px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .btn-pagar:active { transform: scale(0.95); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Trabaio Especial</h1>
+        </div>
+
+        <div class="aviso-card">
+            <div class="icon-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+
+            <h2>Requiere Visita Técnica para Presupuesto</h2>
+            
+            <p style="font-size: 14px; opacity: 0.7; font-weight: 600;">
+                Debido a la complejidad del trabajo, el experto necesita evaluar la situación en persona.
+            </p>
+
+            <span class="precio-visita">$400</span>
+
+            <div class="politicas-visita">
+                <div class="politica-item">
+                    <i class="fas fa-check-circle si"></i>
+                    <span><b>SI CONTRATAS EL SERVICIO FINAL:</b> El costo de la visita se te descontará del total.</span>
+                </div>
+                <div class="politica-item">
+                    <i class="fas fa-times-circle no"></i>
+                    <span><b>SI NO CONTRATAS:</b> El pago de la visita se queda como compensación por el tiempo y traslado del experto.</span>
+                </div>
+            </div>
+
+            <button class="btn-pagar" onclick="location.href='/pedidos/visita/agendar'">Agendar y Pagar Visita</button>
+            
+            <a href="javascript:history.back()" style="display: block; margin-top: 25px; font-size: 13px; font-weight: 800; color: var(--color-texto); text-decoration: none; opacity: 0.6;">
+                Prefiero esperar otra oferta
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

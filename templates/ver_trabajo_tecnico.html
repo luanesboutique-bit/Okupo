@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofertar Trabajo - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+            --color-azul: #3498db;
+        }
+
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        /* CARD DETALLE DEL TRABAJO */
+        .job-detail-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--color-dorado);
+            margin-bottom: 20px;
+        }
+
+        .client-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(139, 90, 43, 0.1);
+            padding-bottom: 15px;
+        }
+        .client-avatar { width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+
+        .description-box {
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .photo-evidence-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .evidence-img {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* FORMULARIO DE OFERTA */
+        .offer-form {
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #fdfaf5;
+            background: #f9f9f9;
+            font-size: 18px;
+            font-weight: 900;
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+            color: var(--color-verde);
+        }
+        .input-group input:focus { border-color: var(--color-verde); background: white; }
+
+        /* BOTONES DE ACCIÓN TÉCNICA */
+        .btn-action {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-action:active { transform: scale(0.95); }
+
+        .btn-ofertar {
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            color: var(--color-dorado);
+            border: 2px solid var(--color-texto);
+        }
+
+        .btn-visita {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+        }
+
+        .urgencia-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: #ff7675;
+            color: white;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Nueva Solicitud</h1>
+        </div>
+
+        <div class="job-detail-card">
+            <div class="urgencia-badge"><i class="fas fa-bolt"></i> Prioridad Media</div>
+            
+            <div class="client-info">
+                <div class="client-avatar"><i class="fas fa-user"></i></div>
+                <div>
+                    <div style="font-weight: 900; font-size: 14px;">Cliente: Maria R.</div>
+                    <div style="font-size: 11px; opacity: 0.6;"><i class="fas fa-map-marker-alt"></i> Zapopan, Jal. (a 2.4 km)</div>
+                </div>
+            </div>
+
+            <div class="description-box">
+                "Necesito arreglar una fuga de agua en la tina del baño principal. Creo que es el empaque o la tubería interna. Adjunto fotos."
+            </div>
+
+            <div class="photo-evidence-row">
+                <img src="https://images.pexels.com/photos/1010079/pexels-photo-1010079.jpeg?auto=compress&cs=tinysrgb&w=400" class="evidence-img">
+                <img src="https://images.pexels.com/photos/1454806/pexels-photo-1454806.jpeg?auto=compress&cs=tinysrgb&w=400" class="evidence-img">
+            </div>
+
+            <div style="font-size: 12px; font-weight: 800; color: var(--color-dorado); margin-bottom: 20px;">
+                <i class="fas fa-calendar-day"></i> Agenda para: 12/05/2026 - 10:00 AM
+            </div>
+
+            <div class="offer-form">
+                <div class="input-group">
+                    <label>Tu Oferta Económica (Mano de Obra)</label>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 15px; top: 15px; font-weight: 900; color: #888;">$</span>
+                        <input type="number" placeholder="0.00" style="padding-left: 30px;">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-action btn-ofertar" onclick="alert('Oferta enviada al cliente.')">
+                <i class="fas fa-paper-plane"></i> Enviar Oferta Ahora
+            </button>
+
+            <div style="text-align: center; margin: 15px 0; font-size: 12px; font-weight: 800; opacity: 0.5;">— Ó —</div>
+
+            <button class="btn-action btn-visita" onclick="location.href='/pedidos/visita/aviso'">
+                <i class="fas fa-home"></i> Solicitar Visita Técnica
+            </button>
+        </div>
+
+        <p style="font-size: 11px; text-align: center; opacity: 0.6; font-weight: 700;">
+            Si el cliente acepta tu oferta o la visita, se abrirá un chat directo para coordinar.
+        </p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Ayuda - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-rojo: #e74c3c;
+            --color-azul: #3498db;
+        }
+
+        /* 🛠️ ESTILO UNIFICADO "OKUPO" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        .support-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 35px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--color-dorado);
+            margin-bottom: 20px;
+        }
+
+        .support-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--color-texto);
+        }
+        .support-option:active { transform: scale(0.98); background: #fdf9f2; }
+        .support-option i { font-size: 20px; color: var(--color-dorado); width: 30px; text-align: center; }
+        .support-option div { font-size: 14px; font-weight: 700; }
+        .support-option div span { display: block; font-size: 11px; opacity: 0.6; font-weight: 600; }
+
+        .form-section {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            text-align: left;
+        }
+        .form-section label { display: block; font-size: 12px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; padding-left: 5px; }
+        .form-section textarea { width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #ddd; font-family: inherit; font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 20px; }
+
+        .btn-enviar {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 20px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Centro de Ayuda</h1>
+        </div>
+
+        <div class="support-card">
+            <a href="https://wa.me/521234567890" class="support-option">
+                <i class="fab fa-whatsapp"></i>
+                <div>WhatsApp Soporte<span>Atención inmediata 24/7</span></div>
+            </a>
+            
+            <a href="tel:8001234567" class="support-option">
+                <i class="fas fa-phone-alt"></i>
+                <div>Línea Directa<span>Llamada sin costo</span></div>
+            </a>
+
+            <div class="form-section">
+                <label>¿En qué podemos ayudarte?</label>
+                <textarea rows="4" placeholder="Describe tu problema o duda técnica..."></textarea>
+                <button class="btn-enviar" onclick="alert('Ticket enviado. Un asesor te contactará pronto.')">Enviar Reporte</button>
+            </div>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 11px; text-align: center; color: white; opacity: 0.7; text-shadow: 1px 1px 2px black;">
+            Estamos aquí para garantizar que tu experiencia en Okupo sea excelente.
+        </p>
+    </div>
+
+</body>
+</html>

@@ -476,15 +476,15 @@
                 <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 9. Albañilería y Pintura</a>
                 <a href="/categorias/9/subcategorias" class="menu-item"><i class="fas fa-paint-roller"></i> 10. Pintura y Acabados</a>
                 
-                <a href="/categorias" class="menu-item highlight" style="margin-top: 10px;">
+                <a href="/cotizar" class="menu-item highlight" style="margin-top: 10px;">
                     <i class="fas fa-plus-circle"></i> 11. COTIZAR OTRO SERVICIO
                 </a>
                 
                 <a href="javascript:toggleUrgencia()" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 12. Urgencia 24/7</a>
-                <a href="#" class="menu-item"><i class="fas fa-info-circle"></i> 13. Información y Políticas</a>
+                <a href="/politicas" class="menu-item"><i class="fas fa-info-circle"></i> 13. Información y Políticas</a>
                 <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 14. Mi Perfil / Historial</a>
-                <a href="#" class="menu-item"><i class="fas fa-star"></i> 15. Calificaciones</a>
-                <a href="#" class="menu-item"><i class="fas fa-shield-alt"></i> 16. Centro de Ayuda / Soporte</a>
+                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-star"></i> 15. Calificaciones</a>
+                <a href="/soporte" class="menu-item"><i class="fas fa-shield-alt"></i> 16. Centro de Ayuda / Soporte</a>
                 
                 {% if session.get('user_id') %}
                     <a href="{{ url_for('autenticacion.logout') }}" class="menu-item" style="border-top: 1px solid #ddd; margin-top: 10px;">
@@ -554,8 +554,8 @@
         <div class="grid-maderas">
             <a href="/categorias/5/subcategorias" class="btn-madera madera-clara">Limpieza de Muebles</a>
             <a href="/categorias/6/subcategorias" class="btn-madera madera-media">Armado de Muebles</a>
-            <a href="/categorias/8/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
-            <a href="/categorias/7/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
+            <a href="/cotizar" class="btn-madera madera-clara">Albañilería y Pintura</a>
+            <a href="/cotizar" class="btn-madera madera-media">Fletes y Mudanzas</a>
         </div>
 
         <!-- Botones de Acción -->
@@ -564,7 +564,7 @@
                 <span>URGENCIA 24/7</span>
                 <i class="fas fa-bolt"></i>
             </a>
-            <a href="/categorias" class="btn-largo cotizar">
+            <a href="/cotizar" class="btn-largo cotizar">
                 COTIZAR OTRO SERVICIO
             </a>
         </div>

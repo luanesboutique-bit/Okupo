@@ -14,10 +14,6 @@ def index():
 def bienvenida_seleccion_rol():
     return render_template('seleccion_rol.html')
 
-@blueprint.route('/ejemplo')
-def ver_ejemplo():
-    return render_template('ejemplo_servicios.html')
-
 @blueprint.route('/unete')
 def landing_colaborador():
     return render_template('landing_colaborador.html')
@@ -27,35 +23,7 @@ def ver_subcategorias(categoria_id):
     subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias", token=session.get('token'))
     if subcategorias == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-    colores_cat = {1: "#C69B6F", 2: "#9E8B71", 3: "#ADA391", 4: "#C6B79F"}
-    acento = colores_cat.get(categoria_id, "#C69B6F")
-    return render_template('subcategorias.html', subcategorias=subcategorias or [], cat_id=categoria_id, acento=acento)
-
-@blueprint.route('/detalles-servicio')
-def detalles_servicio():
-    return render_template('detalles_servicio.html')
-
-@blueprint.route('/urgencia')
-def urgencia_categorias():
-    categorias = api_get("/categorias", token=session.get('token'))
-    if categorias == "UNAUTHORIZED":
-        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-    return render_template('urgencia_categorias.html', categorias=categorias or [])
-
-@blueprint.route('/urgencia/<int:categoria_id>/subcategorias')
-def urgencia_subcategorias(categoria_id):
-    subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias", token=session.get('token'))
-    if subcategorias == "UNAUTHORIZED":
-        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-    return render_template('urgencia_subcategorias.html', subcategorias=subcategorias or [], cat_id=categoria_id)
-
-@blueprint.route('/urgencia/detalles/<int:subcategoria_id>')
-def urgencia_detalles(subcategoria_id):
-    return render_template('urgencia_detalles.html', subcat_id=subcategoria_id)
-
-@blueprint.route('/urgencia/buscando')
-def buscando_colaborador():
-    return render_template('asignacion.html')
+    return render_template('subcategorias.html', subcategorias=subcategorias or [], cat_id=categoria_id)
 
 @blueprint.route('/marketplace/<int:subcategoria_id>')
 def marketplace(subcategoria_id):
@@ -64,3 +32,15 @@ def marketplace(subcategoria_id):
     if colaboradores == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
     return render_template('marketplace.html', colaboradores=colaboradores or [], subcat_id=subcategoria_id)
+
+@blueprint.route('/cotizar')
+def cotizar_especial():
+    return render_template('cotizar_especial.html')
+
+@blueprint.route('/politicas')
+def politicas():
+    return render_template('politicas.html')
+
+@blueprint.route('/soporte')
+def soporte():
+    return render_template('soporte.html')

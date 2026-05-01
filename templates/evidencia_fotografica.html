@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidencia Fotográfica - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-naranja: #f39c12;
+            --color-verde: #27ae60;
+        }
+
+        /* 🛠️ ESTILO TRANSPARENTE "ONE PIECE" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        .seccion-evidencia {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--color-dorado);
+            margin-bottom: 20px;
+        }
+
+        .seccion-titulo {
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--color-texto);
+        }
+
+        .foto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .upload-card {
+            aspect-ratio: 1;
+            border: 2px dashed rgba(139, 90, 43, 0.3);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .upload-card:hover { border-color: var(--color-dorado); background: #fffcf9; }
+        .upload-card i { font-size: 32px; color: var(--color-dorado); margin-bottom: 8px; opacity: 0.5; }
+        .upload-card span { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.6; }
+
+        .preview-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .btn-accion {
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .btn-accion:active { transform: scale(0.95); }
+
+        .btn-inicio {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            color: var(--color-texto);
+        }
+
+        .btn-fin {
+            background-image: url('/static/piedra_boton.png');
+            background-size: cover;
+            color: var(--color-dorado);
+            border: 2px solid var(--color-texto);
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        .pendiente { background: #eee; color: #888; }
+        .completado { background: var(--color-verde); color: white; }
+
+        /* MODAL DE CÁMARA (SIMULADO) */
+        .camera-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 20px;
+        }
+        .shutter-btn {
+            width: 80px; height: 80px;
+            background: white;
+            border-radius: 50%;
+            border: 5px solid #444;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Evidencia Fotográfica</h1>
+        </div>
+
+        <!-- SECCIÓN 1: FOTOS DE INICIO -->
+        <div class="seccion-evidencia">
+            <div class="seccion-titulo">
+                <i class="fas fa-play-circle" style="color: var(--color-naranja);"></i>
+                Fotos de Inicio (Antes)
+            </div>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: -10px; margin-bottom: 15px;">
+                Captura el estado actual antes de empezar a trabajar.
+            </p>
+            
+            <div class="foto-grid">
+                <div class="upload-card" onclick="abrirCamara('inicio_1')">
+                    <img id="prev-inicio_1" class="preview-img">
+                    <i class="fas fa-camera"></i>
+                    <span>Foto 1</span>
+                </div>
+                <div class="upload-card" onclick="abrirCamara('inicio_2')">
+                    <img id="prev-inicio_2" class="preview-img">
+                    <i class="fas fa-camera"></i>
+                    <span>Foto 2</span>
+                </div>
+            </div>
+
+            <button class="btn-accion btn-inicio" onclick="guardarEvidencia('inicio')">Guardar Fotos de Inicio</button>
+            <div id="status-inicio" class="badge-status pendiente">Pendiente de registro</div>
+        </div>
+
+        <!-- SECCIÓN 2: FOTOS DE FIN -->
+        <div class="seccion-evidencia" id="seccion-fin" style="opacity: 0.5; pointer-events: none;">
+            <div class="seccion-titulo">
+                <i class="fas fa-check-circle" style="color: var(--color-verde);"></i>
+                Fotos de Fin (Después)
+            </div>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: -10px; margin-bottom: 15px;">
+                Captura el resultado final una vez terminado el servicio.
+            </p>
+            
+            <div class="foto-grid">
+                <div class="upload-card" onclick="abrirCamara('fin_1')">
+                    <img id="prev-fin_1" class="preview-img">
+                    <i class="fas fa-camera"></i>
+                    <span>Foto 1</span>
+                </div>
+                <div class="upload-card" onclick="abrirCamara('fin_2')">
+                    <img id="prev-fin_2" class="preview-img">
+                    <i class="fas fa-camera"></i>
+                    <span>Foto 2</span>
+                </div>
+            </div>
+
+            <button class="btn-accion btn-fin" onclick="guardarEvidencia('fin')">Finalizar y Subir Evidencia</button>
+            <div id="status-fin" class="badge-status pendiente">Esperando inicio</div>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 11px; text-align: center; color: white; opacity: 0.6; text-shadow: 1px 1px 2px black;">
+            * Las fotos son obligatorias para acreditar la realización del servicio y procesar tu pago.
+        </p>
+    </div>
+
+    <!-- Cámara Mock -->
+    <div class="camera-overlay" id="camera-overlay">
+        <div style="color: white; font-weight: 800; font-size: 18px;">CÁMARA OKUPO</div>
+        <div style="width: 100%; flex: 1; border: 2px solid #333; margin: 20px 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #444;">
+            <i class="fas fa-user-shield" style="font-size: 80px;"></i>
+        </div>
+        <div class="shutter-btn" onclick="capturarFoto()"></div>
+        <a href="javascript:cerrarCamara()" style="color: white; text-decoration: none; margin-top: 20px; font-size: 14px;">Cancelar</a>
+    </div>
+
+    <script>
+        let targetFotoId = '';
+
+        function abrirCamara(id) {
+            targetFotoId = id;
+            document.getElementById('camera-overlay').style.display = 'flex';
+        }
+
+        function cerrarCamara() {
+            document.getElementById('camera-overlay').style.display = 'none';
+        }
+
+        function capturarFoto() {
+            // Simulamos la captura mostrando una imagen de stock
+            const preview = document.getElementById('prev-' + targetFotoId);
+            preview.src = "https://images.pexels.com/photos/175039/pexels-photo-175039.jpeg?auto=compress&cs=tinysrgb&w=400";
+            preview.style.display = 'block';
+            cerrarCamara();
+        }
+
+        function guardarEvidencia(tipo) {
+            if (tipo === 'inicio') {
+                const status = document.getElementById('status-inicio');
+                status.innerText = '✅ Registrado';
+                status.className = 'badge-status completado';
+                
+                // Habilitar sección de fin
+                const seccionFin = document.getElementById('seccion-fin');
+                seccionFin.style.opacity = '1';
+                seccionFin.style.pointer_events = 'auto';
+                document.getElementById('status-fin').innerText = 'Pendiente de registro';
+                
+                alert("Fotos de Inicio guardadas correctamente.");
+            } else {
+                const status = document.getElementById('status-fin');
+                status.innerText = '✅ Servicio Finalizado';
+                status.className = 'badge-status completado';
+                alert("Evidencia final enviada. Trabajo marcado como completado.");
+                window.location.href = "{{ url_for('colaboradores.dashboard_tecnico') }}";
+            }
+        }
+    </script>
+</body>
+</html>

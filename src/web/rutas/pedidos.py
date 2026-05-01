@@ -8,13 +8,35 @@ blueprint = Blueprint('pedidos', __name__)
 @login_requerido
 def pedir():
     if request.method == 'POST':
-        # En lugar de crear, pasamos a la pantalla de confirmación
+        subcat_id = request.form.get('subcategoria_id')
+        token = session.get('token')
+        
+        # Obtener detalles de la subcategoría para el resumen
+        subcategoria = api_get(f"/subcategorias/{subcat_id}", token=token)
+        
+        # Simular cálculo de tarifa (en producción vendría de la API o lógica compartida)
+        import datetime
+        ahora = datetime.datetime.now()
+        tarifa_tipo = "Normal"
+        precio = subcategoria.get('precio_normal', 0) if subcategoria else 0
+        
+        if ahora.hour >= 20 or ahora.hour < 6:
+            tarifa_tipo = "Noche"
+            precio = subcategoria.get('precio_noche', precio)
+        if ahora.weekday() == 6: # Domingo
+            tarifa_tipo = "Urgente"
+            precio = subcategoria.get('precio_urgente', precio)
+            
         datos = {
-            "subcategoria_id": request.form.get('subcategoria_id'),
+            "subcat_id": subcat_id,
             "colaborador_id": request.form.get('colaborador_id'),
             "descripcion": request.form.get('descripcion'),
             "latitud": request.form.get('latitud'),
-            "longitud": request.form.get('longitud')
+            "longitud": request.form.get('longitud'),
+            "nombre_servicio": subcategoria.get('nombre', 'Servicio') if subcategoria else "Servicio",
+            "tarifa_tipo": tarifa_tipo,
+            "precio": precio,
+            "nombre_colaborador": "Experto Asignado" # Placeholder o buscar si colaborador_id != None
         }
         return render_template('confirmacion.html', **datos)
 
@@ -26,12 +48,28 @@ def pedir():
 @login_requerido
 def finalizar_pedido():
     token = session.get('token')
+    
+    # Obtener valores del formulario con fallbacks seguros para evitar ValueError
+    subcat_id_raw = request.form.get('subcat_id')
+    colab_id_raw = request.form.get('colaborador_id')
+    
+    # Convertir a int solo si el valor existe y no es la cadena 'None'
+    try:
+        subcat_id = int(subcat_id_raw) if subcat_id_raw and subcat_id_raw != 'None' else 1
+    except (ValueError, TypeError):
+        subcat_id = 1
+
+    try:
+        colab_id = int(colab_id_raw) if colab_id_raw and colab_id_raw != 'None' else 1
+    except (ValueError, TypeError):
+        colab_id = 1
+
     datos_solicitud = {
         "usuario_id": session['user_id'],
-        "colaborador_id": int(request.form.get('colaborador_id', 1)),
-        "subcategoria_id": int(request.form.get('subcategoria_id', 1)),
+        "colaborador_id": colab_id,
+        "subcategoria_id": subcat_id,
         "urgencia": "media",
-        "descripcion_detallada": request.form.get('descripcion'),
+        "descripcion_detallada": request.form.get('descripcion', 'Sin descripción'),
         "fotos_evidencia_inicial": "placeholder.jpg",
         "latitud": float(request.form.get('latitud', 19.4326)),
         "longitud": float(request.form.get('longitud', -99.1332))
@@ -75,3 +113,26 @@ def chat(solicitud_id):
     if mensajes == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
     return render_template('chat.html', mensajes=mensajes or [], solicitud_id=solicitud_id)
+
+@blueprint.route('/cotizacion/enviar', methods=['POST'])
+@login_requerido
+def enviar_cotizacion():
+    # En un entorno real, enviaríamos esto a la API Finite
+    datos = {
+        "descripcion": request.form.get('descripcion_trabajo'),
+        "presupuesto": request.form.get('presupuesto_estimado'),
+        "fecha": request.form.get('fecha_servicio'),
+        "hora": request.form.get('hora_servicio')
+    }
+    # Por ahora simulamos el éxito y mostramos la pantalla de espera
+    return render_template('esperando_ofertas.html', **datos)
+
+@blueprint.route('/visita/aviso')
+@login_requerido
+def aviso_visita():
+    return render_template('aviso_visita.html')
+
+@blueprint.route('/visita/agendar')
+@login_requerido
+def agendar_visita():
+    return render_template('agenda_visita.html')

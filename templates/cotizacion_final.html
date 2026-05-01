@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización Final - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+        }
+
+        /* 🛠️ ESTILO UNIFICADO "OKUPO" */
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; }
+
+        .cotizacion-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 35px;
+            padding: 30px 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+            text-align: left;
+        }
+
+        .tech-info-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(139, 90, 43, 0.1);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .tech-avatar { width: 45px; height: 45px; border-radius: 50%; background-image: url('/static/piedra_boton.png'); background-size: cover; border: 2px solid var(--color-texto); }
+        .tech-name { font-weight: 900; font-size: 14px; text-transform: uppercase; }
+
+        .desglose-pago {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+        }
+
+        .desglose-fila {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .desglose-total {
+            border-top: 2px dashed #ddd;
+            margin-top: 15px;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--color-verde);
+        }
+
+        .descuento-visita {
+            color: #e67e22;
+            font-size: 12px;
+            font-weight: 800;
+            text-align: right;
+            display: block;
+            margin-top: -5px;
+            margin-bottom: 15px;
+        }
+
+        .nota-tecnica {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--color-texto);
+            opacity: 0.8;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #fdf9f2;
+            border-radius: 15px;
+            border-left: 4px solid var(--color-dorado);
+        }
+
+        .btn-confirmar {
+            width: 100%;
+            padding: 20px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 25px;
+            color: #ffff00;
+            text-shadow: 1px 1px 2px black;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+        }
+        .btn-confirmar:active { transform: scale(0.95); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Presupuesto Final</h1>
+        </div>
+
+        <div class="cotizacion-card">
+            <div class="tech-info-mini">
+                <div class="tech-avatar"></div>
+                <div class="tech-info">
+                    <div class="tech-name">Socio: Juan Pérez</div>
+                    <div style="font-size: 10px; opacity: 0.6; font-weight: 800;">Técnico Certificado Okupo</div>
+                </div>
+            </div>
+
+            <div class="nota-tecnica">
+                <b>Indicaciones del Experto:</b><br>
+                {{ notas or 'Se requiere el cambio total de la tubería de desagüe de 2 pulgadas. Incluye sellado con silicón industrial y garantía de 6 meses por goteo.' }}
+            </div>
+
+            <div class="desglose-pago">
+                <div class="desglose-fila">
+                    <span>Mano de Obra</span>
+                    <span>$1,850.00</span>
+                </div>
+                <div class="desglose-fila">
+                    <span>Materiales Sugeridos</span>
+                    <span style="opacity: 0.5;">A cuenta de cliente</span>
+                </div>
+                
+                <div class="desglose-total">
+                    <span>Subtotal</span>
+                    <span>$1,850.00</span>
+                </div>
+                
+                <div style="border-top: 1px solid #eee; margin: 10px 0; padding-top: 10px;">
+                    <div class="desglose-fila" style="color: #e67e22;">
+                        <span>Crédito por Visita</span>
+                        <span>-$400.00</span>
+                    </div>
+                    <span class="descuento-visita">✅ Descuento aplicado</span>
+                </div>
+
+                <div class="desglose-total" style="border: none; padding: 0; color: var(--color-texto);">
+                    <span>TOTAL A PAGAR</span>
+                    <span>$1,450.00</span>
+                </div>
+            </div>
+
+            <button class="btn-confirmar" onclick="alert('Iniciando proceso de pago final...')">Autorizar y Pagar</button>
+            
+            <a href="#" style="display: block; margin-top: 20px; font-size: 12px; text-align: center; color: var(--color-texto); font-weight: 800; opacity: 0.5; text-decoration: none;">
+                Rechazar Presupuesto
+            </a>
+        </div>
+
+        <p style="margin-top: 30px; font-size: 11px; color: white; text-shadow: 1px 1px 2px black; opacity: 0.7; line-height: 1.4;">
+            * Al autorizar, aceptas los términos de servicio y las notas del experto.<br>
+            El pago es procesado de forma segura por Okupo.
+        </p>
+    </div>
+
+</body>
+</html>

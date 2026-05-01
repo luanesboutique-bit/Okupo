@@ -31,6 +31,15 @@
             justify-content: center;
         }
 
+        /* MODO URGENCIA ACTIVO */
+        .modo-urgencia-activo, 
+        .modo-urgencia-activo html, 
+        .modo-urgencia-activo body {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            min-height: 100vh;
+        }
+
         .app-container {
             width: 100%;
             max-width: 450px;
@@ -39,6 +48,33 @@
             position: relative;
             padding: 20px;
             box-sizing: border-box;
+        }
+
+        .modo-urgencia-activo .app-container {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            padding-top: 50px;
+        }
+
+        .banner-urgencia {
+            display: none;
+            background: #ff0000;
+            color: #ffffff;
+            padding: 8px 10px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 13px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 4000;
+            text-transform: uppercase;
+        }
+
+        .modo-urgencia-activo .banner-urgencia {
+            display: block;
         }
 
         .header {
@@ -135,13 +171,17 @@
 </head>
 <body>
 
+    <div class="banner-urgencia" id="banner-urgencia">
+        ⚠️ ATENCIÓN INMEDIATA ACTIVADA - PRIORIDAD MÁXIMA
+    </div>
+
     <div class="app-container">
         <div class="header">
             <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
             <h1>Cotización Especial</h1>
         </div>
 
-        <form action="{{ url_for('pedidos.mis_pedidos') }}" method="POST" class="form-card">
+        <form action="{{ url_for('pedidos.enviar_cotizacion') }}" method="POST" class="form-card">
             <div class="input-group">
                 <label>¿Qué necesitas reparar?</label>
                 <textarea name="descripcion_trabajo" rows="4" placeholder="Describe a detalle el problema o trabajo que requieres..." required></textarea>
@@ -171,11 +211,24 @@
 
             <div class="input-group">
                 <label>Urgencia</label>
-                <select name="nivel_urgencia" style="width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #ddd; background: white; font-family: inherit; font-weight: 700;">
+                <select name="nivel_urgencia" id="nivel_urgencia" onchange="checkUrgencia()" style="width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #ddd; background: white; font-family: inherit; font-weight: 700;">
                     <option value="baja">Puedo esperar (Cotizar con calma)</option>
                     <option value="media" selected>Normal (Próximos días)</option>
                     <option value="alta">Urgente (Hoy mismo)</option>
                 </select>
+            </div>
+
+            <!-- SECCIÓN DE AGENDAMIENTO -->
+            <div id="agendamiento-container">
+                <div class="input-group">
+                    <label><i class="fas fa-calendar-alt"></i> ¿Qué día necesitas el servicio?</label>
+                    <input type="date" name="fecha_servicio" id="fecha_servicio" required>
+                </div>
+
+                <div class="input-group">
+                    <label><i class="fas fa-clock"></i> ¿A qué hora?</label>
+                    <input type="time" name="hora_servicio" id="hora_servicio" required>
+                </div>
             </div>
 
             <button type="submit" class="btn-enviar">Solicitar Cotizaciones</button>
@@ -186,5 +239,32 @@
         </p>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('okupo_urgencia_247') === 'true') {
+                document.body.classList.add('modo-urgencia-activo');
+                // Si es modo urgencia global, ocultar agendamiento porque es inmediato
+                document.getElementById('agendamiento-container').style.display = 'none';
+                document.getElementById('nivel_urgencia').value = 'alta';
+            }
+
+            // Establecer fecha mínima como hoy
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha_servicio').setAttribute('min', hoy);
+            document.getElementById('fecha_servicio').value = hoy;
+        });
+
+        function checkUrgencia() {
+            const nivel = document.getElementById('nivel_urgencia').value;
+            const container = document.getElementById('agendamiento-container');
+            if (nivel === 'alta') {
+                container.style.opacity = '0.5';
+                container.style.pointerEvents = 'none';
+            } else {
+                container.style.opacity = '1';
+                container.style.pointerEvents = 'auto';
+            }
+        }
+    </script>
 </body>
 </html>
