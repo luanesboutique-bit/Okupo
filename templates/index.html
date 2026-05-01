@@ -56,6 +56,17 @@
             justify-content: space-between;
             align-items: center;
         }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-name-display {
+            font-size: 14px;
+            font-weight: 800;
+            color: #5a3e2b;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
         .header i { 
             font-size: 24px; 
             color: #5a3e2b; /* Café Oscuro */
@@ -210,87 +221,58 @@
         }
 
         .btn-piedra {
-            aspect-ratio: 1.3;
-            background-color: #222;
-            background-image: 
-                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05) 0%, transparent 50%),
-                url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            aspect-ratio: 0.9;
+            background-image: url('/static/marco_piedras.jpg'); /* El marco de fondo */
             background-size: cover;
-            border-radius: 40px;
+            background-position: center;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            /* 🪨 EFECTO PIEDRA OSCURA Y RELIEVE */
-            box-shadow: 
-                0 15px 35px rgba(0,0,0,0.8),
-                inset 0 -8px 15px rgba(0,0,0,0.6),
-                inset 0 8px 15px rgba(255,255,255,0.05);
-            border: 2px solid #111;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
+            border: 3px solid #3e2b1f;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+            padding: 10px; /* Espacio para que se vea el marco en las orillas */
         }
 
-        /* Grietas de la piedra */
+        /* La PIEDRA DE CATEGORÍA como el elemento principal que rellena el centro */
         .btn-piedra::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://www.transparenttextures.com/patterns/cracked-earth.png');
-            opacity: 0.3;
-            pointer-events: none;
+            top: 5%; 
+            left: 5%; 
+            right: 5%; 
+            bottom: 5%;
+            background-size: cover; /* Para que cubra casi todo el marco */
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 1;
+            border-radius: 15px;
+            /* 🪨 SOMBRA PARA QUE PAREZCA QUE LA PIEDRA ESTÁ SOBRE EL MARCO */
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
         }
 
         .btn-piedra:active {
-            transform: scale(0.92) translateY(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-        }
-        
-        /* 🏆 ICONOS DORADOS/METÁLICOS 3D */
-        .btn-piedra i {
-            font-size: 55px;
-            margin-bottom: 12px;
-            z-index: 1;
-            /* ✨ EFECTO ORO REALISTA */
-            background: linear-gradient(135deg, 
-                #f5e5a6 0%, 
-                #e1b342 25%, 
-                #b8860b 50%, 
-                #d4af37 75%, 
-                #f5e5a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)) brightness(1.2);
-            position: relative;
+            transform: scale(0.96);
         }
 
-        /* Brillo extra en el icono */
-        .btn-piedra i::after {
-            content: '';
-            position: absolute;
-            top: -10%; left: -10%; width: 120%; height: 120%;
-            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
-            z-index: -1;
-            opacity: 0.5;
-        }
-
-        /* 🏷️ LETRAS METÁLICAS EN RELIEVE */
         .btn-piedra span {
-            color: #d4af37;
+            color: #ffffff;
             font-weight: 900;
-            font-size: 20px;
+            font-size: 19px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            z-index: 1;
-            /* ✨ EFECTO METAL GRABADO */
-            background: linear-gradient(to bottom, #f5e5a6, #b8860b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: none;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.9));
+            z-index: 2;
+            position: absolute;
+            bottom: 10%;
+            /* Sombreado para resaltar sobre la piedra principal */
+            text-shadow: 2px 2px 4px rgba(0,0,0,1), 0 0 15px rgba(0,0,0,0.8);
         }
+
 
         /* Variación para Iconos Plateados (Plomería/Limpieza) */
         .silver i, .silver span {
@@ -357,17 +339,22 @@
         .urgencia {
             background-image: url('/static/madera_oscura.jpg');
             background-size: cover;
-            color: #ffff00; /* Amarillo brillante para máximo impacto */
-            text-shadow: 2px 2px 3px rgba(0,0,0,1); /* Sombra negra definida */
+            color: #ffffff; /* Letra blanca como pediste */
+            text-shadow: 
+                2px 2px 4px rgba(0,0,0,1), 
+                0 0 10px rgba(255,255,255,0.3); /* Sombreado para que sobresalga */
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            border: 2px solid #3d2b1f;
-            font-size: 20px; /* Tamaño de letra aumentado */
-            font-weight: 900; /* Negrita extra */
+            border: 2px solid #ffff00; /* Borde amarillo para resaltar el peligro */
+            font-size: 20px; 
+            font-weight: 900;
         }
         .urgencia i { font-size: 22px; color: #ffff00; filter: drop-shadow(0 0 5px rgba(0,0,0,1)); }
+
+        /* Estilo para cuando se ocultan elementos en la búsqueda */
+        .hidden { display: none !important; }
 
         .cotizar {
             background-image: url('/static/madera_clara.jpg');
@@ -436,17 +423,25 @@
         <div class="header">
             <i class="fas fa-bars" onclick="toggleMenu()"></i>
             <div class="logo">okupo</div>
-            {% if session.get('user_id') %}
-                <a href="{{ url_for('autenticacion.logout') }}" title="Cerrar Sesión" style="color: inherit; text-decoration: none;"><i class="fas fa-sign-out-alt"></i></a>
-            {% else %}
-                <a href="{{ url_for('autenticacion.login') }}" style="color: inherit; text-decoration: none;"><i class="fas fa-user-circle"></i></a>
-            {% endif %}
+            <div class="header-actions">
+                {% if session.get('user_id') %}
+                    <span class="user-name-display">{{ session.get('nombre') }}</span>
+                    <a href="{{ url_for('autenticacion.logout') }}" title="Cerrar Sesión" style="color: inherit; text-decoration: none;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('autenticacion.login') }}" title="Iniciar Sesión" style="color: inherit; text-decoration: none;">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                {% endif %}
+            </div>
         </div>
 
         <!-- Buscador -->
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <span>Buscar</span>
+            <input type="text" id="busqueda-input" placeholder="¿Qué necesitas arreglar?" 
+                   style="border: none; background: transparent; outline: none; width: 100%; font-size: 16px; color: #5a3e2b; font-weight: 600;">
         </div>
 
         <!-- Ubicación -->
@@ -459,35 +454,32 @@
         <!-- Servicios Express (Piedra) -->
         <div class="section-title">Servicios Express</div>
         <div class="grid-express">
-            <a href="/categorias/1/subcategorias" class="btn-piedra">
-                <i class="fas fa-key"></i>
+            <a href="/categorias/1/subcategorias" class="btn-piedra piedra-cerrajeria">
                 <span>Cerrajería</span>
             </a>
-            <a href="/categorias/2/subcategorias" class="btn-piedra silver">
-                <i class="fas fa-faucet"></i>
+            <a href="/categorias/2/subcategorias" class="btn-piedra piedra-plomeria">
                 <span>Plomería</span>
             </a>
-            <a href="/categorias/3/subcategorias" class="btn-piedra">
-                <i class="fas fa-bolt"></i>
+            <a href="/categorias/3/subcategorias" class="btn-piedra piedra-electricidad">
                 <span>Electricidad</span>
             </a>
-            <a href="/categorias/4/subcategorias" class="btn-piedra silver">
-                <i class="fas fa-spray-can-sparkles"></i>
+            <a href="/categorias/4/subcategorias" class="btn-piedra piedra-limpieza">
                 <span>Limpieza</span>
             </a>
         </div>
 
         <!-- Otros Servicios (Madera) -->
+        <div class="section-title">Tareas mas buscadas</div>
         <div class="grid-maderas">
-            <a href="/categorias/5/subcategorias" class="btn-madera madera-clara">Limpieza de Muebles</a>
-            <a href="/categorias/6/subcategorias" class="btn-madera madera-media">Armado de Muebles</a>
-            <a href="/categorias/7/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
-            <a href="/categorias/8/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
+            <a href="/detalles-servicio?tarea=limpieza_muebles" class="btn-madera madera-clara">Limpieza de Muebles</a>
+            <a href="/detalles-servicio?tarea=armado_muebles" class="btn-madera madera-media">Armado de Muebles</a>
+            <a href="/detalles-servicio?tarea=albañileria_pintura" class="btn-madera madera-clara">Albañilería y Pintura</a>
+            <a href="/detalles-servicio?tarea=fletes_mudanzas" class="btn-madera madera-media">Fletes y Mudanzas</a>
         </div>
 
         <!-- Botones de Acción -->
         <div class="bottom-actions">
-            <a href="#" class="btn-largo urgencia">
+            <a href="/urgencia" class="btn-largo urgencia">
                 <span>URGENCIA 24/7</span>
                 <i class="fas fa-bolt"></i>
             </a>
@@ -531,6 +523,21 @@
                 );
             }
         }
+
+        // Lógica de Búsqueda
+        document.getElementById('busqueda-input').addEventListener('input', function(e) {
+            const termino = e.target.value.toLowerCase();
+            const botones = document.querySelectorAll('.btn-piedra, .btn-madera');
+            
+            botones.forEach(boton => {
+                const texto = boton.innerText.toLowerCase();
+                if (texto.includes(termino)) {
+                    boton.classList.remove('hidden');
+                } else {
+                    boton.classList.add('hidden');
+                }
+            });
+        });
 
         // Ejecutar al cargar
         document.addEventListener('DOMContentLoaded', () => {

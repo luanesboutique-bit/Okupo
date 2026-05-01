@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urgencia 24/7 - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-urgencia: #ffff00;
+            --color-fondo: #1a1a1a;
+            --color-texto: #fdfaf5;
+        }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; display: flex; justify-content: center;
+            color: var(--color-texto);
+        }
+        .app-container {
+            width: 100%; max-width: 450px; min-height: 100vh;
+            background: rgba(0,0,0,0.7); padding: 25px; box-sizing: border-box;
+        }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
+        .header h1 { font-size: 26px; color: var(--color-urgencia); margin: 0; font-weight: 900; letter-spacing: 1px; }
+        .header i { font-size: 28px; color: var(--color-urgencia); animation: blink 1s infinite; }
+        
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .banner-alerta {
+            background: var(--color-urgencia); color: #000;
+            padding: 15px; border-radius: 12px; margin-bottom: 30px;
+            font-weight: 900; text-transform: uppercase; text-align: center;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.4);
+        }
+
+        .grid-categorias { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .btn-urgente {
+            background: linear-gradient(145deg, #333, #222);
+            aspect-ratio: 1; border-radius: 25px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; border: 2px solid var(--color-urgencia);
+            transition: all 0.2s;
+        }
+        .btn-urgente:active { transform: scale(0.95); box-shadow: 0 0 15px var(--color-urgencia); }
+        .btn-urgente i { font-size: 45px; margin-bottom: 12px; color: var(--color-urgencia); }
+        .btn-urgente span { color: var(--color-urgencia); font-weight: 800; font-size: 14px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="/" style="color: var(--color-urgencia);"><i class="fas fa-chevron-left"></i></a>
+            <i class="fas fa-bolt"></i>
+            <h1>EMERGENCIA</h1>
+        </div>
+
+        <div class="banner-alerta">Selecciona el área del problema</div>
+
+        <div class="grid-categorias">
+            {% for cat in categorias %}
+            <a href="/urgencia/{{ cat.id }}/subcategorias" class="btn-urgente">
+                <i class="{{ cat.icono or 'fas fa-tools' }}"></i>
+                <span>{{ cat.nombre }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Servicio - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; display: flex; justify-content: center;
+            color: var(--color-texto);
+        }
+        .app-container {
+            width: 100%; max-width: 450px; min-height: 100vh;
+            padding: 25px; box-sizing: border-box;
+            background: rgba(253, 250, 245, 0.9);
+        }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .header h1 { font-size: 22px; margin: 0; font-weight: 900; }
+
+        /* SWITCH PARA ALBAÑILERIA / PINTURA */
+        .switch-container {
+            display: none; /* Oculto por defecto */
+            background: #e8e0d5;
+            padding: 5px;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            display: flex;
+            cursor: pointer;
+        }
+        .switch-option {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-weight: 800;
+            z-index: 2;
+            transition: color 0.3s;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        .switch-active-bg {
+            position: absolute;
+            top: 5px; left: 5px;
+            width: calc(50% - 5px);
+            height: calc(100% - 10px);
+            background: var(--color-texto);
+            border-radius: 20px;
+            z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .switch-option.active { color: white; }
+
+        .form-pedido { display: flex; flex-direction: column; gap: 20px; }
+        label { font-weight: 800; font-size: 13px; text-transform: uppercase; opacity: 0.7; }
+        textarea {
+            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #ccc;
+            font-size: 16px; font-family: inherit; box-sizing: border-box;
+        }
+        .btn-accion {
+            background-image: url('/static/madera_media.jpg');
+            background-size: cover;
+            padding: 20px; border-radius: 30px; color: var(--color-texto);
+            font-weight: 900; font-size: 18px; text-transform: uppercase;
+            border: 2px solid rgba(0,0,0,0.1); cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="/" style="color: var(--color-texto);"><i class="fas fa-arrow-left"></i></a>
+            <h1 id="titulo-pagina">Detalles del Servicio</h1>
+        </div>
+
+        <!-- Solo aparece si la tarea es albañileria_pintura -->
+        <div class="switch-container" id="modo-switch">
+            <div class="switch-active-bg" id="switch-bg"></div>
+            <div class="switch-option active" onclick="setModo('albañileria', 0)">Albañilería</div>
+            <div class="switch-option" onclick="setModo('pintura', 1)">Pintura</div>
+        </div>
+
+        <form class="form-pedido" action="/asignacion" method="POST">
+            <input type="hidden" name="tarea" id="input-tarea">
+            
+            <div class="campo">
+                <label>Descripción del trabajo</label>
+                <textarea rows="5" placeholder="Cuéntanos qué necesitas exactamente..."></textarea>
+            </div>
+
+            <div class="campo">
+                <label>Ubicación del servicio</label>
+                <div style="background: white; padding: 15px; border-radius: 15px; font-size: 14px; border: 1px solid #ccc; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-map-marker-alt" style="color: var(--color-dorado);"></i>
+                    <span id="ubicacion-texto">Cargando ubicación...</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-accion">Buscar Especialista</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tareaInicial = urlParams.get('tarea');
+        
+        const titulos = {
+            'limpieza_muebles': 'Limpieza de Muebles',
+            'armado_muebles': 'Armado de Muebles',
+            'albañileria_pintura': 'Albañilería y Pintura',
+            'fletes_mudanzas': 'Fletes y Mudanzas'
+        };
+
+        document.getElementById('titulo-pagina').innerText = titulos[tareaInicial] || 'Detalles';
+        document.getElementById('input-tarea').value = tareaInicial;
+
+        if (tareaInicial === 'albañileria_pintura') {
+            document.getElementById('modo-switch').style.display = 'flex';
+        }
+
+        function setModo(modo, index) {
+            document.getElementById('input-tarea').value = modo;
+            const options = document.querySelectorAll('.switch-option');
+            options.forEach(opt => opt.classList.remove('active'));
+            options[index].classList.add('active');
+            
+            const bg = document.getElementById('switch-bg');
+            bg.style.transform = `translateX(${index * 100}%)`;
+        }
+
+        // Obtener ubicación de localStorage
+        document.getElementById('ubicacion-texto').innerText = localStorage.getItem('okupo_ubicacion_nombre') || "Zapopan, Jalisco";
+    </script>
+</body>
+</html>
