@@ -366,8 +366,76 @@
             border: 2px solid #3d2b1f;
             font-size: 20px; /* Tamaño de letra aumentado */
             font-weight: 900; /* Negrita extra */
+            cursor: pointer;
+            transition: all 0.3s;
         }
         .urgencia i { font-size: 22px; color: #ffff00; filter: drop-shadow(0 0 5px rgba(0,0,0,1)); }
+
+        /* MODO URGENCIA ACTIVO */
+        .modo-urgencia-activo, 
+        .modo-urgencia-activo html, 
+        .modo-urgencia-activo body {
+            background-color: #ff8c00 !important; /* Naranja Intenso */
+            background-image: none !important;
+            min-height: 100vh;
+        }
+        
+        .modo-urgencia-activo .app-container {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .banner-urgencia {
+            display: none;
+            background: #ff0000; /* Rojo sólido */
+            color: #ffffff; /* Letras blancas */
+            padding: 8px 10px; /* Franja pequeña */
+            text-align: center;
+            font-weight: 900;
+            font-size: 13px; /* Tamaño de letra ajustado */
+            width: 100%;
+            position: fixed; /* Fixed para asegurar que cubra el ancho de la ventana */
+            top: 0;
+            left: 0;
+            z-index: 4000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            border: none;
+        }
+
+        .modo-urgencia-activo .banner-urgencia {
+            display: block;
+        }
+
+        /* Espaciador para que el contenido no quede debajo del banner fixed */
+        .modo-urgencia-activo .app-container {
+            padding-top: 45px;
+        }
+
+        /* Ajustes de elementos en modo urgencia para evitar negros */
+        .modo-urgencia-activo .btn-piedra {
+            background-color: #e67e00 !important; /* Naranja más oscuro para contraste */
+            border-color: #ff9f2b !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        
+        .modo-urgencia-activo .header, 
+        .modo-urgencia-activo .search-box,
+        .modo-urgencia-activo .sidebar-header {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .modo-urgencia-activo .urgencia {
+            background: #fff !important;
+            color: #ff0000 !important;
+            border: 3px solid #ff0000 !important;
+        }
+        .modo-urgencia-activo .urgencia i { color: #ff0000 !important; }
 
         .cotizar {
             background-image: url('/static/madera_clara.jpg');
@@ -377,7 +445,12 @@
 
     </style>
 </head>
-<body>
+<body class="">
+
+    <div class="banner-urgencia" id="banner-urgencia">
+        ⚠️ ESTÁS SOLICITANDO ATENCIÓN INMEDIATA.<br>
+        UN SOCIO DE OKUPO TE ATENDERÁ CON PRIORIDAD MÁXIMA.
+    </div>
 
     <div class="app-container">
         <!-- Menú Lateral (Sidebar) -->
@@ -400,14 +473,14 @@
                 <a href="/categorias/5/subcategorias" class="menu-item"><i class="fas fa-couch"></i> 6. Limpieza de Muebles</a>
                 <a href="/categorias/6/subcategorias" class="menu-item"><i class="fas fa-hammer"></i> 7. Armado de Muebles</a>
                 <a href="/categorias/7/subcategorias" class="menu-item"><i class="fas fa-truck-moving"></i> 8. Fletes y Mudanzas</a>
-                <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 9. Albañilería y Construcción</a>
+                <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 9. Albañilería y Pintura</a>
                 <a href="/categorias/9/subcategorias" class="menu-item"><i class="fas fa-paint-roller"></i> 10. Pintura y Acabados</a>
                 
                 <a href="/categorias" class="menu-item highlight" style="margin-top: 10px;">
                     <i class="fas fa-plus-circle"></i> 11. COTIZAR OTRO SERVICIO
                 </a>
                 
-                <a href="#" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 12. Urgencia 24/7</a>
+                <a href="javascript:toggleUrgencia()" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 12. Urgencia 24/7</a>
                 <a href="#" class="menu-item"><i class="fas fa-info-circle"></i> 13. Información y Políticas</a>
                 <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 14. Mi Perfil / Historial</a>
                 <a href="#" class="menu-item"><i class="fas fa-star"></i> 15. Calificaciones</a>
@@ -481,13 +554,13 @@
         <div class="grid-maderas">
             <a href="/categorias/5/subcategorias" class="btn-madera madera-clara">Limpieza de Muebles</a>
             <a href="/categorias/6/subcategorias" class="btn-madera madera-media">Armado de Muebles</a>
-            <a href="/categorias/7/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
-            <a href="/categorias/8/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
+            <a href="/categorias/8/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
+            <a href="/categorias/7/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
         </div>
 
         <!-- Botones de Acción -->
         <div class="bottom-actions">
-            <a href="#" class="btn-largo urgencia">
+            <a href="javascript:toggleUrgencia()" class="btn-largo urgencia">
                 <span>URGENCIA 24/7</span>
                 <i class="fas fa-bolt"></i>
             </a>
@@ -505,6 +578,18 @@
             const overlay = document.getElementById('overlay');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
+        }
+
+        function toggleUrgencia() {
+            const body = document.body;
+            const esUrgente = body.classList.toggle('modo-urgencia-activo');
+            localStorage.setItem('okupo_urgencia_247', esUrgente ? 'true' : 'false');
+            
+            if (esUrgente) {
+                console.log("Modo Urgencia Activado");
+            } else {
+                console.log("Modo Urgencia Desactivado");
+            }
         }
 
         function obtenerUbicacion() {
@@ -536,6 +621,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             obtenerUbicacion();
             
+            // Verificar estado de urgencia persistido
+            if (localStorage.getItem('okupo_urgencia_247') === 'true') {
+                document.body.classList.add('modo-urgencia-activo');
+            }
+
             // Verificación de Token / Redirección (Simulado aquí, manejado por Flask)
             {% if session.get('token') == 'UNAUTHORIZED' %}
                 window.location.href = "{{ url_for('autenticacion.login') }}";

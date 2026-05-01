@@ -28,6 +28,14 @@
             justify-content: center;
         }
 
+        .modo-urgencia-activo, 
+        .modo-urgencia-activo html, 
+        .modo-urgencia-activo body {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            min-height: 100vh;
+        }
+
         .app-container {
             width: 100%;
             max-width: 450px;
@@ -35,6 +43,34 @@
             background: var(--color-crema);
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             padding-bottom: 50px;
+            position: relative;
+        }
+
+        .modo-urgencia-activo .app-container {
+            background-color: #ff8c00 !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            padding-top: 45px; /* Espacio para el banner fixed */
+        }
+
+        .banner-urgencia {
+            display: none;
+            background: #ff0000; /* Rojo sólido */
+            color: #ffffff; /* Blanco */
+            padding: 8px 10px; /* Franja pequeña */
+            text-align: center;
+            font-weight: 900;
+            font-size: 12px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 4000;
+            text-transform: uppercase;
+        }
+
+        .modo-urgencia-activo .banner-urgencia {
+            display: block;
         }
 
         .header {
@@ -47,6 +83,10 @@
             top: 0;
             z-index: 100;
         }
+        
+        /* Ajuste de header cuando hay banner */
+        .modo-urgencia-activo .header { top: 0; position: relative; }
+
         .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
         .header h1 { font-size: 18px; margin: 0; font-weight: 800; text-transform: uppercase; }
 
@@ -164,6 +204,10 @@
 </head>
 <body>
 
+    <div class="banner-urgencia" id="banner-urgencia">
+        ⚠️ ATENCIÓN INMEDIATA ACTIVADA - PRIORIDAD MÁXIMA
+    </div>
+
     <div class="app-container">
         <div class="header">
             <a href="{{ url_for('principal.index') }}"><i class="fas fa-arrow-left"></i></a>
@@ -212,13 +256,22 @@
                     let tipoTarifa = "normal";
                     let colorTarifa = "#4caf50";
 
-                    // Lógica de visualización (Frontend)
-                    if (dia === 0) {
+                    // Verificar Modo Urgencia Global
+                    const modoUrgenciaGlobal = localStorage.getItem('okupo_urgencia_247') === 'true';
+
+                    if (modoUrgenciaGlobal) {
+                        document.body.classList.add('modo-urgencia-activo');
                         tipoTarifa = "urgente";
                         colorTarifa = "#f44336";
-                    } else if (hora >= 20 || hora < 6) {
-                        tipoTarifa = "noche";
-                        colorTarifa = "#ff9800";
+                    } else {
+                        // Lógica estándar por tiempo/día
+                        if (dia === 0) {
+                            tipoTarifa = "urgente";
+                            colorTarifa = "#f44336";
+                        } else if (hora >= 20 || hora < 6) {
+                            tipoTarifa = "noche";
+                            colorTarifa = "#ff9800";
+                        }
                     }
 
                     // Aplicar a todos los servicios
@@ -226,6 +279,12 @@
                         const item = document.getElementById(`${tipoTarifa}-{{ sub.id }}`);
                         const btn = document.getElementById(`btn-ahora-{{ sub.id }}`);
                         
+                        // Limpiar estilos previos por si acaso (útil si se togglea en vivo, aunque aquí es al cargar)
+                        ['normal', 'noche', 'urgente'].forEach(t => {
+                            const el = document.getElementById(`${t}-{{ sub.id }}`);
+                            if (el) { el.style.background = ""; el.style.borderColor = ""; el.style.transform = ""; }
+                        });
+
                         if (item) {
                             item.style.background = colorTarifa + "22"; // Fondo traslúcido
                             item.style.borderColor = colorTarifa;
@@ -234,7 +293,8 @@
                         }
                         
                         if (btn) {
-                            btn.innerText = `Solicitar (${tipoTarifa.toUpperCase()})`;
+                            const labelBoton = modoUrgenciaGlobal ? "URGENTE 24/7" : tipoTarifa.toUpperCase();
+                            btn.innerText = `Solicitar (${labelBoton})`;
                             if (tipoTarifa !== 'normal') btn.style.background = colorTarifa;
                         }
                     {% endfor %}
