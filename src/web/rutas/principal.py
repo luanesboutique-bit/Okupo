@@ -31,6 +31,32 @@ def ver_subcategorias(categoria_id):
     acento = colores_cat.get(categoria_id, "#C69B6F")
     return render_template('subcategorias.html', subcategorias=subcategorias or [], cat_id=categoria_id, acento=acento)
 
+@blueprint.route('/detalles-servicio')
+def detalles_servicio():
+    return render_template('detalles_servicio.html')
+
+@blueprint.route('/urgencia')
+def urgencia_categorias():
+    categorias = api_get("/categorias", token=session.get('token'))
+    if categorias == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+    return render_template('urgencia_categorias.html', categorias=categorias or [])
+
+@blueprint.route('/urgencia/<int:categoria_id>/subcategorias')
+def urgencia_subcategorias(categoria_id):
+    subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias", token=session.get('token'))
+    if subcategorias == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+    return render_template('urgencia_subcategorias.html', subcategorias=subcategorias or [], cat_id=categoria_id)
+
+@blueprint.route('/urgencia/detalles/<int:subcategoria_id>')
+def urgencia_detalles(subcategoria_id):
+    return render_template('urgencia_detalles.html', subcat_id=subcategoria_id)
+
+@blueprint.route('/urgencia/buscando')
+def buscando_colaborador():
+    return render_template('asignacion.html')
+
 @blueprint.route('/marketplace/<int:subcategoria_id>')
 def marketplace(subcategoria_id):
     params = "?latitud=19.4326&longitud=-99.1332"

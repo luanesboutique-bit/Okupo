@@ -14,17 +14,27 @@ def login():
         email = request.form.get('email')
         contrasenna = request.form.get('contrasenna')
         
-        token = api_post("/login", {"correo": email, "contrasenna": contrasenna})
+        print(f"DEBUG: Intentando login con correo: {email}")
+        respuesta = api_post("/login", {"correo": email, "contrasenna": contrasenna})
+        print(f"DEBUG: Respuesta API Login: {respuesta}")
         
-        if token and token != "UNAUTHORIZED":
+        if respuesta and respuesta != "UNAUTHORIZED":
+            token = respuesta.get('token') if isinstance(respuesta, dict) else respuesta
+            print(f"DEBUG: Token extraido: {token}")
+            
             usuario_id = obtener_usuario_id_de_token(token)
+            print(f"DEBUG: Usuario ID decodificado: {usuario_id}")
+
             if usuario_id:
                 session.clear()
                 session['user_id'] = int(usuario_id)
                 session['nombre'] = email.split('@')[0].capitalize()
                 session['correo'] = email
                 session['token'] = token
+                print(f"DEBUG: Sesion guardada: {dict(session)}")
                 return redirect(url_for('principal.index'))
+            else:
+                print("DEBUG: Fallo al decodificar ID del token")
         
         return render_template('login.html', error="Correo o contrasenna incorrectos")
             
@@ -39,10 +49,12 @@ def registro():
     if request.method == 'POST':
         datos_usuario = {
             "nombre": request.form.get('nombre'),
-            "correo": request.form.get('email'),
-            "contrasenna": request.form.get('password')
+            "correo": request.form.get('correo'),
+            "contrasenna": request.form.get('contrasenna')
         }
+        print(f"DEBUG: Intentando registrar: {datos_usuario}")
         respuesta = api_post("/usuarios", datos_usuario)
+        print(f"DEBUG: Respuesta registro: {respuesta}")
         if respuesta and respuesta != "UNAUTHORIZED":
             if rol == 'colaborador':
                 return redirect(url_for('autenticacion.login', mensaje="¡Cuenta creada! Inicia sesión para configurar tu perfil técnico."))

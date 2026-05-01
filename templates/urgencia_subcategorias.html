@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urgencia - Tipo de Problema</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-urgencia: #ffff00;
+            --color-texto: #fdfaf5;
+        }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; display: flex; justify-content: center;
+            color: var(--color-texto);
+        }
+        .app-container {
+            width: 100%; max-width: 450px; min-height: 100vh;
+            background: rgba(0,0,0,0.8); padding: 25px; box-sizing: border-box;
+        }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .header h1 { font-size: 22px; color: var(--color-urgencia); margin: 0; font-weight: 900; }
+        
+        .lista-urgente { display: flex; flex-direction: column; gap: 15px; }
+
+        .btn-tarea {
+            background: #222; padding: 25px; border-radius: 20px;
+            text-decoration: none; color: var(--color-texto);
+            font-weight: 800; font-size: 18px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 6px solid var(--color-urgencia);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: transform 0.1s;
+        }
+        .btn-tarea:active { transform: scale(0.97); background: #333; }
+        .btn-tarea i { color: var(--color-urgencia); font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="/urgencia" style="color: var(--color-urgencia);"><i class="fas fa-chevron-left"></i></a>
+            <h1>¿QUÉ SUCEDIÓ?</h1>
+        </div>
+
+        <div class="lista-urgente">
+            {% for sub in subcategorias %}
+            <a href="/urgencia/detalles/{{ sub.id }}" class="btn-tarea">
+                <span>{{ sub.nombre }}</span>
+                <i class="fas fa-bolt"></i>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
