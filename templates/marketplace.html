@@ -158,31 +158,36 @@
                 <div class="info">
                     <h3>{{ col.nombre }}</h3>
                     <div class="rating">
-                        <i class="fas fa-star"></i> {{ col.reputacion or '4.8' }}
-                        <span style="color: #888; font-size: 11px; margin-left: 5px;">({{ col.trabajos or '12' }} trabajos)</span>
-                    </div>
-                    <div class="distancia">
-                        <i class="fas fa-map-marker-alt"></i> a {{ col.distancia_km or '1.2' }} km
-                    </div>
-                </div>
-                
-                <div class="price-tag">
-                    <span class="label">Desde</span>
-                    <span class="amount">${{ col.precio_base or '850' }}</span>
-                </div>
+                        <i class="fas fa-star"></i> {{ col.reputacion }}
+                                <span style="color: #888; font-size: 11px; margin-left: 5px;">({{ col.trabajos }} trabajos)</span>
+                            </div>
+                            <div class="distancia">
+                                <i class="fas fa-map-marker-alt"></i> a {{ col.distancia_km }} km
+                            </div>
+                        </div>
 
-                <a href="{{ url_for('pedidos.pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcategoria_id, categoria_id=categoria_id) }}" class="btn-seleccionar">
-                    Elegir Experto
-                </a>
-            </div>
-            {% else %}
-            <div style="text-align: center; margin-top: 50px; color: var(--color-texto); font-weight: 800; text-shadow: 0 0 10px white;">
-                <i class="fas fa-user-slash" style="font-size: 40px; margin-bottom: 15px; display: block; opacity: 0.7;"></i>
-                No hay profesionales cerca en este momento.
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+                        <div class="price-tag">
+                            <span class="label">Desde</span>
+                            <span class="amount">${{ col.precio_base }}</span>
+                        </div>
 
-</body>
-</html>
+                        <a href="{{ url_for('pedidos.pedir', colaborador_id=col.colaborador_id, subcategoria_id=subcategoria_id, categoria_id=categoria_id) }}" class="btn-seleccionar">
+                            Elegir Experto
+                        </a>
+                        </div>
+                        {% else %}
+                        <div style="text-align: center; margin-top: 50px; color: var(--color-texto); font-weight: 800; text-shadow: 0 0 10px white;">
+                        <i class="fas fa-user-slash" style="font-size: 40px; margin-bottom: 15px; display: block; opacity: 0.7;"></i>
+                        No hay profesionales cerca en este momento.
+                        </div>
+                        {% endfor %}
+                        </div>
+                        </div>
+
+                        </body>
+                        </html>
+
+
+
+
+
