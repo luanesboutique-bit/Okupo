@@ -8,11 +8,11 @@ blueprint = Blueprint('pedidos', __name__)
 @login_requerido
 def pedir():
     if request.method == 'POST':
-        subcat_id = request.form.get('subcategoria_id')
+        subcategoria_id = request.form.get('subcategoria_id')
         token = session.get('token')
         
         # Obtener detalles de la subcategoría para el resumen
-        subcategoria = api_get(f"/subcategorias/{subcat_id}", token=token)
+        subcategoria = api_get(f"/subcategorias/{subcategoria_id}", token=token)
         
         # Simular cálculo de tarifa (en producción vendría de la API o lógica compartida)
         import datetime
@@ -28,7 +28,7 @@ def pedir():
             precio = subcategoria.get('precio_urgente', precio)
             
         datos = {
-            "subcat_id": subcat_id,
+            "subcategoria_id": subcategoria_id,
             "colaborador_id": request.form.get('colaborador_id'),
             "descripcion": request.form.get('descripcion'),
             "latitud": request.form.get('latitud'),
@@ -41,8 +41,8 @@ def pedir():
         return render_template('confirmacion.html', **datos)
 
     colaborador_id = request.args.get('colaborador_id')
-    subcat_id = request.args.get('subcategoria_id')
-    return render_template('pedir.html', colaborador_id=colaborador_id, subcat_id=subcat_id)
+    subcategoria_id = request.args.get('subcategoria_id')
+    return render_template('pedir.html', colaborador_id=colaborador_id, subcategoria_id=subcategoria_id)
 
 @blueprint.route('/confirmar/finalizar', methods=['POST'])
 @login_requerido
@@ -50,24 +50,24 @@ def finalizar_pedido():
     token = session.get('token')
     
     # Obtener valores del formulario con fallbacks seguros para evitar ValueError
-    subcat_id_raw = request.form.get('subcat_id')
-    colab_id_raw = request.form.get('colaborador_id')
+    subcategoria_id_cruda = request.form.get('subcategoria_id')
+    colaborador_id_crudo = request.form.get('colaborador_id')
     
     # Convertir a int solo si el valor existe y no es la cadena 'None'
     try:
-        subcat_id = int(subcat_id_raw) if subcat_id_raw and subcat_id_raw != 'None' else 1
+        subcategoria_id = int(subcategoria_id_cruda) if subcategoria_id_cruda and subcategoria_id_cruda != 'None' else 1
     except (ValueError, TypeError):
-        subcat_id = 1
+        subcategoria_id = 1
 
     try:
-        colab_id = int(colab_id_raw) if colab_id_raw and colab_id_raw != 'None' else 1
+        colaborador_id = int(colaborador_id_crudo) if colaborador_id_crudo and colaborador_id_crudo != 'None' else 1
     except (ValueError, TypeError):
-        colab_id = 1
+        colaborador_id = 1
 
     datos_solicitud = {
         "usuario_id": session['user_id'],
-        "colaborador_id": colab_id,
-        "subcategoria_id": subcat_id,
+        "colaborador_id": colaborador_id,
+        "subcategoria_id": subcategoria_id,
         "urgencia": "media",
         "descripcion_detallada": request.form.get('descripcion', 'Sin descripción'),
         "fotos_evidencia_inicial": "placeholder.jpg",

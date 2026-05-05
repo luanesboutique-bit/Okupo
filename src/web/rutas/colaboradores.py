@@ -102,7 +102,7 @@ def finalizar_registro():
 
     return redirect(url_for('principal.index', registro_exitoso=True))
 
-@blueprint.route('/dashboard')
+@blueprint.route('/dashboard/tecnico')
 @login_requerido
 def dashboard_tecnico():
     # En un entorno real, aquí buscaríamos los trabajos asignados al colaborador
@@ -116,5 +116,11 @@ def evidencia_fotografica(solicitud_id):
 @blueprint.route('/trabajo/<int:solicitud_id>')
 @login_requerido
 def ver_trabajo(solicitud_id):
-    # Simula la vista de un trabajo para cotizar
+    # Simula la vista de un trabajo para cotizar (Oferta económica)
     return render_template('ver_trabajo_tecnico.html', solicitud_id=solicitud_id)
+
+@blueprint.route('/trabajo/<int:solicitud_id>/detalle')
+@login_requerido
+def detalle_trabajo(solicitud_id):
+    # Vista detallada del trabajo con botones de Aceptar/Visita
+    return render_template('detalle_trabajo_tecnico.html', solicitud_id=solicitud_id)

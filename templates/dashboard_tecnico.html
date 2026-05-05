@@ -159,17 +159,18 @@
         .job-precio { font-size: 18px; font-weight: 900; color: var(--color-verde); }
 
         .btn-aceptar {
-            background-image: url('/static/piedra_boton.png');
+            background-image: url('/static/madera_oscura.jpg');
             background-size: cover;
-            color: var(--color-dorado);
+            color: #ffff00;
             padding: 10px 25px;
             border-radius: 15px;
             text-decoration: none;
             font-weight: 900;
             font-size: 14px;
             box-shadow: 0 5px 12px rgba(0,0,0,0.3);
-            border: 2px solid var(--color-texto);
+            border: 2px solid #3d2b1f;
             text-transform: uppercase;
+            text-shadow: 1px 1px 2px black;
         }
 
     </style>
@@ -217,7 +218,7 @@
             </div>
             <div class="job-footer">
                 <div class="job-precio">$1,450</div>
-                <a href="#" class="btn-aceptar">Aceptar</a>
+                <a href="{{ url_for('colaboradores.detalle_trabajo', solicitud_id=1) }}" class="btn-aceptar">Aceptar</a>
             </div>
         </div>
         {% endfor %}

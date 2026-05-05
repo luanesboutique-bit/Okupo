@@ -183,38 +183,38 @@
 
         <form action="{{ url_for('pedidos.enviar_cotizacion') }}" method="POST" class="form-card">
             <div class="input-group">
-                <label>¿Qué necesitas reparar?</label>
-                <textarea name="descripcion_trabajo" rows="4" placeholder="Describe a detalle el problema o trabajo que requieres..." required></textarea>
+                <label>Descripción detallada</label>
+                <textarea name="descripcion_trabajo" rows="4" placeholder="¿Qué necesitas que hagamos? Describe el problema a detalle..." required></textarea>
             </div>
 
             <div class="input-group">
-                <label>Fotos del Problema (Opcional)</label>
+                <label>Evidencia (Foto o Video obligatorio)</label>
                 <div class="photo-grid">
                     <div class="photo-upload" onclick="alert('Funcionalidad de cámara')">
                         <i class="fas fa-camera"></i>
-                        <span>Foto 1</span>
+                        <span>Cargar Foto</span>
                     </div>
                     <div class="photo-upload" onclick="alert('Funcionalidad de cámara')">
-                        <i class="fas fa-camera"></i>
-                        <span>Foto 2</span>
+                        <i class="fas fa-video"></i>
+                        <span>Cargar Video</span>
                     </div>
                 </div>
             </div>
 
             <div class="input-group">
-                <label>Presupuesto Estimado (Opcional)</label>
+                <label>Presupuesto (Opcional)</label>
                 <div style="position: relative;">
                     <span style="position: absolute; left: 15px; top: 15px; font-weight: 800; opacity: 0.5;">$</span>
-                    <input type="number" name="presupuesto_estimado" placeholder="Cantidad que planeas invertir" style="padding-left: 30px;">
+                    <input type="number" name="presupuesto_estimado" placeholder="¿Cuánto tienes pensado invertir?" style="padding-left: 30px;">
                 </div>
             </div>
 
             <div class="input-group">
                 <label>Urgencia</label>
                 <select name="nivel_urgencia" id="nivel_urgencia" onchange="checkUrgencia()" style="width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #ddd; background: white; font-family: inherit; font-weight: 700;">
-                    <option value="baja">Puedo esperar (Cotizar con calma)</option>
-                    <option value="media" selected>Normal (Próximos días)</option>
-                    <option value="alta">Urgente (Hoy mismo)</option>
+                    <option value="baja">Baja (puedo esperar)</option>
+                    <option value="media" selected>Media (esta semana)</option>
+                    <option value="alta">Alta (hoy mismo)</option>
                 </select>
             </div>
 
@@ -234,7 +234,7 @@
             <button type="submit" class="btn-enviar">Solicitar Cotizaciones</button>
         </form>
 
-        <p style="margin-top: 30px; font-size: 12px; opacity: 0.8; line-height: 1.4; color: white; text-shadow: 1px 1px 2px black;">
+        <p style="margin-top: 30px; font-size: 13px; font-weight: 800; line-height: 1.4; color: #000000; text-shadow: 0 0 10px white;">
             Expertos cercanos revisarán tu solicitud y te enviarán sus propuestas económicas directamente al chat.
         </p>
     </div>

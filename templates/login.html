@@ -152,10 +152,10 @@
 
         <div id="social-view">
             <div class="social-buttons">
-                <a href="#" class="btn-social btn-google">
+                <a href="{{ url_for('autenticacion.login_social', red_social='google') }}" class="btn-social btn-google">
                     <i class="fab fa-google"></i> Entrar con Google
                 </a>
-                <a href="#" class="btn-social btn-facebook">
+                <a href="{{ url_for('autenticacion.login_social', red_social='facebook') }}" class="btn-social btn-facebook">
                     <i class="fab fa-facebook-f"></i> Entrar con Facebook
                 </a>
                 <a href="javascript:void(0)" onclick="showEmailLogin()" class="btn-social btn-email">
@@ -186,8 +186,24 @@
             <a href="{{ url_for('autenticacion.registro', rol='colaborador') }}">Regístrate como Técnico Aquí</a>
         </div>
         
-        <p style="margin-top: 30px; font-size: 13px; opacity: 0.5;">
-            ¿No tienes cuenta? <a href="{{ url_for('autenticacion.registro') }}" style="color: var(--color-texto); font-weight: 700;">Regístrate como cliente</a>
+        <p style="margin-top: 30px; font-size: 14px; color: var(--color-texto); font-weight: 800; text-shadow: 0 0 10px white;">
+            ¿No tienes cuenta? <a href="{{ url_for('autenticacion.registro') }}" style="color: var(--color-texto); font-weight: 900; text-decoration: underline;">Regístrate como cliente</a>
+        </p>
+    </div>
+
+    <script>
+        function showEmailLogin() {
+            document.getElementById('social-view').style.display = 'none';
+            document.getElementById('email-view').classList.add('active');
+        }
+        function hideEmailLogin() {
+            document.getElementById('social-view').style.display = 'block';
+            document.getElementById('email-view').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
+
         </p>
     </div>
 

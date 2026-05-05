@@ -62,6 +62,20 @@ def registro():
         return render_template('registro.html', error="Error al registrar. Intenta con otro correo.")
     return render_template('registro.html', rol=rol)
 
+@blueprint.route('/login/social/<red_social>')
+def login_social(red_social):
+    # SIMULACIÓN (MOCK) según Protocolo de Adelantamiento
+    # En el futuro esto llamará a POST /auth/google o /auth/facebook
+    print(f"DEBUG: Simulando login social con {red_social}")
+    
+    session.clear()
+    session['user_id'] = 999 # Usuario de prueba
+    session['nombre'] = f"Usuario {red_social.capitalize()}"
+    session['correo'] = f"prueba_{red_social}@okupo.mx"
+    session['token'] = "token_simulado_social_12345"
+    
+    return redirect(url_for('principal.index'))
+
 @blueprint.route('/logout')
 def logout():
     session.clear()

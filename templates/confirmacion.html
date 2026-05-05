@@ -259,7 +259,7 @@
 
         <form action="{{ url_for('pedidos.finalizar_pedido') }}" method="POST">
             <!-- Datos ocultos para la API -->
-            <input type="hidden" name="subcategoria_id" value="{{ subcat_id }}">
+            <input type="hidden" name="subcategoria_id" value="{{ subcategoria_id }}">
             <input type="hidden" name="colaborador_id" value="{{ colaborador_id }}">
             <input type="hidden" name="descripcion" value="{{ descripcion }}">
             <input type="hidden" name="latitud" value="{{ latitud }}">
@@ -268,7 +268,7 @@
             <button type="submit" class="btn-confirmar" id="btn-confirmar-final">Confirmar y Pedir</button>
         </form>
 
-        <p style="margin-top: 20px; font-size: 11px; opacity: 0.5; color: white;">
+        <p style="margin-top: 20px; font-size: 12px; font-weight: 800; color: white; text-shadow: 1px 1px 4px black;">
             Al confirmar, aceptas que el pago se realizará al finalizar el servicio.
         </p>
     </div>

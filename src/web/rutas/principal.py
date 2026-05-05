@@ -23,15 +23,24 @@ def ver_subcategorias(categoria_id):
     subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias", token=session.get('token'))
     if subcategorias == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-    return render_template('subcategorias.html', subcategorias=subcategorias or [], cat_id=categoria_id)
+    return render_template('subcategorias.html', subcategorias=subcategorias or [], categoria_id=categoria_id)
 
 @blueprint.route('/marketplace/<int:subcategoria_id>')
 def marketplace(subcategoria_id):
-    params = "?latitud=19.4326&longitud=-99.1332"
-    colaboradores = api_get(f"/subcategorias/{subcategoria_id}/colaboradores{params}", token=session.get('token'))
+    latitud = request.args.get('latitud', '19.4326')
+    longitud = request.args.get('longitud', '-99.1332')
+    categoria_id = request.args.get('categoria_id') # Capturar categoria_id
+    
+    parametros = f"?latitud={latitud}&longitud={longitud}"
+    colaboradores = api_get(f"/subcategorias/{subcategoria_id}/colaboradores{parametros}", token=session.get('token'))
+    
     if colaboradores == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-    return render_template('marketplace.html', colaboradores=colaboradores or [], subcat_id=subcategoria_id)
+        
+    return render_template('marketplace.html', 
+                           colaboradores=colaboradores or [], 
+                           subcategoria_id=subcategoria_id,
+                           categoria_id=categoria_id) # Pasar al template
 
 @blueprint.route('/cotizar')
 def cotizar_especial():

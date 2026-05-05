@@ -45,8 +45,31 @@
         .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
         .header h1 { font-size: 20px; margin: 0; font-weight: 700; }
 
+        .section-header {
+            background: rgba(139, 90, 43, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            color: var(--color-texto);
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
         .form-container {
             padding: 20px;
+        }
+
+        .category-fields {
+            display: none; /* Se muestra por JS */
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(139, 90, 43, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(139, 90, 43, 0.1);
         }
 
         .input-group {
@@ -61,7 +84,7 @@
             color: var(--color-texto);
         }
 
-        .input-group textarea, .input-group select {
+        .input-group textarea, .input-group select, .input-group input {
             width: 100%;
             padding: 15px;
             border-radius: 15px;
@@ -70,24 +93,25 @@
             box-sizing: border-box;
             font-size: 15px;
             font-family: inherit;
+            outline: none;
         }
 
-        .input-group textarea:focus {
-            border-color: var(--color-texto);
-            outline: none;
+        .input-group textarea:focus, .input-group select:focus, .input-group input:focus {
+            border-color: var(--color-dorado);
         }
 
         .photo-upload {
             border: 2px dashed #ddd;
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: border-color 0.2s;
+            background: white;
         }
         .photo-upload:hover { border-color: var(--color-dorado); }
-        .photo-upload i { font-size: 40px; color: var(--color-dorado); margin-bottom: 10px; opacity: 0.5; }
-        .photo-upload p { font-size: 12px; margin: 0; opacity: 0.6; }
+        .photo-upload i { font-size: 30px; color: var(--color-dorado); margin-bottom: 8px; opacity: 0.5; }
+        .photo-upload p { font-size: 11px; margin: 0; opacity: 0.6; font-weight: 700; }
 
         .btn-enviar {
             width: 100%;
@@ -111,47 +135,388 @@
     <div class="app-container">
         <div class="header">
             <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
-            <h1>Detalles del Pedido</h1>
+            <h1>
+                {% if colaborador_id and colaborador_id|string != "" and colaborador_id|string != "None" %}
+                    Detalles de Agenda
+                {% else %}
+                    Detalles del Pedido
+                {% endif %}
+            </h1>
         </div>
 
         <div class="form-container">
             <form method="POST">
+                <div class="section-header">
+                    <i class="fas fa-clipboard-list"></i> 1. Información del Trabajo
+                </div>
+                <p style="font-size: 16px; font-weight: 800; margin-bottom: 5px;">Confirma los detalles</p>
+                <p style="font-size: 11px; opacity: 0.7; margin-bottom: 20px;">Verifica que coincida con lo que necesitas</p>
+
+                <!-- SECCIÓN DINÁMICA DE CAMPOS POR CATEGORÍA -->
+                
+                <!-- 1. Cerrajería -->
+                <div id="fields-cat-1" class="category-fields">
+                    <div class="input-group">
+                        <label>Tipo de puerta</label>
+                        <select name="tipo_puerta">
+                            <option value="Madera">Madera</option>
+                            <option value="Metal">Metal</option>
+                            <option value="Aluminio y Vidrio">Aluminio y Vidrio</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo de cerradura</label>
+                        <select name="tipo_cerradura">
+                            <option value="Pomo (bola)">Pomo (bola)</option>
+                            <option value="Seguridad">Seguridad</option>
+                            <option value="Digital">Digital</option>
+                            <option value="Sobreponer">Sobreponer</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Estado de la puerta</label>
+                        <select name="estado_puerta">
+                            <option value="Abierta (solo cambio de chapa)">Abierta (solo cambio de chapa)</option>
+                            <option value="Cerrada (requiere apertura)">Cerrada (requiere apertura)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 2. Plomería -->
+                <div id="fields-cat-2" class="category-fields">
+                    <div class="input-group">
+                        <label>Ubicación</label>
+                        <select name="ubicacion_fuga">
+                            <option value="Baño">Baño</option>
+                            <option value="Cocina">Cocina</option>
+                            <option value="Patio">Patio</option>
+                            <option value="Tinaco">Tinaco</option>
+                            <option value="Cisterna">Cisterna</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>¿Sabe dónde está la llave de paso?</label>
+                        <select name="llave_paso">
+                            <option value="Sí">Sí</option>
+                            <option value="No">No</option>
+                            <option value="No funciona">No funciona</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Material visible</label>
+                        <select name="material_tuberia">
+                            <option value="PVC">PVC</option>
+                            <option value="Cobre">Cobre</option>
+                            <option value="CPVC">CPVC</option>
+                            <option value="Galvanizado">Galvanizado</option>
+                            <option value="No sé">No sé</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. Electricidad -->
+                <div id="fields-cat-3" class="category-fields">
+                    <div class="input-group">
+                        <label>Alcance del problema</label>
+                        <select name="alcance_electrico">
+                            <option value="Toda la casa">Toda la casa</option>
+                            <option value="Solo una habitación">Solo una habitación</option>
+                            <option value="Solo un contacto o lámpara">Solo un contacto o lámpara</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>¿Se bota la pastilla (breaker)?</label>
+                        <select name="se_bota_pastilla">
+                            <option value="Sí">Sí</option>
+                            <option value="No">No</option>
+                            <option value="No tengo pastillas">No tengo pastillas</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Voltaje</label>
+                        <select name="voltaje">
+                            <option value="110v (Normal)">110v (Normal)</option>
+                            <option value="220v (Bifásica)">220v (Bifásica)</option>
+                            <option value="No sé">No sé</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. Limpieza y Mantenimiento -->
+                <div id="fields-cat-4" class="category-fields">
+                    <div class="input-group">
+                        <label>Tipo de servicio</label>
+                        <select name="tipo_limpieza">
+                            <option value="Express">Express</option>
+                            <option value="Profunda">Profunda</option>
+                            <option value="Mudanza">Mudanza</option>
+                            <option value="Post-Obra">Post-Obra</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Tamaño del lugar</label>
+                        <input type="text" name="tamanno_lugar" placeholder="Ej: 3 habitaciones y 2 baños">
+                    </div>
+                    <div class="input-group">
+                        <label>Insumos</label>
+                        <select name="insumos">
+                            <option value="Yo pongo el material">Yo pongo el material</option>
+                            <option value="El técnico debe traer todo">El técnico debe traer todo</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Mascotas presentes</label>
+                        <select name="mascotas">
+                            <option value="Sí">Sí</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 5. Limpieza de Muebles -->
+                <div id="fields-cat-5" class="category-fields">
+                    <div class="input-group">
+                        <label>Mueble a lavar</label>
+                        <select name="mueble_lavado">
+                            <option value="Sofá">Sofá</option>
+                            <option value="Colchón">Colchón</option>
+                            <option value="Alfombra">Alfombra</option>
+                            <option value="Sillas">Sillas</option>
+                            <option value="Interior de Auto">Interior de Auto</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Tamaño</label>
+                        <input type="text" name="tamanno_mueble" placeholder="Ej: Sofá 3 plazas, Colchón King Size">
+                    </div>
+                    <div class="input-group">
+                        <label>Cojines</label>
+                        <input type="text" name="cojines_mueble" placeholder="Ej: ¿Son fijos o sueltos? (+ extras)">
+                    </div>
+                    <div class="input-group">
+                        <label>Material</label>
+                        <select name="material_mueble">
+                            <option value="Tela">Tela</option>
+                            <option value="Piel">Piel</option>
+                            <option value="Gamuza (Suede)">Gamuza (Suede)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 6. Armado de Muebles -->
+                <div id="fields-cat-6" class="category-fields">
+                    <div class="input-group">
+                        <label>Tienda / Marca</label>
+                        <input type="text" name="marca_mueble" placeholder="Ej: IKEA, Amazon, Home Depot">
+                    </div>
+                    <div class="input-group">
+                        <label>Estado</label>
+                        <select name="estado_mueble">
+                            <option value="Nuevo en caja">Nuevo en caja</option>
+                            <option value="Armado parcial con error">Armado parcial con error</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>¿Requiere empotrar a la pared?</label>
+                        <select name="empotrar">
+                            <option value="Sí">Sí</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo de pared</label>
+                        <select name="tipo_pared">
+                            <option value="Concreto o Ladrillo">Concreto o Ladrillo</option>
+                            <option value="Tablaroca">Tablaroca</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 7. Albañilería y Construcción / Pintura -->
+                <div id="fields-cat-7" class="category-fields">
+                    <div class="input-group">
+                        <label>Tipo de trabajo</label>
+                        <select name="tipo_alba_pintura">
+                            <option value="Resane de grieta">Resane de grieta</option>
+                            <option value="Pintura muro">Pintura muro</option>
+                            <option value="Azulejo">Azulejo</option>
+                            <option value="Impermeabilizado">Impermeabilizado</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Medida estimada (Largo x Alto aprox.)</label>
+                        <input type="text" name="medida_obra" placeholder="Ej: 4m x 2.5m">
+                    </div>
+                    <div class="input-group">
+                        <label>Altura</label>
+                        <select name="altura_obra">
+                            <option value="Normal">Normal</option>
+                            <option value="Escalera alta">Escalera alta</option>
+                            <option value="Fachada o Segundo piso">Fachada o Segundo piso</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 8. Fletes y Mudanzas -->
+                <div id="fields-cat-8" class="category-fields">
+                    <div class="input-group">
+                        <label>Ruta (Origen a Destino)</label>
+                        <input type="text" name="ruta_flete" placeholder="Colonia origen y Colonia destino">
+                    </div>
+                    <div class="input-group">
+                        <label>Accesos y Elevadores</label>
+                        <textarea name="accesos_flete" rows="2" placeholder="Piso número / ¿Hay elevador? / ¿Escaleras caracol?"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label>Inventario de muebles grandes</label>
+                        <textarea name="inventario_flete" rows="2" placeholder="Ej: Refri, Cama King, Comedor"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label>Cargadores requeridos</label>
+                        <select name="cargadores">
+                            <option value="Solo chofer">Solo chofer</option>
+                            <option value="Chofer + 1 cargador">Chofer + 1 cargador</option>
+                            <option value="Chofer + 2 cargadores">Chofer + 2 cargadores</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="fields-cat-9" class="category-fields">
+                    <!-- Se llena con el mismo contenido de Cat 8 vía JS -->
+                </div>
+
+                <div class="section-header">
+                    <i class="fas fa-map-marker-alt"></i> 2. 
+                    {% if colaborador_id is not none %}
+                        Agenda y Ubicación
+                    {% else %}
+                        Ubicación del Servicio
+                    {% endif %}
+                </div>
+
+                {% if colaborador_id is not none %}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="input-group">
+                        <label>Fecha</label>
+                        <input type="date" name="fecha_servicio" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Hora</label>
+                        <input type="time" name="hora_servicio" required>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="input-group">
+                    <label>Calle</label>
+                    <input type="text" name="calle" placeholder="Nombre de la calle" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="input-group">
+                        <label>Número</label>
+                        <input type="text" name="numero" placeholder="Ext / Int" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Colonia</label>
+                        <input type="text" name="colonia" placeholder="Ej: Condesa" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Referencias / Entre calles</label>
+                    <textarea name="referencias" rows="2" placeholder="Ej: Portón café, frente al parque..."></textarea>
+                </div>
+
+                <div class="section-header">
+                    <i class="fas fa-camera"></i> 3. Evidencia Fotográfica
+                </div>
+
+                <div class="input-group">
+                    <label>Evidencia Obligatoria</label>
+                    <div class="photo-upload">
+                        <i class="fas fa-camera"></i>
+                        <p>Adjunta foto real. El técnico la revisará antes de salir</p>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <i class="fas fa-hand-holding-usd"></i> 4. Resumen de Pago
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 20px; border: 2px solid var(--color-dorado); margin-bottom: 25px; text-align: center;">
+                    <span style="font-size: 12px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Total a Reservar</span>
+                    <div style="font-size: 32px; font-weight: 900; color: #27ae60;">$850.00</div>
+                    <p style="font-size: 11px; margin-top: 10px; color: #000000; font-weight: 800; text-shadow: 0 0 5px white;">
+                        Pago seguro. El monto se reserva hasta confirmar el servicio.
+                    </p>
+                </div>
+
                 <div class="input-group">
                     <label>Describe lo que necesitas</label>
                     <textarea name="descripcion" rows="4" placeholder="Ej: Mi llave se rompió dentro de la cerradura y no puedo entrar..." required></textarea>
                 </div>
 
-                <div class="input-group">
-                    <label>¿Qué tan urgente es?</label>
-                    <select name="urgencia">
-                        <option value="baja">Baja (Puede esperar)</option>
-                        <option value="media" selected>Media (Normal)</option>
-                        <option value="alta">Alta (Urgente)</option>
-                        <option value="critica">Crítica (¡Ahora mismo!)</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Evidencia (Opcional)</label>
-                    <div class="photo-upload">
-                        <i class="fas fa-camera"></i>
-                        <p>Toca para subir una foto del problema</p>
-                    </div>
-                </div>
-
                 <!-- Campos ocultos actualizados con localStorage -->
-                <input type="hidden" name="subcategoria_id" value="{{ subcat_id }}">
+                <input type="hidden" name="subcategoria_id" value="{{ subcategoria_id }}">
                 <input type="hidden" name="colaborador_id" value="{{ colaborador_id }}">
                 <input type="hidden" name="latitud" id="lat-input">
                 <input type="hidden" name="longitud" id="lon-input">
 
-                <button type="submit" class="btn-enviar">Solicitar Servicio</button>
+                <button type="submit" class="btn-enviar" style="background-image: url('/static/madera_oscura.jpg'); color: #ffff00; text-shadow: 1px 1px 2px black; border: 2px solid #3d2b1f;">CONFIRMAR SERVICIO</button>
             </form>
         </div>
     </div>
 
     <script>
+        function toggleMuebleSubfields(valor) {
+            const limpieza = document.getElementById('mueble-limpieza');
+            const armado = document.getElementById('mueble-armado');
+            const photoLabel = document.querySelector('.photo-upload p');
+            
+            if (valor === 'limpieza') {
+                limpieza.style.display = 'block';
+                armado.style.display = 'none';
+                if (photoLabel) photoLabel.innerText = 'Foto del mueble completo y manchas difíciles';
+            } else {
+                limpieza.style.display = 'none';
+                armado.style.display = 'block';
+                if (photoLabel) photoLabel.innerText = 'Foto del instructivo o link al producto';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Obtener categoria_id de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoriaId = urlParams.get('categoria_id');
+            const instructions = {
+                '1': 'Foto de frente y de perfil de la chapa',
+                '2': 'Foto de la fuga y de la llave de paso principal',
+                '3': 'Foto del centro de carga (pastillas) y área afectada',
+                '4': 'Foto de las áreas con mayor suciedad',
+                '5': 'Foto del mueble completo y manchas difíciles',
+                '6': 'Foto del instructivo o link al producto',
+                '7': 'Foto panorámica de la zona y detalle del daño',
+                '8': 'Foto de los 3 muebles más voluminosos',
+                '9': 'Foto panorámica de la zona y detalle del daño'
+            };
+            
+            if (categoriaId) {
+                // Sincronizar Cat 9 con Cat 8 si es necesario
+                if (categoriaId === '9') {
+                    document.getElementById('fields-cat-9').innerHTML = document.getElementById('fields-cat-8').innerHTML;
+                }
+
+                const targetDiv = document.getElementById(`fields-cat-${categoriaId}`);
+                if (targetDiv) {
+                    targetDiv.style.display = 'block';
+                }
+                
+                // Actualizar leyenda de foto si existe
+                if (instructions[categoriaId]) {
+                    const photoLabel = document.querySelector('.photo-upload p');
+                    if (photoLabel) photoLabel.innerText = instructions[categoriaId] + ". (Obligatorio)";
+                }
+            }
+
             document.getElementById('lat-input').value = localStorage.getItem('okupo_lat') || '19.4326';
             document.getElementById('lon-input').value = localStorage.getItem('okupo_lon') || '-99.1332';
         });

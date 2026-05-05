@@ -469,22 +469,21 @@
                 <a href="/categorias/1/subcategorias" class="menu-item"><i class="fas fa-key"></i> 2. Cerrajería</a>
                 <a href="/categorias/2/subcategorias" class="menu-item"><i class="fas fa-faucet"></i> 3. Plomería</a>
                 <a href="/categorias/3/subcategorias" class="menu-item"><i class="fas fa-bolt"></i> 4. Electricidad</a>
-                <a href="/categorias/4/subcategorias" class="menu-item"><i class="fas fa-spray-can-sparkles"></i> 5. Limpieza</a>
+                <a href="/categorias/4/subcategorias" class="menu-item"><i class="fas fa-spray-can-sparkles"></i> 5. Limpieza y Mantenimiento</a>
                 <a href="/categorias/5/subcategorias" class="menu-item"><i class="fas fa-couch"></i> 6. Limpieza de Muebles</a>
                 <a href="/categorias/6/subcategorias" class="menu-item"><i class="fas fa-hammer"></i> 7. Armado de Muebles</a>
-                <a href="/categorias/7/subcategorias" class="menu-item"><i class="fas fa-truck-moving"></i> 8. Fletes y Mudanzas</a>
-                <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 9. Albañilería y Pintura</a>
-                <a href="/categorias/9/subcategorias" class="menu-item"><i class="fas fa-paint-roller"></i> 10. Pintura y Acabados</a>
+                <a href="/categorias/7/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 8. Albañilería y Construcción / Pintura</a>
+                <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-truck-moving"></i> 9. Fletes y Mudanzas</a>
                 
                 <a href="/cotizar" class="menu-item highlight" style="margin-top: 10px;">
-                    <i class="fas fa-plus-circle"></i> 11. COTIZAR OTRO SERVICIO
+                    <i class="fas fa-plus-circle"></i> 10. COTIZAR OTRO SERVICIO
                 </a>
                 
-                <a href="javascript:toggleUrgencia()" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 12. Urgencia 24/7</a>
-                <a href="/politicas" class="menu-item"><i class="fas fa-info-circle"></i> 13. Información y Políticas</a>
-                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 14. Mi Perfil / Historial</a>
-                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-star"></i> 15. Calificaciones</a>
-                <a href="/soporte" class="menu-item"><i class="fas fa-shield-alt"></i> 16. Centro de Ayuda / Soporte</a>
+                <a href="javascript:toggleUrgencia()" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 11. Urgencia 24/7</a>
+                <a href="/politicas" class="menu-item"><i class="fas fa-info-circle"></i> 12. Información y Políticas</a>
+                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 13. Mi Perfil / Historial</a>
+                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-star"></i> 14. Calificaciones</a>
+                <a href="/soporte" class="menu-item"><i class="fas fa-shield-alt"></i> 15. Centro de Ayuda / Soporte</a>
                 
                 {% if session.get('user_id') %}
                     <a href="{{ url_for('autenticacion.logout') }}" class="menu-item" style="border-top: 1px solid #ddd; margin-top: 10px;">
@@ -492,7 +491,7 @@
                     </a>
                 {% else %}
                     <a href="{{ url_for('autenticacion.login') }}" class="menu-item highlight" style="border-top: 1px solid #ddd; margin-top: 10px;">
-                        <i class="fas fa-sign-in-alt"></i> 17. Iniciar Sesión / Registrarse
+                        <i class="fas fa-sign-in-alt"></i> 16. Iniciar Sesión / Registrarse
                     </a>
                 {% endif %}
             </div>
@@ -554,8 +553,8 @@
         <div class="grid-maderas">
             <a href="/categorias/5/subcategorias" class="btn-madera madera-clara">Limpieza de Muebles</a>
             <a href="/categorias/6/subcategorias" class="btn-madera madera-media">Armado de Muebles</a>
-            <a href="/cotizar" class="btn-madera madera-clara">Albañilería y Pintura</a>
-            <a href="/cotizar" class="btn-madera madera-media">Fletes y Mudanzas</a>
+            <a href="/categorias/7/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
+            <a href="/categorias/8/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
         </div>
 
         <!-- Botones de Acción -->

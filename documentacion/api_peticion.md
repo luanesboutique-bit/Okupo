@@ -16,6 +16,12 @@ Este archivo sirve como canal de comunicación para que **D'Mayoral** (Front-end
 - **Datos requeridos**: `solicitud_id`, `puntuacion` (1-5), `aspectos` (lista de strings: puntualidad, limpieza, calidad), `comentario`.
 - **Estado**: Pendiente.
 
+### `POST /auth/google` y `POST /auth/facebook`
+- **Motivo**: Implementación de Social Login (OAuth2).
+- **Datos requeridos**: `token_social` (proporcionado por el proveedor), `rol_solicitado` (cliente/colaborador).
+- **Comportamiento esperado**: Validar el token con el proveedor, realizar registro automático si el usuario no existe y devolver el token JWT de Okupo.
+- **Estado**: Pendiente (Urgente para D'Mayoral).
+
 ---
 
 ## 🛠️ Modificaciones de Endpoints Existentes
