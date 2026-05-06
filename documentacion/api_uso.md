@@ -23,6 +23,9 @@ Okupo utiliza el motor **Finite** como núcleo de procesamiento. A continuación
 ### `GET /categorias/{id}/subcategorias`
 - **Uso**: Obtener los servicios específicos de una categoría.
 
+### `GET /subcategorias/{id}`
+- **Uso**: Obtener detalles de una subcategoría específica (nombre, descripción, precios base).
+
 ### `GET /subcategorias/{id}/colaboradores`
 - **Uso**: Búsqueda de profesionales mediante filtros de geolocalización.
 - **Parámetros**: `latitud`, `longitud`.
