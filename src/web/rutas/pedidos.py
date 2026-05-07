@@ -27,33 +27,50 @@ def pedir():
             tarifa_tipo = "Urgente"
             precio = subcategoria.get('precio_urgente', precio)
             
+        # Capturar TODOS los campos específicos por categoría
+        campos_ignorar = ['subcategoria_id', 'colaborador_id', 'descripcion', 'latitud', 'longitud', 
+                          'calle', 'numero', 'colonia', 'referencias', 'fecha_servicio', 'hora_servicio']
+        detalles_adicionales = {k: v for k, v in request.form.items() if k not in campos_ignorar and v}
+        
+        import json
         datos = {
             "subcategoria_id": subcategoria_id,
             "colaborador_id": request.form.get('colaborador_id'),
             "descripcion": request.form.get('descripcion'),
             "latitud": request.form.get('latitud'),
             "longitud": request.form.get('longitud'),
+            "calle": request.form.get('calle'),
+            "numero": request.form.get('numero'),
+            "colonia": request.form.get('colonia'),
+            "referencias": request.form.get('referencias'),
+            "detalles_adicionales": json.dumps(detalles_adicionales),
             "nombre_servicio": subcategoria.get('nombre', 'Servicio') if subcategoria else "Servicio",
             "tarifa_tipo": tarifa_tipo,
             "precio": precio,
-            "nombre_colaborador": "Experto Asignado" # Placeholder o buscar si colaborador_id != None
+            "nombre_colaborador": "Experto Asignado"
         }
         return render_template('confirmacion.html', **datos)
 
     colaborador_id = request.args.get('colaborador_id')
     subcategoria_id = request.args.get('subcategoria_id')
-    return render_template('pedir.html', colaborador_id=colaborador_id, subcategoria_id=subcategoria_id)
+    
+    # Obtener detalles de la subcategoría para el resumen de pago inicial
+    subcategoria = api_get(f"/subcategorias/{subcategoria_id}", token=session.get('token'))
+    
+    return render_template('pedir.html', 
+                           colaborador_id=colaborador_id, 
+                           subcategoria_id=subcategoria_id,
+                           subcategoria=subcategoria or {})
 
 @blueprint.route('/confirmar/finalizar', methods=['POST'])
 @login_requerido
 def finalizar_pedido():
     token = session.get('token')
     
-    # Obtener valores del formulario con fallbacks seguros para evitar ValueError
+    # Obtener valores del formulario con fallbacks seguros
     subcategoria_id_cruda = request.form.get('subcategoria_id')
     colaborador_id_crudo = request.form.get('colaborador_id')
     
-    # Convertir a int solo si el valor existe y no es la cadena 'None'
     try:
         subcategoria_id = int(subcategoria_id_cruda) if subcategoria_id_cruda and subcategoria_id_cruda != 'None' else 1
     except (ValueError, TypeError):
@@ -68,11 +85,16 @@ def finalizar_pedido():
         "usuario_id": session['user_id'],
         "colaborador_id": colaborador_id,
         "subcategoria_id": subcategoria_id,
-        "urgencia": "media",
+        "urgencia": "media", # Se podría derivar de tarifa_tipo si fuera necesario
         "descripcion_detallada": request.form.get('descripcion', 'Sin descripción'),
         "fotos_evidencia_inicial": "placeholder.jpg",
         "latitud": float(request.form.get('latitud', 19.4326)),
-        "longitud": float(request.form.get('longitud', -99.1332))
+        "longitud": float(request.form.get('longitud', -99.1332)),
+        "calle": request.form.get('calle'),
+        "numero": request.form.get('numero'),
+        "colonia": request.form.get('colonia'),
+        "referencias": request.form.get('referencias'),
+        "detalles_adicionales": request.form.get('detalles_adicionales')
     }
     
     respuesta = api_post("/solicitudes", datos_solicitud, token=token)
@@ -96,6 +118,18 @@ def mis_pedidos():
     solicitudes = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=session.get('token'))
     if solicitudes == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+    
+    import json
+    if solicitudes:
+        for sol in solicitudes:
+            if sol.get('detalles_adicionales'):
+                try:
+                    sol['campos_extra'] = json.loads(sol['detalles_adicionales'])
+                except:
+                    sol['campos_extra'] = {}
+            else:
+                sol['campos_extra'] = {}
+                
     return render_template('mis_pedidos.html', solicitudes=solicitudes or [])
 
 @blueprint.route('/chat/<int:solicitud_id>', methods=['GET', 'POST'])
