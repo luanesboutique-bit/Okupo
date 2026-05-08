@@ -3,633 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Okupo - Servicios</title>
-    
-    <!-- ICONOS -->
+    <title>Okupo Clic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        :root {
-            --color-crema: #fdfaf5;
-            --color-texto: #5a3e2b;
-            --color-dorado: #d4af37;
-            --color-dorado-oscuro: #b8860b;
-        }
-
-        /* ESTILO GENERAL */
-        body {
-            background-image: url('/static/fondo_pared.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--color-texto);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 450px; /* Tamaño móvil ideal */
-            min-height: 100vh;
-            background: transparent !important;
-            position: relative;
-            padding-bottom: 30px;
-        }
-
-        /* DECORACIONES ELEGANTES */
-        .decoracion-esquina {
-            position: absolute;
-            width: 100px;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        .top-left { top: 0; left: 0; transform: rotate(0deg); }
-        .bottom-right { bottom: 0; right: 0; transform: rotate(180deg); }
-
-        /* HEADER */
-        .header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header i { 
-            font-size: 24px; 
-            color: #5a3e2b; /* Café Oscuro */
-            cursor: pointer; 
-            transition: transform 0.2s; 
-            text-shadow: 0 0 8px rgba(255,255,255,0.4); 
-        }
-        .header i:active { transform: scale(0.9); }
-        .logo { 
-            font-size: 32px; 
-            font-weight: bold; 
-            letter-spacing: 2px; 
-            color: #5a3e2b; /* Café Oscuro */
-            text-shadow: 0 0 8px rgba(255,255,255,0.4); 
-        }
-
-        /* SIDEBAR / MENÚ LATERAL */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px; /* Oculto por defecto */
-            width: 300px;
-            height: 100%;
-            background-color: var(--color-crema);
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
-            z-index: 2000;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
-            transition: left 0.3s ease-in-out;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar.active {
-            left: 0;
-        }
-
-        .sidebar-header {
-            padding: 30px 20px;
-            background-image: url('/static/madera_media.jpg');
-            background-size: cover;
-            color: var(--color-texto);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-bottom: 2px solid var(--color-dorado-oscuro);
-        }
-        .sidebar-header .user-avatar {
-            width: 70px;
-            height: 70px;
-            background-image: url('/static/piedra_boton.png');
-            background-size: cover;
-            border-radius: 50%;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: var(--color-dorado);
-            border: 2px solid var(--color-texto);
-        }
-
-        .sidebar-content {
-            padding: 15px 0;
-            flex-grow: 1;
-        }
-        .menu-item {
-            padding: 12px 25px;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--color-texto);
-            font-weight: 600;
-            font-size: 15px;
-            transition: background 0.2s;
-            border-left: 4px solid transparent;
-        }
-        .menu-item i {
-            width: 25px;
-            margin-right: 15px;
-            font-size: 18px;
-            color: var(--color-dorado-oscuro);
-            text-align: center;
-        }
-        .menu-item:hover {
-            background: rgba(139, 90, 43, 0.05);
-            border-left: 4px solid var(--color-dorado);
-        }
-        .menu-item.highlight {
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--color-dorado-oscuro);
-        }
-
-        /* OVERLAY / FONDO OSCURO AL ABRIR MENÚ */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1500;
-            display: none;
-        }
-        .overlay.active {
-            display: block;
-        }
-
-        /* BUSCADOR */
-        .search-box {
-            margin: 0 20px 15px 20px;
-            background: rgba(255,255,255,0.95);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 25px;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-        .search-box i { color: #a09080; margin-right: 10px; }
-        .search-box span { color: #a09080; font-size: 16px; }
-
-        /* UBICACION */
-        .location {
-            margin: 0 20px 20px 20px;
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            cursor: pointer;
-            color: #5a3e2b; /* Café Oscuro */
-            text-shadow: 0 0 8px rgba(255,255,255,0.4);
-        }
-        .location i:first-child { color: var(--color-dorado-oscuro); margin-right: 8px; }
-        .location span { font-weight: 800; }
-        .location i:last-child { margin-left: 5px; font-size: 12px; }
-
-        /* SECCIONES */
-        .section-title {
-            margin: 0 20px 20px 20px;
-            font-size: 22px;
-            font-weight: 800;
-            color: #5a3e2b; /* Café Oscuro */
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-
-        /* GRID PIEDRAS (Servicios Express) */
-        .grid-express {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 0 20px;
-            margin-bottom: 30px;
-        }
-
-        .btn-piedra {
-            aspect-ratio: 1.3;
-            background-color: #222;
-            background-image: 
-                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05) 0%, transparent 50%),
-                url('https://www.transparenttextures.com/patterns/dark-matter.png');
-            background-size: cover;
-            border-radius: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            /* 🪨 EFECTO PIEDRA OSCURA Y RELIEVE */
-            box-shadow: 
-                0 15px 35px rgba(0,0,0,0.8),
-                inset 0 -8px 15px rgba(0,0,0,0.6),
-                inset 0 8px 15px rgba(255,255,255,0.05);
-            border: 2px solid #111;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Grietas de la piedra */
-        .btn-piedra::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://www.transparenttextures.com/patterns/cracked-earth.png');
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .btn-piedra:active {
-            transform: scale(0.92) translateY(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-        }
+        :root { --wood-dark: #A67C52; --wood-light: #D4B996; --gold: #E8B760; --engraved: #2a1b12; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #F2EDE0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: #F2EDE0; position: relative; padding-bottom: 120px; }
         
-        /* 🏆 ICONOS DORADOS/METÁLICOS 3D */
-        .btn-piedra i {
-            font-size: 55px;
-            margin-bottom: 12px;
-            z-index: 1;
-            /* ✨ EFECTO ORO REALISTA */
-            background: linear-gradient(135deg, 
-                #f5e5a6 0%, 
-                #e1b342 25%, 
-                #b8860b 50%, 
-                #d4af37 75%, 
-                #f5e5a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)) brightness(1.2);
-            position: relative;
-        }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; }
+        .logo-text { font-size: 11px; font-weight: bold; color: var(--engraved); line-height: 1.1; }
+        .search-box { flex: 1; margin: 0 10px; padding: 10px; border: 2px solid var(--wood-dark); border-radius: 20px; font-size: 9px; background: #fff; }
 
-        /* Brillo extra en el icono */
-        .btn-piedra i::after {
-            content: '';
-            position: absolute;
-            top: -10%; left: -10%; width: 120%; height: 120%;
-            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
-            z-index: -1;
-            opacity: 0.5;
-        }
-
-        /* 🏷️ LETRAS METÁLICAS EN RELIEVE */
-        .btn-piedra span {
-            color: #d4af37;
-            font-weight: 900;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            z-index: 1;
-            /* ✨ EFECTO METAL GRABADO */
-            background: linear-gradient(to bottom, #f5e5a6, #b8860b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: none;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.9));
-        }
-
-        /* Variación para Iconos Plateados (Plomería/Limpieza) */
-        .silver i, .silver span {
-            background: linear-gradient(135deg, 
-                #ffffff 0%, 
-                #a0a0a0 25%, 
-                #707070 50%, 
-                #b0b0b0 75%, 
-                #ffffff 100%);
-            -webkit-background-clip: text;
-        }
-
-        /* GRID MADERAS (Categorías secundarias) */
-        .grid-maderas {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 0 20px;
-            margin-bottom: 25px;
-        }
-
-        .btn-madera {
-            padding: 15px 10px;
-            border-radius: 15px;
-            text-decoration: none;
-            color: var(--color-texto);
-            font-weight: bold;
-            text-align: center;
-            font-size: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(139, 90, 43, 0.3);
-            transition: transform 0.2s;
-        }
-        .btn-madera:active { transform: scale(0.98); }
-
-        .madera-clara { background-image: url('/static/madera_clara.jpg'); background-size: cover; }
-        .madera-media { background-image: url('/static/madera_media.jpg'); background-size: cover; }
-
-        /* BOTONES LARGOS INFERIORES */
-        .bottom-actions {
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .btn-largo {
-            width: 100%;
-            padding: 18px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 800;
-            text-transform: uppercase;
-            text-align: center;
-            font-size: 17px;
-            letter-spacing: 1px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            border: 2px solid rgba(0,0,0,0.1);
-        }
-
-        .urgencia {
-            background-image: url('/static/madera_oscura.jpg');
-            background-size: cover;
-            color: #ffff00; /* Amarillo brillante para máximo impacto */
-            text-shadow: 2px 2px 3px rgba(0,0,0,1); /* Sombra negra definida */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: 2px solid #3d2b1f;
-            font-size: 20px; /* Tamaño de letra aumentado */
-            font-weight: 900; /* Negrita extra */
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .urgencia i { font-size: 22px; color: #ffff00; filter: drop-shadow(0 0 5px rgba(0,0,0,1)); }
-
-        /* MODO URGENCIA ACTIVO */
-        .modo-urgencia-activo, 
-        .modo-urgencia-activo html, 
-        .modo-urgencia-activo body {
-            background-color: #ff8c00 !important; /* Naranja Intenso */
-            background-image: none !important;
-            min-height: 100vh;
-        }
+        #map { width: calc(100% - 20px); height: 250px; margin: 15px auto; border-radius: 40px; border: 8px solid #F2EDE0; box-shadow: inset 0px 5px 15px rgba(0,0,0,0.3), 0 4px 10px rgba(0,0,0,0.2); position: relative; }
+        .map-icon { background: white; padding: 5px; border-radius: 50%; border: 2px solid var(--gold); box-shadow: 0 3px 6px rgba(0,0,0,0.4); font-size: 14px; color: #333; text-align: center; }
         
-        .modo-urgencia-activo .app-container {
-            background-color: #ff8c00 !important;
-            background-image: none !important;
-            box-shadow: none !important;
-            width: 100%;
-            max-width: 450px;
-        }
+        .btn-urgencia { display: flex; align-items:center; justify-content:center; gap:10px; width: calc(100% - 40px); margin: 20px auto; padding: 25px; 
+            background: linear-gradient(135deg, #ff8c00, #d2691e); color: #FFF; font-weight: 900; border-radius: 16px; 
+            border: 2px solid #5d3a1a; box-shadow: 10px 10px 20px rgba(0,0,0,0.4); text-decoration:none; font-size: 16px; position:relative; }
 
-        .banner-urgencia {
-            display: none;
-            background: #ff0000; /* Rojo sólido */
-            color: #ffffff; /* Letras blancas */
-            padding: 8px 10px; /* Franja pequeña */
-            text-align: center;
-            font-weight: 900;
-            font-size: 13px; /* Tamaño de letra ajustado */
-            width: 100%;
-            position: fixed; /* Fixed para asegurar que cubra el ancho de la ventana */
-            top: 0;
-            left: 0;
-            z-index: 4000;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            line-height: 1.2;
-            border: none;
-        }
+        .carrusel { display: flex; overflow-x: auto; gap: 15px; padding: 20px; }
+        .btn { min-width: 100px; padding: 15px 5px; border-radius: 16px; text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.3); 
+            position: relative; border: 2px solid var(--gold); background-size: cover !important; text-decoration: none; }
+        .btn i { font-size: 28px; display: block; margin-bottom: 8px; color: var(--engraved); filter: drop-shadow(0 1px 1px rgba(255,255,255,0.3)); }
+        .btn-title { display: block; font-weight: 900; color: var(--engraved); font-size: 10px; margin-bottom: 2px; }
+        .btn-desc { display: block; color: var(--engraved); font-size: 8px; font-weight: 700; }
 
-        .modo-urgencia-activo .banner-urgencia {
-            display: block;
-        }
+        .popup-card { background: url('/static/madera_clara.jpg'); padding: 12px; border-radius: 12px; border: 2px solid var(--wood-dark); font-size: 10px; color: var(--engraved); text-align:center; }
+        .popup-btn { background: linear-gradient(135deg, #ff8c00, #d2691e); border: none; padding: 8px 12px; border-radius: 8px; color: #fff; font-weight:bold; cursor: pointer; margin-top:8px; width: 100%; }
 
-        /* Espaciador para que el contenido no quede debajo del banner fixed */
-        .modo-urgencia-activo .app-container {
-            padding-top: 45px;
-        }
-
-        /* Ajustes de elementos en modo urgencia para evitar negros */
-        .modo-urgencia-activo .btn-piedra {
-            background-color: #e67e00 !important; /* Naranja más oscuro para contraste */
-            border-color: #ff9f2b !important;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-        }
-        
-        .modo-urgencia-activo .header, 
-        .modo-urgencia-activo .search-box,
-        .modo-urgencia-activo .sidebar-header {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(10px);
-        }
-
-        .modo-urgencia-activo .urgencia {
-            background: #fff !important;
-            color: #ff0000 !important;
-            border: 3px solid #ff0000 !important;
-        }
-        .modo-urgencia-activo .urgencia i { color: #ff0000 !important; }
-
-        .cotizar {
-            background-image: url('/static/madera_clara.jpg');
-            background-size: cover;
-            color: var(--color-texto);
-        }
-
+        #barra-servicio { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 420px; background: url('/static/madera_clara.jpg') center/cover; color: var(--engraved); padding: 15px; display: none; align-items: center; justify-content: space-between; border-radius: 16px; border: 1px solid var(--wood-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; }
+        #user-menu { position: fixed; top: 60px; right: 15px; width: 220px; background: url('/static/madera_clara.jpg') center/cover; padding: 15px; border-radius: 16px; border: 2px solid var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: none; z-index: 2000; }
+        .menu-item { display: block; color: var(--engraved); font-weight: 800; font-size: 11px; padding: 8px 0; text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.1); }
     </style>
 </head>
-<body class="">
+<body>
+    <div id="user-menu">
+        <a href="/perfil" class="menu-item">👤 Mi Perfil</a>
+        <a href="/pedidos" class="menu-item">📜 Historial de Servicios</a>
+        <a href="/chat" class="menu-item">💬 Chat Seguro</a>
+        <a href="/pagos" class="menu-item">💳 Métodos de Pago</a>
+        <a href="/tecnico" class="menu-item">🛠️ Panel Técnico</a>
+        <a href="/logout" class="menu-item">🚪 Cerrar Sesión</a>
+    </div>
 
-    <div class="banner-urgencia" id="banner-urgencia">
-        ⚠️ ESTÁS SOLICITANDO ATENCIÓN INMEDIATA.<br>
-        UN SOCIO DE OKUPO TE ATENDERÁ CON PRIORIDAD MÁXIMA.
+    <div id="barra-servicio">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:35px; height:35px; border-radius:50%; background:#fff; border: 1px solid #000;"></div>
+            <div style="font-size:10px;"><b>David Ruiz</b> ✅ verificado<br>🚗 EN CAMINO | Llegada: 12 min<br>⭐⭐⭐⭐⭐</div>
+        </div>
+        <div><button style="background:var(--wood-dark); color:#fff; border:none; padding:5px 10px; border-radius:5px;">CHAT</button><button style="background:var(--wood-dark); color:#fff; border:none; padding:5px 10px; border-radius:5px;">LLAMAR</button></div>
     </div>
 
     <div class="app-container">
-        <!-- Menú Lateral (Sidebar) -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="user-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <div style="font-weight: 800; font-size: 18px;">
-                    {% if session.get('user_id') %} {{ session.get('nombre') }} {% else %} Invitado {% endif %}
-                </div>
-            </div>
-            
-            <div class="sidebar-content">
-                <a href="/" class="menu-item"><i class="fas fa-home"></i> 1. Inicio</a>
-                <a href="/categorias/1/subcategorias" class="menu-item"><i class="fas fa-key"></i> 2. Cerrajería</a>
-                <a href="/categorias/2/subcategorias" class="menu-item"><i class="fas fa-faucet"></i> 3. Plomería</a>
-                <a href="/categorias/3/subcategorias" class="menu-item"><i class="fas fa-bolt"></i> 4. Electricidad</a>
-                <a href="/categorias/4/subcategorias" class="menu-item"><i class="fas fa-spray-can-sparkles"></i> 5. Limpieza y Mantenimiento</a>
-                <a href="/categorias/5/subcategorias" class="menu-item"><i class="fas fa-couch"></i> 6. Limpieza de Muebles</a>
-                <a href="/categorias/6/subcategorias" class="menu-item"><i class="fas fa-hammer"></i> 7. Armado de Muebles</a>
-                <a href="/categorias/7/subcategorias" class="menu-item"><i class="fas fa-hard-hat"></i> 8. Albañilería y Construcción / Pintura</a>
-                <a href="/categorias/8/subcategorias" class="menu-item"><i class="fas fa-truck-moving"></i> 9. Fletes y Mudanzas</a>
-                
-                <a href="/cotizar" class="menu-item highlight" style="margin-top: 10px;">
-                    <i class="fas fa-plus-circle"></i> 10. COTIZAR OTRO SERVICIO
-                </a>
-                
-                <a href="javascript:toggleUrgencia()" class="menu-item" style="color: #e65c00;"><i class="fas fa-bolt"></i> 11. Urgencia 24/7</a>
-                <a href="/politicas" class="menu-item"><i class="fas fa-info-circle"></i> 12. Información y Políticas</a>
-                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-history"></i> 13. Mi Perfil / Historial</a>
-                <a href="{{ url_for('pedidos.mis_pedidos') }}" class="menu-item"><i class="fas fa-star"></i> 14. Calificaciones</a>
-                <a href="/soporte" class="menu-item"><i class="fas fa-shield-alt"></i> 15. Centro de Ayuda / Soporte</a>
-                
-                {% if session.get('user_id') %}
-                    <a href="{{ url_for('autenticacion.logout') }}" class="menu-item" style="border-top: 1px solid #ddd; margin-top: 10px;">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                    </a>
-                {% else %}
-                    <a href="{{ url_for('autenticacion.login') }}" class="menu-item highlight" style="border-top: 1px solid #ddd; margin-top: 10px;">
-                        <i class="fas fa-sign-in-alt"></i> 16. Iniciar Sesión / Registrarse
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Overlay -->
-        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-        <!-- Decoraciones -->
-        <svg class="decoracion-esquina top-left" viewBox="0 0 100 100"><path d="M0,0 Q50,0 50,50 T100,100" fill="none" stroke="#5a3e2b" stroke-width="0.5"/></svg>
-        <svg class="decoracion-esquina bottom-right" viewBox="0 0 100 100"><path d="M0,0 Q50,0 50,50 T100,100" fill="none" stroke="#5a3e2b" stroke-width="0.5"/></svg>
-
-        <!-- Header -->
         <div class="header">
-            <i class="fas fa-bars" onclick="toggleMenu()"></i>
-            <div class="logo">okupo</div>
-            {% if session.get('user_id') %}
-                <a href="{{ url_for('autenticacion.logout') }}" title="Cerrar Sesión" style="color: inherit; text-decoration: none;"><i class="fas fa-sign-out-alt"></i></a>
-            {% else %}
-                <a href="{{ url_for('autenticacion.login') }}" style="color: inherit; text-decoration: none;"><i class="fas fa-user-circle"></i></a>
-            {% endif %}
+            <div class="logo-box">
+                <img src="/static/logo_okupo.png" style="height:35px;">
+                <div class="logo-text">OKUPO CLIC<br>Tu experto en casa</div>
+            </div>
+            <div class="search-box">¿Qué servicio necesitas hoy? | Zapopan, Jalisco</div>
+            <i class="fas fa-user-circle" style="font-size:24px; cursor:pointer;" onclick="document.getElementById('user-menu').style.display = (document.getElementById('user-menu').style.display === 'block' ? 'none' : 'block')"></i>
         </div>
-
-        <!-- Buscador -->
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <span>Buscar</span>
+        <div id="map"></div>
+        <a href="/urgencia_categorias" class="btn-urgencia"><i class="fas fa-bolt"></i> SOLICITAR URGENCIA 24/7</a>
+        
+        <div class="carrusel">
+            <a href="/categorias/1/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-key"></i><span class="btn-title">CERRAJERÍA</span><span class="btn-desc">Chapas, duplicados</span></a>
+            <a href="/categorias/2/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-faucet"></i><span class="btn-title">PLOMERÍA</span><span class="btn-desc">Fugas, destapes</span></a>
+            <a href="/categorias/3/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-bolt"></i><span class="btn-title">ELECTRICIDAD</span><span class="btn-desc">Cortos, instalaciones</span></a>
+            <a href="/categorias/4/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-broom"></i><span class="btn-title">LIMPIEZA GENERAL</span><span class="btn-desc">Hogar, oficinas</span></a>
+            <a href="/categorias/5/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-couch"></i><span class="btn-title">LIMPIEZA MUEBLES</span><span class="btn-desc">Salas, lavado</span></a>
+            <a href="/categorias/6/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-chair"></i><span class="btn-title">ARMADO</span><span class="btn-desc">Cocinas, closets</span></a>
+            <a href="/categorias/8/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-truck"></i><span class="btn-title">FLETES</span><span class="btn-desc">Carga, transporte</span></a>
+            <a href="/categorias/7/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-paint-roller"></i><span class="btn-title">ALBAÑILERÍA</span><span class="btn-desc">Reparación, pintura</span></a>
+            <a href="/categorias/9/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-tools"></i><span class="btn-title">REPARACIONES</span><span class="btn-desc">Mantenimiento</span></a>
+            <a href="/categorias/10/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-sun"></i><span class="btn-title">PANELES</span><span class="btn-desc">Instalación</span></a>
+            <a href="/categorias/11/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-car"></i><span class="btn-title">AUTOS</span><span class="btn-desc">Lavado, interior</span></a>
+            <a href="/categorias/12/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-tv"></i><span class="btn-title">INSTALACIONES</span><span class="btn-desc">Minisplit, TV</span></a>
+            <a href="/cotizar" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-ellipsis-h"></i><span class="btn-title">SERVICIOS EXTRA</span><span class="btn-desc">Cotizar otros servicios</span></a>
         </div>
-
-        <!-- Ubicación -->
-        <div class="location" onclick="obtenerUbicacion()">
-            <i class="fas fa-map-marker-alt"></i>
-            <span id="ubicacion-texto">Cargando ubicación...</span>
-            <i class="fas fa-chevron-down"></i>
-        </div>
-
-        <!-- Servicios Express (Piedra) -->
-        <div class="section-title">Servicios Express</div>
-        <div class="grid-express">
-            <a href="/categorias/1/subcategorias" class="btn-piedra">
-                <i class="fas fa-key"></i>
-                <span>Cerrajería</span>
-            </a>
-            <a href="/categorias/2/subcategorias" class="btn-piedra silver">
-                <i class="fas fa-faucet"></i>
-                <span>Plomería</span>
-            </a>
-            <a href="/categorias/3/subcategorias" class="btn-piedra">
-                <i class="fas fa-bolt"></i>
-                <span>Electricidad</span>
-            </a>
-            <a href="/categorias/4/subcategorias" class="btn-piedra silver">
-                <i class="fas fa-spray-can-sparkles"></i>
-                <span>Limpieza</span>
-            </a>
-        </div>
-
-        <!-- Otros Servicios (Madera) -->
-        <div class="grid-maderas">
-            <a href="/categorias/5/subcategorias" class="btn-madera madera-clara">Limpieza de Muebles</a>
-            <a href="/categorias/6/subcategorias" class="btn-madera madera-media">Armado de Muebles</a>
-            <a href="/categorias/7/subcategorias" class="btn-madera madera-clara">Albañilería y Pintura</a>
-            <a href="/categorias/8/subcategorias" class="btn-madera madera-media">Fletes y Mudanzas</a>
-        </div>
-
-        <!-- Botones de Acción -->
-        <div class="bottom-actions">
-            <a href="javascript:toggleUrgencia()" class="btn-largo urgencia">
-                <span>URGENCIA 24/7</span>
-                <i class="fas fa-bolt"></i>
-            </a>
-            <a href="/cotizar" class="btn-largo cotizar">
-                COTIZAR OTRO SERVICIO
-            </a>
-        </div>
-
     </div>
-
-    <!-- SCRIPTS -->
     <script>
-        function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+        const map = L.map('map', { zoomControl: false }).setView([20.6736, -103.3444], 15);
+        L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}').addTo(map);
+        
+        function addTechnicians(lat, lng) {
+            map.eachLayer(l => { if(l instanceof L.Marker) map.removeLayer(l); });
+            const techs = [{i:'fa-bolt', n:'David Ruiz'}, {i:'fa-key', n:'Juan Carlos'}, {i:'fa-faucet', n:'Luis'}];
+            techs.forEach(t => {
+                const m = L.marker([lat + (Math.random()-0.5)*0.005, lng + (Math.random()-0.5)*0.005], { icon: L.divIcon({ className: 'map-icon', html: `<i class="fas ${t.i}"></i>` }) }).addTo(map);
+                m.bindPopup(`<div class="popup-card"><b>${t.n}</b><br>Especialista disponible a 5 min<br><button class="popup-btn" onclick="activarServicio(true)">Solicitar</button></div>`);
+            });
         }
-
-        function toggleUrgencia() {
-            const body = document.body;
-            const esUrgente = body.classList.toggle('modo-urgencia-activo');
-            localStorage.setItem('okupo_urgencia_247', esUrgente ? 'true' : 'false');
-            
-            if (esUrgente) {
-                console.log("Modo Urgencia Activado");
-            } else {
-                console.log("Modo Urgencia Desactivado");
-            }
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                map.setView([pos.coords.latitude, pos.coords.longitude], 15);
+                addTechnicians(pos.coords.latitude, pos.coords.longitude);
+            });
         }
-
-        function obtenerUbicacion() {
-            const span = document.getElementById('ubicacion-texto');
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        localStorage.setItem('okupo_lat', lat);
-                        localStorage.setItem('okupo_lon', lon);
-
-                        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                const ubicacion = data.address.city || data.address.town || "Zapopan, Jalisco";
-                                span.innerText = ubicacion;
-                            })
-                            .catch(() => {
-                                span.innerText = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
-                            });
-                    },
-                    () => { span.innerText = "Zapopan, Jalisco"; }
-                );
-            }
-        }
-
-        // Ejecutar al cargar
-        document.addEventListener('DOMContentLoaded', () => {
-            obtenerUbicacion();
-            
-            // Verificar estado de urgencia persistido
-            if (localStorage.getItem('okupo_urgencia_247') === 'true') {
-                document.body.classList.add('modo-urgencia-activo');
-            }
-
-            // Verificación de Token / Redirección (Simulado aquí, manejado por Flask)
-            {% if session.get('token') == 'UNAUTHORIZED' %}
-                window.location.href = "{{ url_for('autenticacion.login') }}";
-            {% endif %}
-        });
+        addTechnicians(20.6736, -103.3444);
+        window.activarServicio = (activo) => document.getElementById('barra-servicio').style.display = activo ? 'flex' : 'none';
     </script>
 </body>
 </html>
