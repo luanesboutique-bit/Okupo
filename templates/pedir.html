@@ -442,13 +442,15 @@
                     <i class="fas fa-hand-holding-usd"></i> 4. Resumen de Pago
                 </div>
 
+                <!-- CONEKTA ELEMENTS: Contenedor para pago seguro -->
                 <div style="background: white; padding: 20px; border-radius: 20px; border: 2px solid var(--color-dorado); margin-bottom: 25px; text-align: center;">
                     <span style="font-size: 12px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Total a Reservar</span>
                     <div style="font-size: 32px; font-weight: 900; color: var(--color-verde);" id="precio-final-reserva">$ {{ subcategoria.get('precio_normal', 0) }}</div>
-                    <p style="font-size: 11px; margin-top: 10px; color: #000000; font-weight: 800; text-shadow: 0 0 5px white;">
-                        Pago seguro. El monto se reserva hasta confirmar el servicio.
-                    </p>
-                    </div>
+                    
+                    <div id="conekta-element" style="margin-top: 15px; border: 1px solid #ddd; padding: 10px; border-radius: 10px;"></div>
+                    <div id="error-message" style="color: red; margin: 10px 0; font-size: 12px;"></div>
+                </div>
+
                 <div class="input-group">
                     <label>Describe lo que necesitas</label>
                     <textarea name="descripcion" rows="4" placeholder="Ej: Mi llave se rompió dentro de la cerradura y no puedo entrar..." required></textarea>
@@ -459,11 +461,40 @@
                 <input type="hidden" name="colaborador_id" value="{{ colaborador_id }}">
                 <input type="hidden" name="latitud" id="lat-input">
                 <input type="hidden" name="longitud" id="lon-input">
+                <input type="hidden" name="conekta_token" id="conekta_token">
 
-                <button type="submit" class="btn-enviar" style="background-image: url('/static/madera_oscura.jpg'); color: #ffff00; text-shadow: 1px 1px 2px black; border: 2px solid #3d2b1f;">CONFIRMAR SERVICIO</button>
+                <button type="submit" id="pay-button" class="btn-enviar" style="background-image: url('/static/madera_oscura.jpg'); color: #ffff00; text-shadow: 1px 1px 2px black; border: 2px solid #3d2b1f;">CONFIRMAR SERVICIO</button>
             </form>
         </div>
     </div>
+
+    <!-- Integración Conekta JS -->
+    <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
+    <script>
+        // RECUERDA: SUSTITUYE ESTO POR TU LLAVE PÚBLICA (pk_test_...)
+        Conekta.setPublicKey('TU_LLAVE_PUBLICA_PK'); 
+        const conektaElements = Conekta.Elements({});
+        const paymentElement = conektaElements.create('payment', { amount: {{ subcategoria.get('precio_normal', 0) * 100 }} });
+        paymentElement.mount('#conekta-element');
+
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('pay-button');
+            btn.disabled = true;
+            btn.innerText = 'Procesando...';
+
+            const token = await conektaElements.createToken(paymentElement);
+            
+            if (token.error) {
+                document.getElementById('error-message').innerText = token.error.message;
+                btn.disabled = false;
+                btn.innerText = 'CONFIRMAR SERVICIO';
+            } else {
+                document.getElementById('conekta_token').value = token.id;
+                e.target.submit(); // Enviar formulario al backend con el token
+            }
+        });
+    </script>
 
     <script>
         function toggleMuebleSubfields(valor) {
