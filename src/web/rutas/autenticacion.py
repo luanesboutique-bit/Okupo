@@ -22,7 +22,15 @@ def login():
         print(f"DEBUG: Respuesta API Login: {respuesta}")
         
         if respuesta and respuesta != "UNAUTHORIZED":
-            token = respuesta.get('token') if isinstance(respuesta, dict) else respuesta
+            # Si respuesta es un string (el token mismo), úsalo directamente.
+            # Si es un dict, intenta buscar la clave 'token'.
+            if isinstance(respuesta, str):
+                token = respuesta
+            elif isinstance(respuesta, dict):
+                token = respuesta.get('token', '')
+            else:
+                token = str(respuesta)
+                
             print(f"DEBUG: Token extraido: {token}")
             
             usuario_id = obtener_usuario_id_de_token(token)

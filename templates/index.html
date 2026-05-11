@@ -97,19 +97,56 @@
             <a href="/categorias/5/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-couch"></i><span class="btn-title">LIMPIEZA MUEBLES</span><span class="btn-desc">Salas, lavado</span></a>
             <a href="/categorias/6/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-chair"></i><span class="btn-title">ARMADO</span><span class="btn-desc">Cocinas, closets</span></a>
             <a href="/categorias/8/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-truck"></i><span class="btn-title">FLETES</span><span class="btn-desc">Carga, transporte</span></a>
-            <a href="/categorias/7/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-paint-roller"></i><span class="btn-title">ALBAÑILERÍA</span><span class="btn-desc">Reparación, pintura</span></a>
+            <a href="/categorias/7/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-hammer"></i><span class="btn-title">ALBAÑILERÍA</span><span class="btn-desc">Reparación, resanes</span></a>
             <a href="/categorias/9/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-tools"></i><span class="btn-title">REPARACIONES</span><span class="btn-desc">Mantenimiento</span></a>
-            <a href="/categorias/10/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-sun"></i><span class="btn-title">PANELES</span><span class="btn-desc">Instalación</span></a>
-            <a href="/categorias/11/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-car"></i><span class="btn-title">AUTOS</span><span class="btn-desc">Lavado, interior</span></a>
-            <a href="/categorias/12/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-tv"></i><span class="btn-title">INSTALACIONES</span><span class="btn-desc">Minisplit, TV</span></a>
-            <a href="/cotizar" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-ellipsis-h"></i><span class="btn-title">SERVICIOS EXTRA</span><span class="btn-desc">Cotizar otros servicios</span></a>
+            <a href="/categorias/10/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-sun"></i><span class="btn-title">PANELES</span><span class="btn-desc">Instalación solar</span></a>
+            <a href="/categorias/11/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-car"></i><span class="btn-title">AUTOS</span><span class="btn-desc">Lavado, estética</span></a>
+            <a href="/categorias/12/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-tv"></i><span class="btn-title">INSTALACIONES</span><span class="btn-desc">Minisplit, TV, Rack</span></a>
+            <a href="/cotizar" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-ellipsis-h"></i><span class="btn-title">SERVICIOS EXTRA</span><span class="btn-desc">Cotizar otros</span></a>
         </div>
     </div>
     <script>
         const map = L.map('map', { zoomControl: false }).setView([20.6736, -103.3444], 15);
         L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}').addTo(map);
         
+        let userLocation = { lat: 20.6736, lng: -103.3444 };
+
+        async function solicitarServicioClic(nombre, id) {
+            {% if not session.get('user_id') %}
+                alert('Debes iniciar sesión para solicitar un servicio.');
+                window.location.href = '/login';
+                return;
+            {% endif %}
+
+            if (!confirm(`¿Deseas solicitar un servicio de ${nombre} de urgencia ahora?`)) return;
+
+            try {
+                const response = await fetch('/solicitar_clic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        servicio_nombre: nombre,
+                        subcategoria_id: id,
+                        latitud: userLocation.lat,
+                        longitud: userLocation.lng
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    alert('¡Solicitud creada con éxito! Un experto va en camino.');
+                    window.location.href = '/asignacion';
+                } else {
+                    alert('Error: ' + (result.message || 'No se pudo crear la solicitud'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión con el servidor.');
+            }
+        }
+
         function addTechnicians(lat, lng) {
+            userLocation = { lat, lng };
             map.eachLayer(l => { if(l instanceof L.Marker) map.removeLayer(l); });
             const techs = [{i:'fa-bolt', n:'David Ruiz'}, {i:'fa-key', n:'Juan Carlos'}, {i:'fa-faucet', n:'Luis'}];
             techs.forEach(t => {

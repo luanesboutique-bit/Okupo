@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Técnico - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --wood-dark: #A67C52; --wood-light: #D4B996; --gold: #E8B760; --engraved: #2a1b12; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #F2EDE0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: #F2EDE0; padding: 20px; box-sizing: border-box; }
+        h1 { color: var(--engraved); text-align: center; }
+        
+        .card { background: url('/static/madera_clara.jpg'); padding: 20px; border-radius: 16px; border: 2px solid var(--gold); 
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 20px; color: var(--engraved); }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; padding: 15px; border-radius: 12px; border: 2px solid var(--engraved); font-weight: 900; 
+               cursor: pointer; transition: transform 0.2s; text-align: center; }
+        .btn:active { transform: scale(0.95); }
+        .btn-aceptar { background: #5cb85c; color: white; }
+        .btn-rechazar { background: #d9534f; color: white; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1>Mis Trabajos</h1>
+        <div id="lista-trabajos">Cargando...</div>
+    </div>
+
+    <script>
+        async function gestionarEstado(id, estado) {
+            if (!confirm(`¿Confirmar acción: ${estado}?`)) return;
+            const res = await fetch(`/dashboard/estado/${id}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ nuevo_estado: estado })
+            });
+            if (res.ok) {
+                alert('Estado actualizado');
+                location.reload();
+            } else {
+                alert('Error al actualizar');
+            }
+        }
+
+        fetch('/dashboard/datos')
+            .then(res => res.json())
+            .then(data => {
+                const lista = document.getElementById('lista-trabajos');
+                if (data.length === 0) {
+                    lista.innerHTML = '<p style="text-align:center;">No tienes trabajos pendientes.</p>';
+                    return;
+                }
+                lista.innerHTML = data.map(sol => `
+                    <div class="card">
+                        <h3>Solicitud #${sol.id}</h3>
+                        <p><b>Estado:</b> ${sol.estado.toUpperCase()}</p>
+                        <p>${sol.descripcion_detallada}</p>
+                        ${sol.estado.toLowerCase() === 'pendiente' ? `
+                            <div class="btn-group">
+                                <button class="btn btn-aceptar" onclick="gestionarEstado(${sol.id}, 'aceptado')">ACEPTAR</button>
+                                <button class="btn btn-rechazar" onclick="gestionarEstado(${sol.id}, 'rechazado')">RECHAZAR</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            });
+    </script>
+</body>
+</html>
