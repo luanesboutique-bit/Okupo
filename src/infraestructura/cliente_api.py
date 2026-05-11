@@ -65,8 +65,10 @@ def api_post(endpoint, datos, token=None):
                 return respuesta.json()
             except:
                 return respuesta.text.strip('"')
+        print(f"❌ API POST Error {respuesta.status_code}: {respuesta.text}")
         if respuesta.status_code == 401:
             return "UNAUTHORIZED"
         return None
-    except Exception:
+    except Exception as e:
+        print(f"❌ API POST Exception: {e}")
         return None
