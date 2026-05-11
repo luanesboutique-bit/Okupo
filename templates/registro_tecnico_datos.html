@@ -166,7 +166,13 @@
         <h2>Datos Personales</h2>
         <p class="sub-guia">Completa tu perfil para que podamos verificarte.</p>
 
-        <form action="{{ url_for('colaboradores.registro_tecnico_documentos') }}" method="POST">
+        {% if error %}
+        <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; text-align: center; border: 1px solid #f5c6cb;">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="{{ url_for('colaboradores.registro_tecnico_datos') }}" method="POST">
             <div class="input-group">
                 <label>Nombre Completo</label>
                 <div class="input-wrapper">

@@ -142,6 +142,12 @@
         <h2>Documentación</h2>
         <p class="sub-guia">Sube fotos claras para validar tu cuenta profesional.</p>
 
+        {% if error %}
+        <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; text-align: center; border: 1px solid #f5c6cb;">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+
         <form action="{{ url_for('colaboradores.registro_tecnico_documentos') }}" method="POST" enctype="multipart/form-data">
             <div class="upload-grid">
                 <div class="upload-item">

@@ -46,6 +46,9 @@ Okupo utiliza el motor **Finite** como núcleo de procesamiento. A continuación
 
 ### `POST /colaboradores/{id}/documentacion`
 - **Uso**: Carga de documentos legales para certificación.
+- **Formato**: Soporta imágenes en Base64 enviadas como JSON.
+- **Campos**: `ine_frontal`, `ine_trasera`, `comprobante_domicilio`, `foto_selfie_ine`.
+- **Límite**: El motor soporta hasta **20MB** para asegurar calidad en las fotos.
 
 ### `POST /colaboradores/{id}/precios-dinamicos`
 - **Uso**: Configuración de reglas de cobro variables.

@@ -25,6 +25,7 @@ def registro_tecnico_documentos():
         # Crear la entrada del colaborador en el motor Finite
         respuesta_colaborador = api_post("/colaboradores", {
             "token_usuario": token,
+            "nombre_completo": session.get('registro_nombre_completo'),
             "telefono": session.get('registro_telefono_verificacion'),
             "zona_trabajo": session.get('registro_zona_trabajo'),
             "servicios": []
@@ -38,7 +39,7 @@ def registro_tecnico_documentos():
                 colaborador_id = respuesta_colaborador.get('id') if isinstance(respuesta_colaborador, dict) else None
             
             if not colaborador_id:
-                return render_template('registro_tecnico_documentos.html', error="Error al crear el perfil de colaborador.")
+                return render_template('registro_tecnico_documentos.html', error="Error al crear el perfil de colaborador en el sistema.")
 
             session['colaborador_id'] = colaborador_id
 
@@ -46,28 +47,34 @@ def registro_tecnico_documentos():
             import base64
             
             datos_documentacion = {}
-            campos_archivos = [
-                'identificacion_frontal', 
-                'identificacion_trasera', 
-                'comprobante_domicilio', 
-                'foto_perfil_identificacion'
-            ]
+            # Mapeo de campos del form a campos esperados por la API de Finite
+            mapeo_campos = {
+                'identificacion_frontal': 'ine_frontal', 
+                'identificacion_trasera': 'ine_trasera', 
+                'comprobante_domicilio': 'comprobante_domicilio', 
+                'foto_perfil_identificacion': 'foto_selfie_ine'
+            }
 
-            for campo in campos_archivos:
-                archivo = request.files.get(campo)
+            for campo_form, campo_api in mapeo_campos.items():
+                archivo = request.files.get(campo_form)
                 if archivo and archivo.filename != '':
                     contenido = archivo.read()
                     base64_data = base64.b64encode(contenido).decode('utf-8')
                     # Formato data:image/...;base64,...
                     mime = archivo.content_type or 'image/jpeg'
-                    datos_documentacion[campo] = f"data:{mime};base64,{base64_data}"
+                    datos_documentacion[campo_api] = f"data:{mime};base64,{base64_data}"
                 else:
                     # Fallback si se envió como string (por si acaso hay algún JS de por medio)
-                    datos_documentacion[campo] = request.form.get(campo)
+                    datos_documentacion[campo_api] = request.form.get(campo_form)
 
             api_post(f"/colaboradores/{colaborador_id}/documentacion", datos_documentacion, token=token)
             
             return redirect(url_for('colaboradores.registro_tecnico_categorias'))
+        else:
+            error_msg = "Error de conexión con el servidor de Finite."
+            if respuesta_colaborador == "UNAUTHORIZED":
+                error_msg = "Sesión no autorizada. Por favor, inicia sesión de nuevo."
+            return render_template('registro_tecnico_documentos.html', error=error_msg)
 
     return render_template('registro_tecnico_documentos.html')
 
@@ -120,6 +127,9 @@ def finalizar_registro():
     
     api_post(f"/colaboradores/{colaborador_id}/horarios", lista_horarios, token=token)
     
+    # Actualizar el rol en la sesión para que aparezca el dashboard inmediatamente
+    session['rol'] = 'colaborador'
+    
     # Limpiar datos temporales de sesión
     claves_a_limpiar = ['registro_nombre_completo', 'registro_telefono_verificacion', 'registro_zona_trabajo']
     for clave in claves_a_limpiar: session.pop(clave, None)
@@ -129,7 +139,7 @@ def finalizar_registro():
 @blueprint.route('/dashboard')
 @login_requerido
 def dashboard():
-    return render_template('dashboard_colaborador.html')
+    return render_template('dashboard_tecnico.html')
 
 @blueprint.route('/dashboard/tecnico')
 @login_requerido

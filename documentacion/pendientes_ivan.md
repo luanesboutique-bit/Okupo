@@ -15,9 +15,13 @@ He creado el archivo templates/cotizar_especial.html. Para que el botón de "COT
    2 def politicas():
    3     return render_template('politicas.html')
 
-(Las tareas de lógica de backend y dashboard básico de colaborador han sido completadas)
+(Las tareas de lógica de backend, registro técnico y dashboard han sido completadas satisfactoriamente)
 
-- ✅ Dashboard de Colaborador con 4 secciones (Configuración, Portafolio, Solicitudes, Próximos).
+- ✅ Registro Técnico: Corregido flujo de pasos, guardado en sesión y envío de imágenes en Base64.
+- ✅ Optimización Backend: Aumento de límites de API (20MB) y migración a LONGTEXT para documentos.
+- ✅ Dashboard de Colaborador: Vinculado correctamente a la plantilla técnica visual.
+- ✅ Lógica de roles: Actualización automática de rol 'colaborador' al registrarse.
 - ✅ Lógica de redirección basada en rol tras el login.
 - ✅ Menú de usuario dinámico en Home (muestra nombre y opciones según login).
 - ✅ Ruta de perfil básica (/perfil) para evitar 404.
+

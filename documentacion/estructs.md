@@ -18,6 +18,8 @@ Extensión del perfil de usuario para quienes prestan servicios.
 - `id`: Identificador de colaborador.
 - `usuario_id`: Relación con la tabla base de usuarios.
 - `telefono`: Contacto directo.
+- `zona_trabajo`: Ciudad o municipio de operación.
+- `ine_frontal`, `ine_trasera`, `comprobante_domicilio`, `foto_selfie_ine`: Imágenes en formato Base64 (`LONGTEXT` en BD).
 - `sitio_web`: (Opcional) Portafolio externo.
 - `reputacion`: Calificación promedio.
 
