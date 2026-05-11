@@ -13,9 +13,16 @@ Okupo utiliza el motor **Finite** como núcleo de procesamiento. A continuación
 ### `POST /usuarios`
 - **Uso**: Registro de nuevos usuarios (clientes o colaboradores).
 
+### `POST /auth/google` y `POST /auth/facebook`
+- **Uso**: Social Login mediante tokens OAuth2. Valida el token con el proveedor y devuelve un JWT. Registra automáticamente al usuario si no existe.
+
 ---
 
 ## 📂 Catálogo y Marketplace
+
+### `POST /cotizaciones-especiales`
+- **Uso**: Enviar una solicitud de servicio para algo que no está en el catálogo estándar.
+- **Campos**: `usuario_id`, `descripcion_trabajo`, `fotos_evidencia`, `presupuesto_estimado`, `nivel_urgencia`.
 
 ### `GET /categorias`
 - **Uso**: Listar los sectores de servicios principales.
@@ -61,3 +68,7 @@ Okupo utiliza el motor **Finite** como núcleo de procesamiento. A continuación
 
 ### `POST /solicitudes/{id}/mensajes`
 - **Uso**: Enviar un nuevo mensaje dentro del chat de servicio.
+
+### `POST /calificaciones`
+- **Uso**: Evaluar un servicio terminado.
+- **Campos**: `solicitud_id`, `puntuacion`, `aspectos` (lista: puntualidad, limpieza, calidad), `comentario`.

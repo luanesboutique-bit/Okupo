@@ -1,20 +1,9 @@
- Nota para tu amigo (👨‍💻 Lógica):
-  He creado el archivo templates/registro_tecnico_datos.html. Él solo debe añadir esta ruta en src/web/rutas/colaboradores.py para activarlo:
-
-   1 @blueprint.route('/registro/tecnico/datos')
-   2 def registro_tecnico_datos():
-   3     return render_template('registro_tecnico_datos.html')
-
 Nota para tu amigo (👨‍💻 Lógica):
   He creado el archivo templates/seleccion_rol.html. Para que sea visible, él solo necesita añadir una ruta sencilla en main.py:
 
    1 @app.route('/bienvenida')
    2 def seleccion_rol():
    3     return render_template('seleccion_rol.html')
-
-Nota para tu amigo (👨‍💻 Lógica):
-  He creado el archivo templates/registro_tecnico_documentos.html. Debería estar vinculado a su ruta de colaboradores para procesar los archivos de
-  imagen.
 
 He creado el archivo templates/cotizar_especial.html. Para que el botón de "COTIZAR OTRO SERVICIO" del Home funcione, debe apuntar a una nueva
   ruta que él cree en principal.py.
@@ -26,16 +15,9 @@ He creado el archivo templates/cotizar_especial.html. Para que el botón de "COT
    2 def politicas():
    3     return render_template('politicas.html')
 
-  Nota para tu amigo (👨‍💻 Lógica):
-  He creado templates/dashboard_tecnico.html. Él debe añadir esta ruta en colaboradores.py:
+(Las tareas de lógica de backend y dashboard básico de colaborador han sido completadas)
 
-   1 @blueprint.route('/dashboard')
-   2 @login_requerido
-   3 def dashboard():
-   4     return render_template('dashboard_tecnico.html')
-
- Nota para tu amigo (👨‍💻 Lógica):
-  He creado templates/detalle_trabajo_tecnico.html. Él debe vincular esta pantalla desde el Dashboard para que, al dar clic en una solicitud, se
-  abra este detalle con los datos reales del cliente.
-
-
+- ✅ Dashboard de Colaborador con 4 secciones (Configuración, Portafolio, Solicitudes, Próximos).
+- ✅ Lógica de redirección basada en rol tras el login.
+- ✅ Menú de usuario dinámico en Home (muestra nombre y opciones según login).
+- ✅ Ruta de perfil básica (/perfil) para evitar 404.

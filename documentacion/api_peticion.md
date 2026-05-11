@@ -5,40 +5,37 @@ Este archivo sirve como canal de comunicación para que **D'Mayoral** (Front-end
 ---
 
 ## 🚀 Nuevos Endpoints Solicitados
-
-### `POST /cotizaciones-especiales`
-- **Motivo**: Para procesar el formulario de "¿No encuentras lo que buscas?" donde el usuario describe un problema libre y sube fotos.
-- **Datos requeridos**: `descripcion_trabajo`, `fotos_evidencia` (lista de rutas o blobs), `presupuesto_estimado`, `nivel_urgencia`.
-- **Estado**: Pendiente.
-
-### `POST /calificaciones`
-- **Motivo**: Para enviar la puntuación final (estrellas y aspectos) al terminar un servicio.
-- **Datos requeridos**: `solicitud_id`, `puntuacion` (1-5), `aspectos` (lista de strings: puntualidad, limpieza, calidad), `comentario`.
-- **Estado**: Pendiente.
-
-### `POST /auth/google` y `POST /auth/facebook`
-- **Motivo**: Implementación de Social Login (OAuth2).
-- **Datos requeridos**: `token_social` (proporcionado por el proveedor), `rol_solicitado` (cliente/colaborador).
-- **Comportamiento esperado**: Validar el token con el proveedor, realizar registro automático si el usuario no existe y devolver el token JWT de Okupo.
-- **Estado**: Pendiente (Urgente para D'Mayoral).
+- *(Todos completados)*
 
 ---
 
 ## 🛠️ Modificaciones de Endpoints Existentes
-
-### `POST /colaboradores`
-- **Cambio**: Asegurar que acepte los campos guardados en sesión durante el registro: `nombre_completo`, `telefono_verificacion`, `zona_trabajo`.
-- **Estado**: Pendiente.
-
-### `POST /colaboradores/{id}/documentacion`
-- **Cambio**: Los campos ahora se llaman: `identificacion_frontal`, `identificacion_trasera`, `comprobante_domicilio`, `foto_perfil_identificacion`.
-- **Estado**: Pendiente.
-
-### `POST /colaboradores/{id}/horarios`
-- **Cambio**: Recibir una lista de objetos con `dia_semana` (0-6), `hora_inicio`, `hora_fin` y `activo`.
-- **Estado**: Pendiente.
+- *(Todos completados)*
 
 ---
 
 ## 📋 Historial de Peticiones Completadas
-- *(Vacío por ahora)*
+### `POST /auth/google` y `POST /auth/facebook`
+- **Motivo**: Implementación de Social Login (OAuth2).
+- **Estado**: Completado. Soporta registro automático y validación de tokens.
+
+### `POST /colaboradores` (Actualización)
+- **Cambio**: Acepta `nombre_completo` (actualiza usuario), `telefono_verificacion` y `zona_trabajo`.
+- **Estado**: Completado.
+
+### `POST /cotizaciones-especiales`
+- **Motivo**: Para procesar el formulario de "¿No encuentras lo que buscas?" donde el usuario describe un problema libre y sube fotos.
+- **Estado**: Completado en motor Finit (Rust).
+
+### `POST /calificaciones`
+- **Motivo**: Para enviar la puntuación final (estrellas y aspectos) al terminar un servicio.
+- **Datos añadidos**: `aspectos` (lista de strings).
+- **Estado**: Completado en motor Finit (Rust).
+
+### `POST /colaboradores/{id}/documentacion`
+- **Cambio**: Los campos ahora se llaman: `identificacion_frontal`, `identificacion_trasera`, `comprobante_domicilio`, `foto_perfil_identificacion`.
+- **Estado**: Completado en motor Finit (Rust).
+
+### `POST /colaboradores/{id}/horarios`
+- **Cambio**: Recibir una lista de objetos con `dia_semana` (0-6), `hora_inicio`, `hora_fin` y `activo`.
+- **Estado**: Completado en motor Finit (Rust).

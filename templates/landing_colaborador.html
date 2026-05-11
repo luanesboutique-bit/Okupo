@@ -58,7 +58,7 @@
         </div>
 
         {% if session.get('user_id') %}
-            <a href="{{ url_for('colaboradores.registro_tecnico_docs') }}" class="boton">CONTINUAR REGISTRO TÉCNICO</a>
+            <a href="{{ url_for('colaboradores.registro_tecnico_datos') }}" class="boton">CONTINUAR REGISTRO TÉCNICO</a>
         {% else %}
             <a href="{{ url_for('autenticacion.registro', rol='colaborador') }}" class="boton">¡REGÍSTRATE AHORA!</a>
         {% endif %}

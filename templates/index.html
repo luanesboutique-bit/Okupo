@@ -40,12 +40,25 @@
 </head>
 <body>
     <div id="user-menu">
-        <a href="/perfil" class="menu-item">👤 Mi Perfil</a>
-        <a href="/pedidos" class="menu-item">📜 Historial de Servicios</a>
-        <a href="/chat" class="menu-item">💬 Chat Seguro</a>
-        <a href="/pagos" class="menu-item">💳 Métodos de Pago</a>
-        <a href="/tecnico" class="menu-item">🛠️ Panel Técnico</a>
-        <a href="/logout" class="menu-item">🚪 Cerrar Sesión</a>
+        {% if session.get('user_id') %}
+            <div class="menu-item" style="border-bottom: 2px solid var(--gold); margin-bottom: 10px; color: var(--wood-dark);">
+                <b>Hola, {{ session.get('nombre') }}</b>
+            </div>
+            <a href="/perfil" class="menu-item">👤 Mi Perfil</a>
+            <a href="/pedidos" class="menu-item">📜 Historial de Servicios</a>
+            <a href="/chat" class="menu-item">💬 Chat Seguro</a>
+            <a href="/pagos" class="menu-item">💳 Métodos de Pago</a>
+            {% if session.get('rol') == 'colaborador' %}
+                <a href="/dashboard" class="menu-item">🛠️ Panel de Colaborador</a>
+            {% else %}
+                <a href="/unete" class="menu-item">🛠️ ¿Quieres ser Colaborador?</a>
+            {% endif %}
+            <a href="/logout" class="menu-item" style="color: #d9534f;">🚪 Cerrar Sesión</a>
+        {% else %}
+            <a href="/login" class="menu-item">🔑 Iniciar Sesión</a>
+            <a href="/bienvenida" class="menu-item">📝 Registrarse como usuario</a>
+            <a href="/unete" class="menu-item">🛠️ Regístrate como colaborador</a>
+        {% endif %}
     </div>
 
     <div id="barra-servicio">
@@ -67,6 +80,14 @@
         </div>
         <div id="map"></div>
         <a href="/urgencia_categorias" class="btn-urgencia"><i class="fas fa-bolt"></i> SOLICITAR URGENCIA 24/7</a>
+        
+        {% if session.get('rol') != 'colaborador' %}
+        <a href="/unete" style="display: flex; align-items:center; justify-content:center; gap:10px; width: calc(100% - 40px); margin: -10px auto 20px; padding: 12px; 
+            background: #A67C52; color: #FFF; font-weight: 800; border-radius: 12px; 
+            border: 1px solid #5d3a1a; box-shadow: 4px 4px 10px rgba(0,0,0,0.2); text-decoration:none; font-size: 13px;">
+            <i class="fas fa-tools"></i> TRABAJA CON NOSOTROS (COLABORADOR)
+        </a>
+        {% endif %}
         
         <div class="carrusel">
             <a href="/categorias/1/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-key"></i><span class="btn-title">CERRAJERÍA</span><span class="btn-desc">Chapas, duplicados</span></a>

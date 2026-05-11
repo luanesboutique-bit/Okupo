@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from src.infraestructura.cliente_api import api_post
-from src.aplicacion.utilidades_token import obtener_usuario_id_de_token
+from src.aplicacion.utilidades_token import obtener_usuario_id_de_token, obtener_rol_de_token
 
 blueprint = Blueprint('autenticacion', __name__)
 
@@ -10,9 +10,12 @@ def login():
         return redirect(url_for('principal.index'))
         
     mensaje = request.args.get('mensaje')
+    proximo = request.args.get('proximo')
+
     if request.method == 'POST':
         email = request.form.get('email')
         contrasenna = request.form.get('contrasenna')
+        proximo = request.form.get('proximo')
         
         print(f"DEBUG: Intentando login con correo: {email}")
         respuesta = api_post("/login", {"correo": email, "contrasenna": contrasenna})
@@ -23,22 +26,36 @@ def login():
             print(f"DEBUG: Token extraido: {token}")
             
             usuario_id = obtener_usuario_id_de_token(token)
-            print(f"DEBUG: Usuario ID decodificado: {usuario_id}")
+            rol = obtener_rol_de_token(token)
+            print(f"DEBUG: Usuario ID decodificado: {usuario_id}, Rol: {rol}")
 
             if usuario_id:
+                # Mantener la bandera de registro como colaborador si existe
+                es_registro_colaborador = session.get('registro_como_colaborador')
+                
                 session.clear()
                 session['user_id'] = int(usuario_id)
                 session['nombre'] = email.split('@')[0].capitalize()
                 session['correo'] = email
                 session['token'] = token
+                session['rol'] = rol
                 print(f"DEBUG: Sesion guardada: {dict(session)}")
+                
+                if proximo:
+                    return redirect(proximo)
+
+                if es_registro_colaborador:
+                    return redirect(url_for('colaboradores.registro_tecnico_datos'))
+                
+                if rol == 'colaborador':
+                    return redirect(url_for('colaboradores.dashboard'))
                 return redirect(url_for('principal.index'))
             else:
                 print("DEBUG: Fallo al decodificar ID del token")
         
-        return render_template('login.html', error="Correo o contrasenna incorrectos")
+        return render_template('login.html', error="Correo o contrasenna incorrectos", proximo=proximo)
             
-    return render_template('login.html', mensaje=mensaje)
+    return render_template('login.html', mensaje=mensaje, proximo=proximo)
 
 @blueprint.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -57,6 +74,7 @@ def registro():
         print(f"DEBUG: Respuesta registro: {respuesta}")
         if respuesta and respuesta != "UNAUTHORIZED":
             if rol == 'colaborador':
+                session['registro_como_colaborador'] = True
                 return redirect(url_for('autenticacion.login', mensaje="¡Cuenta creada! Inicia sesión para configurar tu perfil técnico."))
             return redirect(url_for('autenticacion.login', mensaje="Cuenta creada con éxito. Ya puedes iniciar sesión."))
         return render_template('registro.html', error="Error al registrar. Intenta con otro correo.")

@@ -50,6 +50,10 @@ def cotizar_especial():
 def politicas():
     return render_template('politicas.html')
 
+@blueprint.route('/perfil')
+def perfil():
+    return f"<h1>Perfil de {session.get('nombre', 'Usuario')}</h1><p>Rol: {session.get('rol')}</p><a href='/'>Volver</a>"
+
 @blueprint.route('/soporte')
 def soporte():
     return render_template('soporte.html')

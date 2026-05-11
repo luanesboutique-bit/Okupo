@@ -31,16 +31,40 @@ def registro_tecnico_documentos():
         }, token=token)
 
         if respuesta_colaborador and respuesta_colaborador != "UNAUTHORIZED":
-            colaborador_id = int(respuesta_colaborador)
+            try:
+                colaborador_id = int(respuesta_colaborador)
+            except (ValueError, TypeError):
+                # Si la respuesta es un objeto JSON con el ID
+                colaborador_id = respuesta_colaborador.get('id') if isinstance(respuesta_colaborador, dict) else None
+            
+            if not colaborador_id:
+                return render_template('registro_tecnico_documentos.html', error="Error al crear el perfil de colaborador.")
+
             session['colaborador_id'] = colaborador_id
 
-            # Subir documentos (Nombres largos y en español según reglas)
-            datos_documentacion = {
-                "identificacion_frontal": request.form.get('identificacion_frontal'),
-                "identificacion_trasera": request.form.get('identificacion_trasera'),
-                "comprobante_domicilio": request.form.get('comprobante_domicilio'),
-                "foto_perfil_identificacion": request.form.get('foto_perfil_identificacion')
-            }
+            # Procesar archivos y convertirlos a base64 (o enviarlos como multipart si la API lo soporta)
+            import base64
+            
+            datos_documentacion = {}
+            campos_archivos = [
+                'identificacion_frontal', 
+                'identificacion_trasera', 
+                'comprobante_domicilio', 
+                'foto_perfil_identificacion'
+            ]
+
+            for campo in campos_archivos:
+                archivo = request.files.get(campo)
+                if archivo and archivo.filename != '':
+                    contenido = archivo.read()
+                    base64_data = base64.b64encode(contenido).decode('utf-8')
+                    # Formato data:image/...;base64,...
+                    mime = archivo.content_type or 'image/jpeg'
+                    datos_documentacion[campo] = f"data:{mime};base64,{base64_data}"
+                else:
+                    # Fallback si se envió como string (por si acaso hay algún JS de por medio)
+                    datos_documentacion[campo] = request.form.get(campo)
+
             api_post(f"/colaboradores/{colaborador_id}/documentacion", datos_documentacion, token=token)
             
             return redirect(url_for('colaboradores.registro_tecnico_categorias'))
@@ -101,6 +125,11 @@ def finalizar_registro():
     for clave in claves_a_limpiar: session.pop(clave, None)
 
     return redirect(url_for('principal.index', registro_exitoso=True))
+
+@blueprint.route('/dashboard')
+@login_requerido
+def dashboard():
+    return render_template('dashboard_colaborador.html')
 
 @blueprint.route('/dashboard/tecnico')
 @login_requerido

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Panel del Colaborador</h1>
+    <p>Bienvenido, {{ session['nombre'] }}</p>
+    
+    <div class="row mt-5 text-center">
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-gear" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Configuración</h5>
+                    <p class="card-text text-muted">Ajusta tus datos y preferencias.</p>
+                    <a href="#" class="btn btn-outline-primary stretched-link">Ir</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-briefcase" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Portafolio</h5>
+                    <p class="card-text text-muted">Gestiona tus trabajos realizados.</p>
+                    <a href="#" class="btn btn-outline-primary stretched-link">Ir</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-file-earmark-text" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Solicitudes</h5>
+                    <p class="card-text text-muted">Nuevas peticiones de clientes.</p>
+                    <a href="#" class="btn btn-outline-primary stretched-link">Ir</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-calendar-event" style="font-size: 2rem;"></i>
+                    <h5 class="card-title mt-3">Próximos</h5>
+                    <p class="card-text text-muted">Tus citas programadas.</p>
+                    <a href="#" class="btn btn-outline-primary stretched-link">Ir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
