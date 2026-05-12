@@ -246,7 +246,77 @@ def enviar_cotizacion():
 def aviso_visita():
     return render_template('aviso_visita.html')
 
-@blueprint.route('/visita/agendar')
+@blueprint.route('/pagar/<int:solicitud_id>')
 @login_requerido
-def agendar_visita():
-    return render_template('agenda_visita.html')
+def iniciar_pago(solicitud_id):
+    # Obtener detalles del pedido para mostrar en la pantalla de pago
+    token = session.get('token')
+    solicitud = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=token)
+    
+    # Filtrar el pedido específico
+    pedido = next((s for s in (solicitud or []) if s['id'] == solicitud_id), None)
+    
+    if not pedido:
+        return "Pedido no encontrado", 404
+        
+    return render_template('pago.html', pedido=pedido)
+
+@blueprint.route('/pagar/finalizar', methods=['POST'])
+@login_requerido
+def finalizar_pago():
+    solicitud_id = request.form.get('solicitud_id')
+    token_pago = request.form.get('conekta_token')
+    
+    # Enviar el token al backend de Finit para realizar el cargo real
+    respuesta = api_post(f"/solicitudes/{solicitud_id}/pagar", {
+        "token_pago": token_pago
+    }, token=session.get('token'))
+    
+    if respuesta:
+        return redirect(url_for('pedidos.mis_pedidos'))
+    
+    return "Error al procesar el pago", 500
+
+@blueprint.route('/urgencia_final')
+@login_requerido
+def mostrar_urgencia_final():
+    return render_template('urgencia_final.html')
+
+@blueprint.route('/cancelar/<int:solicitud_id>', methods=['POST'])
+@login_requerido
+def cancelar_pedido(solicitud_id):
+    # Enviar al backend para que cambie el estado a cancelado
+    respuesta = api_post(f"/solicitudes/{solicitud_id}/estado", {
+        "nuevo_estado": "rechazado"
+    }, token=session.get('token'))
+    
+    if respuesta:
+        return redirect(url_for('pedidos.mis_pedidos'))
+        
+    return "Error al cancelar el pedido", 500
+
+@blueprint.route('/solicitar_urgencia_final', methods=['POST'])
+@login_requerido
+def finalizar_urgencia():
+    # El backend espera una estructura compatible con DatosCrearSolicitud
+    # Necesitamos asignar un colaborador_id válido y ajustar el formato de datos
+    datos_solicitud = {
+        "usuario_id": session['user_id'],
+        "colaborador_id": 1, # El backend asignará automáticamente si es urgente
+        "subcategoria_id": 9, # Reparaciones por defecto para urgencia
+        "urgencia": "media", # 'media' es un valor válido según enum Urgencia
+        "descripcion_detallada": request.form.get('descripcion'),
+        "fotos_evidencia_inicial": None,
+        "latitud": 20.6736, # Usar los valores capturados del GPS si se envían ocultos
+        "longitud": -103.3444,
+        "calle": request.form.get('direccion', 'Ubicación GPS'),
+        "detalles_adicionales": json.dumps({"referencias": request.form.get('referencias'), "urgencia_247": True})
+    }
+    
+    # Enviamos a /solicitudes como define el backend
+    respuesta = api_post("/solicitudes", datos_solicitud, token=session.get('token'))
+    
+    if respuesta and isinstance(respuesta, dict) and 'id' in respuesta:
+        return redirect(url_for('pedidos.iniciar_pago', solicitud_id=respuesta['id']))
+    
+    return "Error al enviar la emergencia", 500

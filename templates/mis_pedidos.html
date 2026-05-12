@@ -156,28 +156,34 @@
                     <h3>{{ sol.servicio_nombre or 'Servicio Okupo' }}</h3>
                     <p>{{ sol.descripcion_detallada or 'Sin descripción proporcionada.' }}</p>
                     
-                    {% if sol.calle %}
-                    <div style="font-size: 12px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 10px;">
+                    <div style="font-size: 12px; margin-top: 10px; color: var(--color-texto);">
                         <i class="fas fa-map-marker-alt" style="color: var(--color-dorado);"></i> 
-                        <b>{{ sol.calle }} {{ sol.numero }}, {{ sol.colonia }}</b><br>
-                        <span style="opacity: 0.7;">Ref: {{ sol.referencias or 'N/A' }}</span>
+                        <b>Dirección:</b> {{ sol.calle }} {{ sol.numero }}, {{ sol.colonia }}
                     </div>
-                    {% endif %}
+                    
+                    <div style="font-size: 12px; margin-top: 5px; color: var(--color-texto);">
+                        <i class="fas fa-user-tie" style="color: var(--color-dorado);"></i> 
+                        <b>Técnico:</b> {{ sol.nombre_colaborador or 'Asignando experto...' }}
+                    </div>
 
-                    {% if sol.campos_extra %}
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
-                        {% for k, v in sol.campos_extra.items() %}
-                        <div style="font-size: 11px; background: rgba(212, 175, 55, 0.1); padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2);">
-                            <b style="text-transform: capitalize;">{{ k.replace('_', ' ') }}:</b> {{ v }}
+                    {% if sol.campos_extra and sol.campos_extra.desglose_financiero %}
+                    <div style="margin-top: 15px; padding: 12px; background: rgba(212, 175, 55, 0.1); border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 12px; font-weight: 800; color: var(--color-texto);">Total estimado:</span>
+                            <span style="font-size: 18px; font-weight: 900; color: var(--color-verde);">$ {{ "%.2f"|format(sol.campos_extra.desglose_financiero.total) }}</span>
                         </div>
-                        {% endfor %}
                     </div>
                     {% endif %}
                 </div>
                 <div class="sol-footer">
-                    <span style="font-size: 11px; font-weight: 800; opacity: 0.5;">{{ sol.fecha_creacion or 'Hoy' }}</span>
+                    <div style="display: flex; gap: 8px;">
+                        <form action="{{ url_for('pedidos.cancelar_pedido', solicitud_id=sol.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas cancelar este pedido?');">
+                            <button type="submit" style="background-image: url('/static/madera_oscura.jpg'); background-size: cover; color: #ffffff; text-shadow: 0 0 5px black; padding: 10px 15px; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 11px; text-transform: uppercase; border: 1px solid #3d2b1f; box-shadow: 0 4px 6px rgba(0,0,0,0.3); cursor: pointer;">Cancelar</button>
+                        </form>
+                        <a href="{{ url_for('pedidos.iniciar_pago', solicitud_id=sol.id) }}" style="background-image: url('/static/madera_oscura.jpg'); background-size: cover; color: #ffffff; text-shadow: 0 0 5px black; padding: 10px 15px; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 11px; text-transform: uppercase; border: 1px solid #3d2b1f; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">Pagar Ahora</a>
+                    </div>
                     <a href="{{ url_for('pedidos.chat', solicitud_id=sol.id) }}" class="btn-chat">
-                        <i class="fas fa-comments" style="margin-right: 5px;"></i> Abrir Chat
+                        <i class="fas fa-comments" style="margin-right: 5px;"></i> Chat
                     </a>
                 </div>
             </div>

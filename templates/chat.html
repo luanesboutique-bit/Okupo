@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Auto-refresco cada 5 segundos para recibir mensajes nuevos -->
+    <meta http-equiv="refresh" content="5">
     <title>Chat de Seguimiento - Okupo</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +17,7 @@
             --color-seguridad: #2980b9;
         }
 
-        /* 🛠️ ESTILO UNIFICADO "OKUPO" */
+        /* 🛠️ ESTILO UNIFICADO "D'MAYORAL" */
         html, body {
             background-color: var(--color-crema) !important;
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -25,92 +27,38 @@
             background-image: url('/static/fondo_pared.jpg') !important;
             background-size: cover !important;
             background-attachment: fixed !important;
+            background-position: center !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
             display: flex;
             justify-content: center;
-        }
-
-        /* MODO URGENCIA ACTIVO */
-        .modo-urgencia-activo, .modo-urgencia-activo html, .modo-urgencia-activo body {
-            background-color: #ff8c00 !important;
-            background-image: none !important;
         }
 
         .app-container {
             width: 100%;
             max-width: 450px;
             height: 100vh;
-            background: transparent !important;
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
             display: flex;
             flex-direction: column;
             position: relative;
-        }
-
-        .modo-urgencia-activo .app-container {
-            background-color: #ff8c00 !important;
-            padding-top: 40px;
-        }
-
-        .banner-urgencia {
-            display: none;
-            background: #ff0000;
-            color: #ffffff;
-            padding: 8px 10px;
-            text-align: center;
-            font-weight: 900;
-            font-size: 12px;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 4000;
-            text-transform: uppercase;
-        }
-
-        .modo-urgencia-activo .banner-urgencia { display: block; }
-
-        /* BANNER DE SEGURIDAD */
-        .seguridad-chat {
-            background: var(--color-seguridad);
-            color: white;
-            padding: 10px;
-            font-size: 11px;
-            text-align: center;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
         }
 
         .header {
-            padding: 15px 20px;
-            background: white;
+            padding: 20px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
             display: flex;
             align-items: center;
             gap: 15px;
-            border-bottom: 1px solid #eee;
+            color: #ffff00;
         }
-        .header a { color: var(--color-texto); font-size: 20px; }
+        .header a { color: #ffff00; font-size: 20px; text-shadow: 0 0 5px black; }
         .header .user-info { flex: 1; }
-        .header .user-info h2 { margin: 0; font-size: 16px; font-weight: 900; }
-        .header .user-info span { font-size: 11px; opacity: 0.6; font-weight: 700; }
-
-        .btn-call {
-            background-image: url('/static/piedra_boton.png');
-            background-size: cover;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-dorado);
-            border: 2px solid var(--color-texto);
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+        .header .user-info h2 { margin: 0; font-size: 16px; font-weight: 900; text-transform: uppercase; }
+        .header .user-info span { font-size: 11px; font-weight: 700; opacity: 0.8; }
 
         .messages-area {
             flex: 1;
@@ -128,15 +76,13 @@
             font-size: 14px;
             font-weight: 600;
             line-height: 1.4;
-            position: relative;
         }
 
         .received {
             align-self: flex-start;
-            background: white;
+            background: #ffffff;
+            border: 1px solid var(--color-dorado);
             color: var(--color-texto);
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .sent {
@@ -144,42 +90,7 @@
             background-image: url('/static/madera_media.jpg');
             background-size: cover;
             color: var(--color-texto);
-            border-bottom-right-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        /* FILTRO DE SEGURIDAD PARA DATOS SENSIBLES */
-        .data-blocked {
-            background: #eee;
-            color: #e74c3c;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 10px;
-        }
-
-        .chat-tools {
-            padding: 10px 20px;
-            display: flex;
-            gap: 10px;
-            background: rgba(255,255,255,0.5);
-        }
-
-        .tool-btn {
-            padding: 8px 15px;
-            border-radius: 15px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            background: white;
-            border: 1px solid var(--color-dorado);
-            color: var(--color-texto);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            border: 1px solid #3d2b1f;
         }
 
         .input-area {
@@ -188,6 +99,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            border-top: 2px solid var(--color-dorado);
         }
 
         .input-area input {
@@ -196,7 +108,6 @@
             border-radius: 25px;
             border: 1px solid #ddd;
             outline: none;
-            font-family: inherit;
             font-weight: 600;
         }
 
@@ -204,8 +115,9 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: var(--color-texto);
-            color: white;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            color: #ffff00;
             border: none;
             cursor: pointer;
             display: flex;
@@ -213,16 +125,16 @@
             justify-content: center;
             font-size: 20px;
         }
-
     </style>
 </head>
 <body>
 
-    <div class="banner-urgencia" id="banner-urgencia">
-        ⚠️ CHAT DE PRIORIDAD MÁXIMA - ATENCIÓN INMEDIATA
-    </div>
-
     <div class="app-container">
+        <!-- Banners integrados, ocultos por defecto -->
+        <div class="banner-urgencia" id="banner-urgencia" style="display: none; position: relative; width: 100%;">
+            ⚠️ CHAT DE PRIORIDAD MÁXIMA - ATENCIÓN INMEDIATA
+        </div>
+
         <div class="seguridad-chat">
             <i class="fas fa-user-shield"></i>
             PROTECCIÓN OKUPO: Datos de contacto bloqueados automáticamente.
@@ -251,10 +163,12 @@
             </div>
         </div>
 
+        {% if session.get('rol') == 'colaborador' %}
         <div class="chat-tools">
-            <button class="tool-btn"><i class="fas fa-list-ul"></i> Lista Materiales</button>
-            <button class="tool-btn"><i class="fas fa-pen-nib"></i> Indicaciones</button>
+            <button class="tool-btn" onclick="alert('Funcionalidad de Lista de Materiales para Técnico')"><i class="fas fa-list-ul"></i> Lista Materiales</button>
+            <button class="tool-btn" onclick="alert('Funcionalidad de Indicaciones para Técnico')"><i class="fas fa-pen-nib"></i> Indicaciones</button>
         </div>
+        {% endif %}
 
         <div class="input-area">
             <input type="text" id="msg-input" placeholder="Escribe un mensaje seguro..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
@@ -276,40 +190,19 @@
             const textoOriginal = input.value.trim();
             if (!textoOriginal) return;
 
-            // 🛡️ LÓGICA DE CENSURA AGRESIVA (Seguridad Okupo)
-            let textoFiltrado = textoOriginal;
+            // Crear un formulario temporal para enviar el mensaje mediante POST
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ url_for('pedidos.chat', solicitud_id=solicitud_id) }}";
             
-            // 1. Palabras clave prohibidas (incluye variaciones y caracteres especiales intermedios)
-            const palabrasProhibidas = [
-                'whatsapp', 'watsap', 'wapp', 'wa', 'cel', 'celular', 'tel', 'telefono', 
-                'numero', 'num', 'correo', 'email', 'mail', 'contacto', 'face', 'insta'
-            ];
-
-            palabrasProhibidas.forEach(palabra => {
-                // Regex que detecta la palabra aunque pongan puntos, espacios o símbolos entre letras (ej: w.h.a.t.s)
-                const regexPalabra = new RegExp(palabra.split('').join('[\\W_]*'), 'gi');
-                textoFiltrado = textoFiltrado.replace(regexPalabra, " <span class='data-blocked'>[DATO BLOQUEADO]</span> ");
-            });
-
-            // 2. Censura de secuencias numéricas (evita intercambio de teléfonos)
-            // Detecta 7 o más números aunque estén separados por puntos, guiones o espacios
-            const regexNumeros = /(\d[\W_]*){7,}/g;
-            textoFiltrado = textoFiltrado.replace(regexNumeros, " <span class='data-blocked'>[NUMERO PROTEGIDO]</span> ");
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'texto';
+            hiddenInput.value = textoOriginal;
             
-            // 3. Censura de correos electrónicos
-            const regexEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-            textoFiltrado = textoFiltrado.replace(regexEmail, " <span class='data-blocked'>[CORREO BLOQUEADO]</span> ");
-
-            // Mostrar mensaje en la UI
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'message sent';
-            msgDiv.innerHTML = textoFiltrado;
-            
-            document.getElementById('chat-box').appendChild(msgDiv);
-            input.value = '';
-            
-            const chatBox = document.getElementById('chat-box');
-            chatBox.scrollTop = chatBox.scrollHeight;
+            form.appendChild(hiddenInput);
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 </body>

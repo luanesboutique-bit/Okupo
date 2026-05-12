@@ -7,7 +7,7 @@ blueprint = Blueprint('colaboradores', __name__)
 @blueprint.route('/dashboard')
 @login_requerido
 def dashboard_colaborador():
-    return render_template('dashboard.html')
+    return render_template('dashboard_tecnico.html')
 
 @blueprint.route('/dashboard/datos')
 @login_requerido

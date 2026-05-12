@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session
 from src.infraestructura.cliente_api import api_get
+from src.aplicacion.clasificador import clasificar_servicio
 
 blueprint = Blueprint('principal', __name__)
 
@@ -9,6 +10,15 @@ def index():
     if categorias == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada. Inicia sesión de nuevo."))
     return render_template('index.html', categorias=categorias or [])
+
+@blueprint.route('/buscar', methods=['GET'])
+def buscar():
+    query = request.args.get('q', '')
+    if not query:
+        return redirect(url_for('principal.index'))
+    
+    categoria_id = clasificar_servicio(query)
+    return redirect(url_for('principal.ver_subcategorias', categoria_id=categoria_id))
 
 @blueprint.route('/bienvenida')
 def bienvenida_seleccion_rol():

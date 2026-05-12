@@ -196,7 +196,14 @@
             text-shadow: 2px 2px 3px rgba(0,0,0,1);
             border: 2px solid #3d2b1f !important; 
         }
-        .btn-expertos { background-image: url('/static/madera_media.jpg'); background-size: cover; color: var(--color-texto); }
+        .btn-expertos { 
+            background-image: url('/static/madera_clara.jpg'); 
+            background-size: cover; 
+            color: var(--color-texto); 
+            font-weight: 900;
+            border: 1px solid var(--wood-dark);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
 
         .desc-hibrida {
             font-size: 10px;
@@ -209,8 +216,9 @@
 
         .info-nota {
             margin-top: 25px;
-            padding: 10px;
-            background: rgba(255,255,255,0.5);
+            padding: 12px;
+            background: #fffdf0;
+            border: 1px solid #e6d7a1;
             border-radius: 10px;
             font-size: 10px;
             text-align: center;
@@ -309,14 +317,8 @@
             <a href="/cotizar" class="btn-especial">
                 ⚡ ¿OTRO TRABAJO?<br>COTIZAR AQUÍ
             </a>
-
-            <div style="text-align: center; font-size: 11px; opacity: 0.5; padding: 20px; color: var(--color-texto); font-weight: 800;">
-                🟢 NORMAL: Lun-Sab 6AM-8PM<br>
-                🟠 NOCHE: Lun-Sab 8PM-6AM<br>
-                🔴 URGENTE: Dom/Fest/Lluvia
-            </div>
         </div>
-
+        
         <script>
             // Capturar ubicación en segundo plano al cargar la página
             function capturarUbicacion() {

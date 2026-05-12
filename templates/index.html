@@ -14,21 +14,37 @@
         
         .header { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; }
         .logo-text { font-size: 11px; font-weight: bold; color: var(--engraved); line-height: 1.1; }
-        .search-box { flex: 1; margin: 0 10px; padding: 10px; border: 2px solid var(--wood-dark); border-radius: 20px; font-size: 9px; background: #fff; }
-
-        #map { width: calc(100% - 20px); height: 250px; margin: 15px auto; border-radius: 40px; border: 8px solid #F2EDE0; box-shadow: inset 0px 5px 15px rgba(0,0,0,0.3), 0 4px 10px rgba(0,0,0,0.2); position: relative; }
+        .search-box { flex: 1; margin: 0 10px; padding: 15px; border: 2px solid var(--wood-dark); 
+            border-radius: 20px; font-size: 14px; background: #fff; outline: none; }
+/* MAPA CON MARCO DE MADERA */
+.map-wrapper { width: 90%; margin: 20px auto; padding: 8px; 
+    background: url('/static/madera_media.jpg') center/cover; 
+    border-radius: 48px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+#map { width: 100%; height: 250px; border-radius: 40px; border: 4px solid var(--wood-dark); overflow: hidden; }
         .map-icon { background: white; padding: 5px; border-radius: 50%; border: 2px solid var(--gold); box-shadow: 0 3px 6px rgba(0,0,0,0.4); font-size: 14px; color: #333; text-align: center; }
         
-        .btn-urgencia { display: flex; align-items:center; justify-content:center; gap:10px; width: calc(100% - 40px); margin: 20px auto; padding: 25px; 
-            background: linear-gradient(135deg, #ff8c00, #d2691e); color: #FFF; font-weight: 900; border-radius: 16px; 
-            border: 2px solid #5d3a1a; box-shadow: 10px 10px 20px rgba(0,0,0,0.4); text-decoration:none; font-size: 16px; position:relative; }
+        /* BOTONES ELEVADOS CON EFECTO HUNDIDO */
+        .btn-base { display: flex; align-items:center; justify-content:center; gap:10px; width: 90%; margin: 15px auto; padding: 20px; 
+            border-radius: 20px; font-weight: 900; text-decoration:none; text-transform: uppercase; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2); transition: transform 0.1s, box-shadow 0.1s; border: none; }
+        .btn-base:active, .btn-urgencia:active, .btn-trabaja:active, .btn:active { 
+            transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.2) inset !important; }
+        
+        .btn-urgencia { background: url('/static/madera_oscura.jpg') center/cover; color: #FFF; font-size: 16px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4); border: 2px solid #5d3a1a; border-radius: 16px; display: flex; align-items:center; justify-content:center; gap:10px; width: 90%; margin: 20px auto; padding: 25px; text-decoration:none; font-weight: 900; }
+        
+        .btn-trabaja { background: url('/static/madera_clara.jpg') center/cover; color: var(--engraved); font-weight: 900; border-radius: 12px; 
+            border: 1px solid var(--wood-dark); box-shadow: 4px 4px 10px rgba(0,0,0,0.2); text-decoration:none; font-size: 13px; 
+            text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items:center; justify-content:center; gap:10px; width: 90%; margin: -10px auto 20px; padding: 15px; }
 
+        /* TARJETAS CATEGORÍAS (RELIEVE Y EFECTO PRESSED) */
         .carrusel { display: flex; overflow-x: auto; gap: 15px; padding: 20px; }
-        .btn { min-width: 100px; padding: 15px 5px; border-radius: 16px; text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.3); 
-            position: relative; border: 2px solid var(--gold); background-size: cover !important; text-decoration: none; }
-        .btn i { font-size: 28px; display: block; margin-bottom: 8px; color: var(--engraved); filter: drop-shadow(0 1px 1px rgba(255,255,255,0.3)); }
-        .btn-title { display: block; font-weight: 900; color: var(--engraved); font-size: 10px; margin-bottom: 2px; }
-        .btn-desc { display: block; color: var(--engraved); font-size: 8px; font-weight: 700; }
+        .btn { min-width: 100px; padding: 15px 5px; border-radius: 16px; text-align: center; box-shadow: 8px 8px 15px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.2); 
+            position: relative; border: 2px solid var(--gold); background-size: cover !important; text-decoration: none; transition: transform 0.1s, box-shadow 0.1s; }
+        .btn:active { transform: translateY(4px); box-shadow: 4px 4px 8px rgba(0,0,0,0.3), inset 2px 2px 5px rgba(0,0,0,0.4); }
+        .btn i { font-size: 28px; display: block; margin-bottom: 8px; color: var(--engraved); filter: drop-shadow(0 1px 0 rgba(255,255,255,0.6)); }
+        .btn-title { display: block; font-weight: 900; color: var(--engraved); font-size: 10px; margin-bottom: 2px; text-shadow: 0 0 1px rgba(255,255,255,0.5); }
+        .btn-desc { display: block; color: var(--engraved); font-size: 8px; font-weight: 700; text-shadow: 0 0 1px rgba(255,255,255,0.5); }
 
         .popup-card { background: url('/static/madera_clara.jpg'); padding: 12px; border-radius: 12px; border: 2px solid var(--wood-dark); font-size: 10px; color: var(--engraved); text-align:center; }
         .popup-btn { background: linear-gradient(135deg, #ff8c00, #d2691e); border: none; padding: 8px 12px; border-radius: 8px; color: #fff; font-weight:bold; cursor: pointer; margin-top:8px; width: 100%; }
@@ -44,16 +60,15 @@
             <div class="menu-item" style="border-bottom: 2px solid var(--gold); margin-bottom: 10px; color: var(--wood-dark);">
                 <b>Hola, {{ session.get('nombre') }}</b>
             </div>
-            <a href="/perfil" class="menu-item">👤 Mi Perfil</a>
-            <a href="/pedidos" class="menu-item">📜 Historial de Servicios</a>
-            <a href="/chat" class="menu-item">💬 Chat Seguro</a>
-            <a href="/pagos" class="menu-item">💳 Métodos de Pago</a>
-            {% if session.get('rol') == 'colaborador' %}
-                <a href="/dashboard" class="menu-item">🛠️ Panel de Colaborador</a>
-            {% else %}
-                <a href="/unete" class="menu-item">🛠️ ¿Quieres ser Colaborador?</a>
-            {% endif %}
-            <a href="/logout" class="menu-item" style="color: #d9534f;">🚪 Cerrar Sesión</a>
+            <a href="/perfil" class="menu-item"><i class="fas fa-user-circle" style="color: var(--wood-dark); margin-right: 10px;"></i> Mi perfil</a>
+            <a href="/historial_pagos" class="menu-item"><i class="fas fa-history" style="color: #b8860b; margin-right: 10px;"></i> Historial de servicios</a>
+            <a href="/expertos_favoritos" class="menu-item"><i class="fas fa-heart" style="color: #e74c3c; margin-right: 10px;"></i> Mis Expertos Favoritos</a>
+            <a href="/direcciones" class="menu-item"><i class="fas fa-map-marker-alt" style="color: var(--wood-dark); margin-right: 10px;"></i> Direcciones guardadas</a>
+            <a href="/pagos" class="menu-item"><i class="fas fa-credit-card" style="color: #b8860b; margin-right: 10px;"></i> Métodos de pago</a>
+            <a href="/chat" class="menu-item"><i class="fas fa-comments" style="color: #2980b9; margin-right: 10px;"></i> Chat seguro</a>
+            <a href="/unete" class="menu-item"><i class="fas fa-tools" style="color: var(--wood-dark); margin-right: 10px;"></i> ¿Quieres ser colaborador?</a>
+            <a href="/soporte" class="menu-item"><i class="fas fa-headset" style="color: #b8860b; margin-right: 10px;"></i> Ayuda/soporte</a>
+            <a href="/logout" class="menu-item" style="color: #d9534f; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 5px;"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i> Cerrar sesión</a>
         {% else %}
             <a href="/login" class="menu-item">🔑 Iniciar Sesión</a>
             <a href="/bienvenida" class="menu-item">📝 Registrarse como usuario</a>
@@ -75,19 +90,66 @@
                 <img src="/static/logo_okupo.png" style="height:35px;">
                 <div class="logo-text">OKUPO CLIC<br>Tu experto en casa</div>
             </div>
-            <div class="search-box">¿Qué servicio necesitas hoy? | Zapopan, Jalisco</div>
             <i class="fas fa-user-circle" style="font-size:24px; cursor:pointer;" onclick="document.getElementById('user-menu').style.display = (document.getElementById('user-menu').style.display === 'block' ? 'none' : 'block')"></i>
         </div>
+
+        <!-- BARRA DE BÚSQUEDA NEUMÓRFICA PREMIUM -->
+        <form action="/buscar" method="GET" style="display: flex; justify-content: center; padding: 20px 15px;">
+            <div class="neumo-search" style="width: calc(100% - 20px); max-width: 430px; height: 55px; background: #fdfaf5; border-radius: 30px; box-shadow: 8px 8px 16px #d1ccc0, -8px -8px 16px #ffffff; border: 1px solid var(--wood-light); overflow: hidden; display: flex; align-items: center;">
+                <button type="submit" style="background: url('/static/madera_clara.jpg') center/cover; border: none; padding: 0 20px; height: 100%; cursor: pointer; color: var(--wood-dark); font-size: 18px; border-right: 1px solid var(--wood-light);">
+                    <i class="fas fa-search"></i>
+                </button>
+                <input type="text" name="q" placeholder="¿Qué necesitas hoy? Ej: Cambiar chapa, Instalar luz..." style="width: 100%; border: none; padding: 0 20px; background: transparent; font-size: 14px; font-weight: 600; color: var(--engraved); outline: none;" required>
+            </div>
+        </form>
+
         <div id="map"></div>
-        <a href="/urgencia_categorias" class="btn-urgencia"><i class="fas fa-bolt"></i> SOLICITAR URGENCIA 24/7</a>
+        <div id="urgencia-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 5000; justify-content: center; align-items: center;">
+            <div style="background: url('/static/madera_clara.jpg') center/cover; padding: 30px; border-radius: 25px; width: 85%; max-width: 320px; text-align: center; border: 3px solid var(--wood-dark); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ff4500; margin-bottom: 15px;"></i>
+                <h3 style="color: var(--engraved); font-weight: 900; margin-bottom: 15px;">¿Activar Modo Urgencia?</h3>
+                <p style="font-size: 13px; font-weight: 600; color: var(--engraved);">Se aplicará un cargo extra por asignación inmediata 24/7.</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button onclick="document.getElementById('urgencia-modal').style.display='none'" style="flex:1; padding:12px; border-radius:15px; border:1px solid #5d3a1a; background:white; font-weight:bold; cursor:pointer;">Cancelar</button>
+                    <button onclick="ejecutarUrgencia()" style="flex:1; padding:12px; border-radius:15px; border:none; background:#ff4500; color:white; font-weight:bold; cursor:pointer;">Aceptar</button>
+                </div>
+            </div>
+        </div>
+
+        <a href="javascript:void(0)" onclick="document.getElementById('urgencia-modal').style.display='flex'" class="btn-urgencia"><i class="fas fa-bolt"></i> SOLICITAR URGENCIA 24/7</a>
         
-        {% if session.get('rol') != 'colaborador' %}
-        <a href="/unete" style="display: flex; align-items:center; justify-content:center; gap:10px; width: calc(100% - 40px); margin: -10px auto 20px; padding: 12px; 
-            background: #A67C52; color: #FFF; font-weight: 800; border-radius: 12px; 
-            border: 1px solid #5d3a1a; box-shadow: 4px 4px 10px rgba(0,0,0,0.2); text-decoration:none; font-size: 13px;">
-            <i class="fas fa-tools"></i> TRABAJA CON NOSOTROS (COLABORADOR)
-        </a>
-        {% endif %}
+        <script>
+        function ejecutarUrgencia() {
+            document.getElementById('urgencia-modal').style.display = 'none';
+            document.body.style.backgroundColor = '#ff4500';
+            document.body.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:white; text-align:center; padding:20px;">
+                    <i class="fas fa-radar fa-spin" style="font-size:80px; margin-bottom:20px;"></i>
+                    <h2 style="font-size:24px;">🚀 Buscando al técnico más cercano...</h2>
+                    <p>Ubicación confirmada. Prioridad ALTA.</p>
+                </div>
+            `;
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    fetch('/solicitar_urgencia', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            latitud: pos.coords.latitude,
+                            longitud: pos.coords.longitude,
+                            urgencia: true,
+                            priority: "high",
+                            timestamp: new Date().toISOString()
+                        })
+                    }).then(res => {
+                        window.location.href = '/urgencia_final';
+                    });
+                });
+            } else {
+                alert('No se pudo obtener tu ubicación.');
+            }
+        }
+        </script>
         
         <div class="carrusel">
             <a href="/categorias/1/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-key"></i><span class="btn-title">CERRAJERÍA</span><span class="btn-desc">Chapas, duplicados</span></a>
@@ -148,10 +210,25 @@
         function addTechnicians(lat, lng) {
             userLocation = { lat, lng };
             map.eachLayer(l => { if(l instanceof L.Marker) map.removeLayer(l); });
-            const techs = [{i:'fa-bolt', n:'David Ruiz'}, {i:'fa-key', n:'Juan Carlos'}, {i:'fa-faucet', n:'Luis'}];
-            techs.forEach(t => {
-                const m = L.marker([lat + (Math.random()-0.5)*0.005, lng + (Math.random()-0.5)*0.005], { icon: L.divIcon({ className: 'map-icon', html: `<i class="fas ${t.i}"></i>` }) }).addTo(map);
-                m.bindPopup(`<div class="popup-card"><b>${t.n}</b><br>Especialista disponible a 5 min<br><button class="popup-btn" onclick="activarServicio(true)">Solicitar</button></div>`);
+            
+            const servicios = [
+                {i:'fa-key', n:'Cerrajería', lat: 0.003, lng: 0.003},
+                {i:'fa-faucet', n:'Plomería', lat: 0.003, lng: -0.003},
+                {i:'fa-bolt', n:'Electricidad', lat: -0.003, lng: 0.003},
+                {i:'fa-broom', n:'Limpieza General', lat: -0.003, lng: -0.003},
+                {i:'fa-couch', n:'Limpieza Muebles', lat: 0.005, lng: 0},
+                {i:'fa-chair', n:'Armado', lat: -0.005, lng: 0},
+                {i:'fa-truck', n:'Fletes', lat: 0, lng: 0.005},
+                {i:'fa-hammer', n:'Albañilería', lat: 0, lng: -0.005},
+                {i:'fa-tools', n:'Reparaciones', lat: 0.002, lng: 0.002},
+                {i:'fa-sun', n:'Paneles', lat: -0.002, lng: -0.002},
+                {i:'fa-car', n:'Autos', lat: 0.002, lng: -0.002},
+                {i:'fa-tv', n:'Instalaciones', lat: -0.002, lng: 0.002}
+            ];
+
+            servicios.forEach(s => {
+                const m = L.marker([lat + s.lat, lng + s.lng], { icon: L.divIcon({ className: 'map-icon', html: `<i class="fas ${s.i}"></i>` }) }).addTo(map);
+                m.bindPopup(`<div class="popup-card"><b>${s.n}</b><br>Especialista disponible<br><button class="popup-btn" onclick="activarServicio(true)">Solicitar</button></div>`);
             });
         }
         if(navigator.geolocation) {
