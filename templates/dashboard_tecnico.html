@@ -173,6 +173,44 @@
             text-shadow: 1px 1px 2px black;
         }
 
+        /* ⚙️ MENÚ DESPLEGABLE DE CONFIGURACIÓN */
+        .settings-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .settings-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: rgba(253, 250, 245, 0.98);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            z-index: 1000;
+            border-radius: 15px;
+            border: 2px solid var(--color-dorado);
+            overflow: hidden;
+        }
+
+        .settings-menu a {
+            color: var(--color-texto);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-weight: 800;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background 0.2s;
+        }
+
+        .settings-menu a:last-child { border-bottom: none; }
+        .settings-menu a:hover { background: rgba(212, 175, 55, 0.1); }
+        .settings-menu a i { width: 20px; margin-right: 10px; color: var(--color-dorado); }
+
+        .settings-menu.show { display: block; }
+
     </style>
 </head>
 <body>
@@ -187,7 +225,19 @@
                     <div class="badge-verificado"><i class="fas fa-check-circle"></i> Verificado</div>
                 </div>
             </div>
-            <a href="/" style="color: var(--color-texto); font-size: 24px;"><i class="fas fa-cog"></i></a>
+            <div class="settings-container">
+                <a href="javascript:void(0)" onclick="toggleMenu()" style="color: var(--color-texto); font-size: 24px;"><i class="fas fa-cog"></i></a>
+                <div id="settingsMenu" class="settings-menu">
+                    <a href="#"><i class="fas fa-briefcase"></i> Portafolio</a>
+                    <a href="{{ url_for('colaboradores.registro_tecnico_datos') }}"><i class="fas fa-user-edit"></i> Perfil</a>
+                    <a href="#"><i class="fas fa-store"></i> Mi negocio</a>
+                    <a href="{{ url_for('colaboradores.registro_tecnico_horarios') }}"><i class="fas fa-clock"></i> Horario</a>
+                    <a href="{{ url_for('colaboradores.registro_tecnico_precios') }}"><i class="fas fa-tag"></i> Precios</a>
+                    <a href="{{ url_for('colaboradores.registro_tecnico_categorias') }}"><i class="fas fa-list"></i> Categorías</a>
+                    <a href="/" style="background: rgba(0,0,0,0.05);"><i class="fas fa-exchange-alt"></i> Entrar como usuario</a>
+                    <a href="{{ url_for('autenticacion.logout') }}" style="color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                </div>
+            </div>
         </div>
 
         <!-- Estadísticas Rápidas -->
@@ -202,8 +252,28 @@
             </div>
         </div>
 
-        <!-- Nuevas Solicitudes -->
+        <!-- Trabajos en Curso (AHORA PRIMERO) -->
         <div class="section-header">
+            <h4>En Curso</h4>
+        </div>
+
+        <div class="job-card" style="border-left: 6px solid var(--color-verde);">
+            <div class="job-body">
+                <h5>Reparación de Fuga en Cocina</h5>
+                <div class="job-distancia">Cliente: Maria García</div>
+            </div>
+            <div class="job-footer">
+                <a href="{{ url_for('colaboradores.evidencia_fotografica', solicitud_id=1) }}" style="color: var(--color-dorado); font-weight: 800; font-size: 13px; text-decoration: none;">
+                    <i class="fas fa-camera"></i> Subir Evidencia
+                </a>
+                <a href="{{ url_for('pedidos.chat', solicitud_id=1) }}" style="color: var(--color-texto); font-weight: 800; font-size: 13px; text-decoration: none;">
+                    <i class="fas fa-comments"></i> Chat
+                </a>
+            </div>
+        </div>
+
+        <!-- Nuevas Solicitudes (AHORA DESPUÉS) -->
+        <div class="section-header" style="margin-top: 30px;">
             <h4>Nuevas Solicitudes</h4>
             <span style="font-size: 12px; font-weight: 800; color: var(--color-dorado);">Ver todas</span>
         </div>
@@ -223,27 +293,26 @@
         </div>
         {% endfor %}
 
-        <!-- Trabajos en Curso -->
-        <div class="section-header" style="margin-top: 30px;">
-            <h4>En Curso</h4>
-        </div>
-
-        <div class="job-card" style="border-left: 6px solid var(--color-verde);">
-            <div class="job-body">
-                <h5>Reparación de Fuga en Cocina</h5>
-                <div class="job-distancia">Cliente: Maria García</div>
-            </div>
-            <div class="job-footer">
-                <a href="{{ url_for('colaboradores.evidencia_fotografica', solicitud_id=1) }}" style="color: var(--color-dorado); font-weight: 800; font-size: 13px; text-decoration: none;">
-                    <i class="fas fa-camera"></i> Subir Evidencia
-                </a>
-                <a href="{{ url_for('pedidos.chat', solicitud_id=1) }}" style="color: var(--color-texto); font-weight: 800; font-size: 13px; text-decoration: none;">
-                    <i class="fas fa-comments"></i> Chat
-                </a>
-            </div>
-        </div>
-
     </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("settingsMenu").classList.toggle("show");
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.fa-cog') && !event.target.matches('.settings-container a')) {
+                var dropdowns = document.getElementsByClassName("settings-menu");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
 
 </body>
 </html>
