@@ -234,33 +234,49 @@
         </p>
     </div>
 
-    <!-- Cámara Mock -->
+    <!-- Cámara Real -->
     <div class="camera-overlay" id="camera-overlay">
-        <div style="color: white; font-weight: 800; font-size: 18px;">CÁMARA OKUPO</div>
-        <div style="width: 100%; flex: 1; border: 2px solid #333; margin: 20px 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #444;">
-            <i class="fas fa-user-shield" style="font-size: 80px;"></i>
-        </div>
+        <video id="video" autoplay playsinline style="width: 100%; height: 80%; object-fit: cover;"></video>
+        <canvas id="canvas" style="display: none;"></canvas>
         <div class="shutter-btn" onclick="capturarFoto()"></div>
-        <a href="javascript:cerrarCamara()" style="color: white; text-decoration: none; margin-top: 20px; font-size: 14px;">Cancelar</a>
+        <a href="javascript:cerrarCamara()" style="color: white; text-decoration: none; margin-top: 10px; font-size: 14px;">Cancelar</a>
     </div>
 
     <script>
         let targetFotoId = '';
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
 
-        function abrirCamara(id) {
+        async function abrirCamara(id) {
             targetFotoId = id;
             document.getElementById('camera-overlay').style.display = 'flex';
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+            } catch (err) {
+                alert("No se pudo acceder a la cámara: " + err);
+                cerrarCamara();
+            }
         }
 
         function cerrarCamara() {
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
             document.getElementById('camera-overlay').style.display = 'none';
         }
 
         function capturarFoto() {
-            // Simulamos la captura mostrando una imagen de stock
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const dataUrl = canvas.toDataURL('image/jpeg');
             const preview = document.getElementById('prev-' + targetFotoId);
-            preview.src = "https://images.pexels.com/photos/175039/pexels-photo-175039.jpeg?auto=compress&cs=tinysrgb&w=400";
+            preview.src = dataUrl;
             preview.style.display = 'block';
+            
             cerrarCamara();
         }
 

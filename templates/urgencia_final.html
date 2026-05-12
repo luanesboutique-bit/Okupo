@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergencia 24/7 - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; --color-alerta: #ff4500; }
+        body { background-color: var(--color-alerta); font-family: sans-serif; display: flex; justify-content: center; margin: 0; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: var(--color-crema); padding-bottom: 30px; }
+        .header { background: var(--color-alerta); color: white; padding: 20px; text-align: center; font-weight: 900; text-transform: uppercase; }
+        .form-container { padding: 20px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-weight: 800; margin-bottom: 8px; color: var(--color-texto); font-size: 13px; }
+        textarea, input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #ddd; box-sizing: border-box; }
+        .photo-upload { border: 2px dashed #d4af37; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; background: #fff; }
+        .btn-enviar { width: 100%; padding: 20px; background: url('/static/madera_oscura.jpg') center/cover; color: #ffff00; 
+            border: none; border-radius: 20px; font-weight: 900; font-size: 18px; text-transform: uppercase; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-shadow: 1px 1px 2px black; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            SOLICITUD DE EMERGENCIA 24/7
+        </div>
+        <div class="form-container">
+            <form action="{{ url_for('pedidos.finalizar_urgencia') }}" method="POST">
+                <div class="input-group">
+                    <label>Evidencia Fotográfica (Obligatoria)</label>
+                    <div class="photo-upload" onclick="alert('Cámara activada')">
+                        <i class="fas fa-camera" style="color: var(--color-dorado); font-size: 30px;"></i>
+                        <p style="font-size: 12px;">Tomar foto del problema</p>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Dinos qué pasó</label>
+                    <textarea name="descripcion" rows="3" placeholder="Ej: Me quedé fuera..." required></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Ubicación GPS Automática</label>
+                    <input type="text" id="direccion-gps" name="direccion" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Referencias visuales</label>
+                    <textarea name="referencias" rows="2" placeholder="Ej: Portón café..."></textarea>
+                </div>
+                <div style="text-align: center; margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 15px;">
+                    <span style="font-size: 12px; opacity: 0.7;">Total a pagar</span>
+                    <div style="font-size: 28px; font-weight: 900; color: var(--color-dorado);">$450 MXN</div>
+                    <p style="font-size: 10px; opacity: 0.6;">Incluye recargo por asignación inmediata 24/7</p>
+                </div>
+                <button type="submit" class="btn-enviar">ENVIAR TÉCNICO AHORA</button>
+                <script>
+                    document.getElementById('direccion-gps').value = "Detectando ubicación GPS...";
+                    if(navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(pos => {
+                            document.getElementById('direccion-gps').value = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+                        });
+                    }
+                </script>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

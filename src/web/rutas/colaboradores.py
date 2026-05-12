@@ -147,7 +147,7 @@ def finalizar_registro():
 
 @blueprint.route('/dashboard')
 @login_requerido
-def dashboard():
+def dashboard_tecnico_view():
     return render_template('dashboard_tecnico.html')
 
 @blueprint.route('/dashboard/tecnico')

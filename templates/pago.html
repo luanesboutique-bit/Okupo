@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Seguro - Okupo</title>
+    <script src="https://cdn.conekta.io/js/latest/conekta.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        .pago-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 2px solid var(--color-dorado);
+            text-align: left;
+        }
+
+        .pago-card h2 { margin: 0 0 15px 0; font-size: 20px; font-weight: 900; text-align: center; }
+        .pago-card p { font-size: 14px; font-weight: 800; text-align: center; margin-bottom: 20px; }
+
+        input { 
+            width: 100%; padding: 12px; margin: 8px 0; border: 1px solid rgba(139, 90, 43, 0.2); 
+            border-radius: 12px; box-sizing: border-box; font-size: 14px;
+        }
+
+        .btn-pagar {
+            width: 100%;
+            padding: 18px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 15px;
+            color: #ffffff;
+            text-shadow: 0 0 5px black;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Pago Seguro</h1>
+        </div>
+
+        <div class="pago-card">
+            <h2>Resumen del Pago</h2>
+            <p>Pedido #{{ pedido.id }} - Total: <b>$ {{ "%.2f"|format(pedido.precio_final) }}</b></p>
+            
+            <form id="payment-form" action="{{ url_for('pedidos.finalizar_pago') }}" method="POST">
+                <input type="hidden" name="solicitud_id" value="{{ pedido.id }}">
+                <input type="hidden" name="conekta_token" id="conekta_token">
+                
+                <input type="text" id="card-name" placeholder="Nombre en la tarjeta" required>
+                
+                <input type="text" id="card-number" placeholder="Número de tarjeta (16 dígitos)" 
+                       maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                
+                <div style="display: flex; gap: 10px;">
+                    <select id="expiry-month" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(139, 90, 43, 0.2);">
+                        <option value="">Mes</option>
+                        {% for i in range(1, 13) %}<option value="{{ '%02d'|format(i) }}">{{ '%02d'|format(i) }}</option>{% endfor %}
+                    </select>
+                    <select id="expiry-year" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(139, 90, 43, 0.2);">
+                        <option value="">Año</option>
+                        {% for i in range(2026, 2037) %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+                    </select>
+                </div>
+                
+                <input type="text" id="cvc" placeholder="CVC / CVV" 
+                       maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                
+                <button type="submit" class="btn-pagar">Pagar Ahora</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        Conekta.setPublicKey('{{ config["VITE_CONEKTA_PUBLIC_KEY"] }}');
+
+        document.getElementById('payment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const month = document.getElementById('expiry-month').value;
+            const year = document.getElementById('expiry-year').value;
+            
+            if (!month || !year) {
+                alert("Por favor selecciona una fecha de vencimiento válida.");
+                return;
+            }
+
+            const tokenParams = {
+                "card": {
+                    "number": document.getElementById('card-number').value,
+                    "name": document.getElementById('card-name').value,
+                    "exp_year": year,
+                    "exp_month": month,
+                    "cvc": document.getElementById('cvc').value
+                }
+            };
+
+            Conekta.Token.create(tokenParams, function(token) {
+                document.getElementById('conekta_token').value = token.id;
+                document.getElementById('payment-form').submit();
+            }, function(error) {
+                alert("Error en el pago: " + error.message);
+            });
+        });
+    </script>
+</body>
+</html>
