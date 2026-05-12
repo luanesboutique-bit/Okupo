@@ -6,7 +6,7 @@ blueprint = Blueprint('colaboradores', __name__)
 
 @blueprint.route('/dashboard')
 @login_requerido
-def dashboard():
+def dashboard_colaborador():
     return render_template('dashboard.html')
 
 @blueprint.route('/dashboard/datos')
@@ -144,11 +144,6 @@ def finalizar_registro():
     for clave in claves_a_limpiar: session.pop(clave, None)
     return redirect(url_for('principal.index', registro_exitoso=True))
 
-
-@blueprint.route('/dashboard')
-@login_requerido
-def dashboard():
-    return render_template('dashboard_tecnico.html')
 
 @blueprint.route('/dashboard/tecnico')
 @login_requerido

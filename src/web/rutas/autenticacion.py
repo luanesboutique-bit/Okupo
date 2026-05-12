@@ -56,7 +56,7 @@ def login():
                     return redirect(url_for('colaboradores.registro_tecnico_datos'))
                 
                 if rol == 'colaborador':
-                    return redirect(url_for('colaboradores.dashboard'))
+                    return redirect(url_for('colaboradores.dashboard_colaborador'))
                 return redirect(url_for('principal.index'))
             else:
                 print("DEBUG: Fallo al decodificar ID del token")
