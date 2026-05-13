@@ -268,14 +268,24 @@ def finalizar_pago():
     token_pago = request.form.get('conekta_token')
     
     # Enviar el token al backend de Finit para realizar el cargo real
-    respuesta = api_post(f"/solicitudes/{solicitud_id}/pagar", {
-        "token_pago": token_pago
+    respuesta = api_post("/pagos/confirmar", {
+        "solicitud_id": int(solicitud_id),
+        "conekta_token": token_pago
     }, token=session.get('token'))
     
-    if respuesta:
+    if respuesta and isinstance(respuesta, dict) and respuesta.get('exito'):
         return redirect(url_for('pedidos.mis_pedidos'))
     
-    return "Error al procesar el pago", 500
+    error_mensaje = "Error al procesar el pago"
+    if isinstance(respuesta, dict) and respuesta.get('mensaje'):
+        error_mensaje = respuesta.get('mensaje')
+        
+    # Si hay error, volvemos a mostrar la pantalla de pago con el error
+    token = session.get('token')
+    solicitud = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=token)
+    pedido = next((s for s in (solicitud or []) if str(s['id']) == str(solicitud_id)), None)
+    
+    return render_template('pago.html', pedido=pedido, error=error_mensaje)
 
 @blueprint.route('/urgencia_final')
 @login_requerido

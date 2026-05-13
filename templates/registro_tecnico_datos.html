@@ -173,14 +173,8 @@
         {% endif %}
 
         <form action="{{ url_for('colaboradores.registro_tecnico_datos') }}" method="POST">
-            <div class="input-group">
-                <label>Nombre Completo</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-user"></i>
-                    <input type="text" name="nombre_completo" placeholder="Nombre y Apellidos" required>
-                </div>
-            </div>
-
+            <!-- Nombre y Correo omitidos por ser redundantes según el plan de refacción -->
+            
             <div class="input-group">
                 <label>Teléfono de Contacto</label>
                 <div class="input-wrapper">
@@ -190,18 +184,34 @@
             </div>
 
             <div class="input-group">
-                <label>Correo Electrónico</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" name="correo_electronico" placeholder="correo@ejemplo.com" required>
-                </div>
-            </div>
-
-            <div class="input-group">
                 <label>Zona de Trabajo</label>
                 <div class="input-wrapper">
                     <i class="fas fa-map-marker-alt"></i>
                     <input type="text" name="zona_trabajo" placeholder="Ciudad o Municipio" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Especialidad Resumen</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-tools"></i>
+                    <input type="text" name="especialidad_resumen" placeholder="Ej: Experto en Cerraduras Digitales" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Medio de Transporte</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-motorcycle"></i>
+                    <input type="text" name="medio_transporte" placeholder="Ej: Motocicleta, Auto, Transporte Público" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Sitio Web / Red Social (Opcional)</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-globe"></i>
+                    <input type="text" name="sitio_web" placeholder="https://tuportafolio.com">
                 </div>
             </div>
 

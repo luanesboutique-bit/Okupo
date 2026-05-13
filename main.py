@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory
-from src.infraestructura.configuracion import CLAVE_SECRETA
+from src.infraestructura.configuracion import CLAVE_SECRETA, CONEKTA_PUBLIC_KEY
 from src.web.rutas.autenticacion import blueprint as blueprint_autenticacion
 from src.web.rutas.principal import blueprint as blueprint_principal
 from src.web.rutas.pedidos import blueprint as blueprint_pedidos
@@ -7,6 +7,7 @@ from src.web.rutas.colaboradores import blueprint as blueprint_colaboradores
 
 app = Flask(__name__)
 app.secret_key = CLAVE_SECRETA
+app.config['VITE_CONEKTA_PUBLIC_KEY'] = CONEKTA_PUBLIC_KEY
 
 # Registro de Blueprints
 app.register_blueprint(blueprint_autenticacion)

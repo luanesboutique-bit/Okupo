@@ -95,6 +95,12 @@
             <h2>Resumen del Pago</h2>
             <p>Pedido #{{ pedido.id }} - Total: <b>$ {{ "%.2f"|format(pedido.precio_final) }}</b></p>
             
+            {% if error %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; text-align: center; border: 1px solid #f5c6cb;">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+
             <form id="payment-form" action="{{ url_for('pedidos.finalizar_pago') }}" method="POST">
                 <input type="hidden" name="solicitud_id" value="{{ pedido.id }}">
                 <input type="hidden" name="conekta_token" id="conekta_token">

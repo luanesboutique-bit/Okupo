@@ -28,10 +28,11 @@ def dashboard_estado(id):
 @login_requerido
 def registro_tecnico_datos():
     if request.method == 'POST':
-        session['registro_nombre_completo'] = request.form.get('nombre_completo')
         session['registro_telefono_verificacion'] = request.form.get('telefono_verificacion')
-        session['registro_correo_electronico'] = request.form.get('correo_electronico')
         session['registro_zona_trabajo'] = request.form.get('zona_trabajo')
+        session['registro_especialidad_resumen'] = request.form.get('especialidad_resumen')
+        session['registro_medio_transporte'] = request.form.get('medio_transporte')
+        session['registro_sitio_web'] = request.form.get('sitio_web')
         return redirect(url_for('colaboradores.registro_tecnico_documentos'))
     return render_template('registro_tecnico_datos.html')
 
@@ -40,11 +41,29 @@ def registro_tecnico_datos():
 def registro_tecnico_documentos():
     token = session.get('token')
     if request.method == 'POST':
+        # 1. Crear el perfil base del colaborador
+        # Nombre completo se saca de la sesión (guardado en login)
+        nombre_completo = session.get('usuario_nombre', 'Usuario Okupo')
+        
+        # Procesar foto de perfil primero para mandarla en la creación
+        import base64
+        foto_perfil_b64 = None
+        archivo_foto = request.files.get('foto_perfil')
+        if archivo_foto and archivo_foto.filename != '':
+            contenido = archivo_foto.read()
+            base64_data = base64.b64encode(contenido).decode('utf-8')
+            mime = archivo_foto.content_type or 'image/jpeg'
+            foto_perfil_b64 = f"data:{mime};base64,{base64_data}"
+
         respuesta_colaborador = api_post("/colaboradores", {
             "token_usuario": token,
-            "nombre_completo": session.get('registro_nombre_completo'),
+            "nombre_completo": nombre_completo,
             "telefono": session.get('registro_telefono_verificacion'),
             "zona_trabajo": session.get('registro_zona_trabajo'),
+            "sitio_web": session.get('registro_sitio_web'),
+            "foto_perfil": foto_perfil_b64,
+            "medio_transporte": session.get('registro_medio_transporte'),
+            "especialidad_resumen": session.get('registro_especialidad_resumen'),
             "servicios": []
         }, token=token)
 
@@ -58,7 +77,6 @@ def registro_tecnico_documentos():
                 return render_template('registro_tecnico_documentos.html', error="Error al crear el perfil de colaborador en el sistema.")
 
             session['colaborador_id'] = colaborador_id
-            import base64
             datos_documentacion = {}
 
             # Mapeo de campos del form a campos esperados por la API de Finite
@@ -73,14 +91,12 @@ def registro_tecnico_documentos():
             for campo_form, campo_api in mapeo_campos.items():
                 archivo = request.files.get(campo_form)
                 if archivo and archivo.filename != '':
+                    # Ya que re-leemos archivos, nos aseguramos que el puntero esté al inicio si es necesario
+                    # Pero request.files son diferentes objetos
                     contenido = archivo.read()
                     base64_data = base64.b64encode(contenido).decode('utf-8')
                     mime = archivo.content_type or 'image/jpeg'
                     datos_documentacion[campo_api] = f"data:{mime};base64,{base64_data}"
-                else:
-
-                    # Fallback si se envió como string (por si acaso hay algún JS de por medio)
-                    datos_documentacion[campo_api] = request.form.get(campo_form)
 
             api_post(f"/colaboradores/{colaborador_id}/documentacion", datos_documentacion, token=token)
             return redirect(url_for('colaboradores.registro_tecnico_categorias'))
