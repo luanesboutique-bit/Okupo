@@ -280,25 +280,67 @@
             cerrarCamara();
         }
 
-        function guardarEvidencia(tipo) {
-            if (tipo === 'inicio') {
-                const status = document.getElementById('status-inicio');
-                status.innerText = '✅ Registrado';
-                status.className = 'badge-status completado';
-                
-                // Habilitar sección de fin
-                const seccionFin = document.getElementById('seccion-fin');
-                seccionFin.style.opacity = '1';
-                seccionFin.style.pointer_events = 'auto';
-                document.getElementById('status-fin').innerText = 'Pendiente de registro';
-                
-                alert("Fotos de Inicio guardadas correctamente.");
-            } else {
-                const status = document.getElementById('status-fin');
-                status.innerText = '✅ Servicio Finalizado';
-                status.className = 'badge-status completado';
-                alert("Evidencia final enviada. Trabajo marcado como completado.");
-                window.location.href = "{{ url_for('colaboradores.dashboard_tecnico') }}";
+        async function guardarEvidencia(tipo) {
+            const inicial = (tipo === 'inicio');
+            const prefix = inicial ? 'inicio' : 'fin';
+            
+            const foto1 = document.getElementById('prev-' + prefix + '_1').src;
+            const foto2 = document.getElementById('prev-' + prefix + '_2').src;
+
+            if (!foto1.startsWith('data:') && !foto2.startsWith('data:')) {
+                alert("Debes capturar al menos una foto.");
+                return;
+            }
+
+            // Crear un array JSON de las fotos capturadas
+            const fotosArray = [];
+            if (foto1.startsWith('data:')) fotosArray.push(foto1);
+            if (foto2.startsWith('data:')) fotosArray.push(foto2);
+
+            try {
+                const response = await fetch(`/evidencia/{{ solicitud_id }}/subir`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        inicial: inicial,
+                        fotos: JSON.stringify(fotosArray)
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    if (inicial) {
+                        const status = document.getElementById('status-inicio');
+                        status.innerText = '✅ Registrado';
+                        status.className = 'badge-status completado';
+                        
+                        // Habilitar sección de fin
+                        const seccionFin = document.getElementById('seccion-fin');
+                        seccionFin.style.opacity = '1';
+                        seccionFin.style.pointerEvents = 'auto';
+                        document.getElementById('status-fin').innerText = 'Pendiente de registro';
+                        
+                        alert("Fotos de Inicio guardadas correctamente.");
+                    } else {
+                        const status = document.getElementById('status-fin');
+                        status.innerText = '✅ Servicio Finalizado';
+                        status.className = 'badge-status completado';
+                        
+                        // Opcional: Llamar a finalizar solicitud si no se hace en el backend
+                        await fetch(`/dashboard/estado/{{ solicitud_id }}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ estado: 'terminado' })
+                        });
+
+                        alert("Evidencia final enviada. Trabajo marcado como completado.");
+                        window.location.href = "{{ url_for('colaboradores.dashboard_tecnico') }}";
+                    }
+                } else {
+                    alert("Error al guardar evidencia.");
+                }
+            } catch (err) {
+                alert("Error de conexión: " + err);
             }
         }
     </script>

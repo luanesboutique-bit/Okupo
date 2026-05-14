@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portafolio - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+            --color-verde: #27ae60;
+        }
+
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        .portfolio-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--color-dorado);
+            margin-bottom: 20px;
+        }
+
+        .add-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
+
+        .btn-add {
+            width: 100%;
+            padding: 15px;
+            background-image: url('/static/madera_oscura.jpg');
+            background-size: cover;
+            border: none;
+            border-radius: 15px;
+            color: #ffff00;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .work-item {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+        .work-item img { width: 100%; height: 200px; object-fit: cover; }
+        .work-info { padding: 15px; }
+        .work-info h5 { margin: 0 0 5px 0; font-size: 16px; font-weight: 900; }
+        .work-info p { margin: 0; font-size: 13px; opacity: 0.8; line-height: 1.4; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('colaboradores.dashboard_tecnico') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>Mi Portafolio</h1>
+        </div>
+
+        <div class="portfolio-card">
+            <div class="add-section">
+                <h4 style="margin-top: 0; text-transform: uppercase; font-size: 14px;">Agregar Trabajo</h4>
+                <div class="form-group">
+                    <label>Título del trabajo</label>
+                    <input type="text" id="titulo" placeholder="Ej: Instalación Eléctrica Completa">
+                </div>
+                <div class="form-group">
+                    <label>Imagen</label>
+                    <input type="file" id="imagen" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>Descripción (Opcional)</label>
+                    <textarea id="descripcion" rows="2" placeholder="Breve descripción del trabajo realizado..."></textarea>
+                </div>
+                <button class="btn-add" onclick="agregarTrabajo()">Subir al Portafolio</button>
+            </div>
+
+            <h4 style="text-transform: uppercase; font-size: 14px; margin-bottom: 15px;">Mis Trabajos</h4>
+            <div id="lista-trabajos">
+                {% for trabajo in trabajos %}
+                <div class="work-item">
+                    <img src="{{ trabajo.imagen }}" alt="{{ trabajo.titulo }}">
+                    <div class="work-info">
+                        <h5>{{ trabajo.titulo }}</h5>
+                        <p>{{ trabajo.descripcion or '' }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p style="text-align: center; font-size: 13px; opacity: 0.5;">No tienes trabajos en tu portafolio aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function agregarTrabajo() {
+            const titulo = document.getElementById('titulo').value;
+            const imagenFile = document.getElementById('imagen').files[0];
+            const descripcion = document.getElementById('descripcion').value;
+
+            if (!titulo || !imagenFile) {
+                alert("Por favor completa el título y selecciona una imagen.");
+                return;
+            }
+
+            const imagenB64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(imagenFile);
+            });
+
+            try {
+                const response = await fetch('/portafolio/agregar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        titulo: titulo,
+                        imagen: imagenB64,
+                        descripcion: descripcion
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Trabajo agregado con éxito.');
+                    location.reload();
+                } else {
+                    alert('Error al agregar el trabajo.');
+                }
+            } catch (err) {
+                alert('Error de conexión: ' + err);
+            }
+        }
+    </script>
+</body>
+</html>

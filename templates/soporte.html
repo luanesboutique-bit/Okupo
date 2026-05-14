@@ -127,8 +127,12 @@
 
             <div class="form-section">
                 <label>¿En qué podemos ayudarte?</label>
-                <textarea rows="4" placeholder="Describe tu problema o duda técnica..."></textarea>
-                <button class="btn-enviar" onclick="alert('Ticket enviado. Un asesor te contactará pronto.')">Enviar Reporte</button>
+                <textarea id="descripcion_soporte" rows="4" placeholder="Describe tu problema o duda técnica..."></textarea>
+                
+                <label>Evidencia (Opcional)</label>
+                <input type="file" id="foto_soporte" accept="image/*" style="margin-bottom: 20px;">
+                
+                <button class="btn-enviar" onclick="enviarReporte()">Enviar Reporte</button>
             </div>
         </div>
 
@@ -136,6 +140,49 @@
             Estamos aquí para garantizar que tu experiencia en Okupo sea excelente.
         </p>
     </div>
+
+    <script>
+        async function enviarReporte() {
+            const descripcion = document.getElementById('descripcion_soporte').value;
+            if (!descripcion) {
+                alert("Por favor describe tu problema.");
+                return;
+            }
+
+            const fotoFile = document.getElementById('foto_soporte').files[0];
+            let fotosB64 = null;
+
+            if (fotoFile) {
+                fotosB64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(fotoFile);
+                });
+                // Enviar como un array JSON de una sola foto para consistencia
+                fotosB64 = JSON.stringify([fotosB64]);
+            }
+
+            try {
+                const response = await fetch('/soporte/reportar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        descripcion: descripcion,
+                        fotos: fotosB64
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Ticket enviado. Un asesor te contactará pronto.');
+                    window.location.href = '/';
+                } else {
+                    alert('Error al enviar el reporte.');
+                }
+            } catch (err) {
+                alert('Error de conexión: ' + err);
+            }
+        }
+    </script>
 
 </body>
 </html>

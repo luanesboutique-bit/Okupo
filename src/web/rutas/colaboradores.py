@@ -167,11 +167,54 @@ def dashboard_tecnico():
     # En un entorno real, aquí buscaríamos los trabajos asignados al colaborador
     return render_template('dashboard_tecnico.html')
 
+@blueprint.route('/portafolio')
+@login_requerido
+def portafolio():
+    token = session.get('token')
+    colaborador_id = session.get('colaborador_id')
+    
+    # Si no tenemos el colaborador_id en sesion, intentamos obtenerlo del perfil
+    if not colaborador_id:
+        # Esto es un fallback, en realidad deberia estar siempre si es colaborador
+        pass
+
+    perfil = api_get(f"/colaboradores/{colaborador_id}", token=token)
+    trabajos = perfil.get('portafolio', []) if perfil and isinstance(perfil, dict) else []
+    
+    return render_template('portafolio.html', trabajos=trabajos)
+
+@blueprint.route('/portafolio/agregar', methods=['POST'])
+@login_requerido
+def agregar_portafolio():
+    token = session.get('token')
+    colaborador_id = session.get('colaborador_id')
+    datos = request.get_json()
+    # datos: { titulo, imagen (b64), descripcion }
+    respuesta = api_post(f"/colaboradores/{colaborador_id}/portafolio", datos, token=token)
+    return jsonify({"success": respuesta is not None})
 
 @blueprint.route('/evidencia/<int:solicitud_id>')
 @login_requerido
 def evidencia_fotografica(solicitud_id):
     return render_template('evidencia_fotografica.html', solicitud_id=solicitud_id)
+
+@blueprint.route('/evidencia/<int:solicitud_id>/subir', methods=['POST'])
+@login_requerido
+def subir_evidencia(solicitud_id):
+    token = session.get('token')
+    datos = request.get_json()
+    # datos debe tener { inicial: bool, fotos: string_base64_array }
+    respuesta = api_post(f"/solicitudes/{solicitud_id}/evidencia", datos, token=token)
+    return jsonify({"success": respuesta is not None})
+
+@blueprint.route('/soporte/reportar', methods=['POST'])
+@login_requerido
+def reportar_soporte():
+    token = session.get('token')
+    datos = request.get_json()
+    # datos debe tener { descripcion: string, fotos: optional_string_base64_array }
+    respuesta = api_post("/soporte/reportar", datos, token=token)
+    return jsonify({"success": respuesta is not None})
 
 @blueprint.route('/trabajo/<int:solicitud_id>')
 @login_requerido
