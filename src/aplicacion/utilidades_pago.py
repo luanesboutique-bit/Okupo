@@ -1,60 +1,52 @@
 from decimal import Decimal
+from src.infraestructura.cliente_api import api_post
 
-def calcular_desglose_pago(precio_total, metodo_pago='tarjeta', es_flete=False):
+def calcular_desglose_pago(precio_total, metodo_pago='tarjeta', es_flete=False, token=None):
     """
-    Calcula el desglose del pago siguiendo la nueva lógica fiscal y financiera:
-    1. Total = precio_total
-    2. Gasto Conekta = segun metodo (descontado primero)
-    3. Impuestos = Total * (ISR + IVA + IMSS)
-    4. BaseReparto = Total - Gasto Conekta - Impuestos
-    5. Repartos = BaseReparto * porcentajes (75/15/5/5)
+    DEPRECATED LOCAL LOGIC: Now calls the Finite (Rust) engine to ensure 
+    consistency across all platforms (Web, Mobile, Tauri).
     """
+    datos = {
+        "precio_total": str(precio_total),
+        "metodo_pago": metodo_pago,
+        "es_flete": es_flete
+    }
+    
+    # Intentar obtener el desglose desde el motor Rust
+    respuesta = api_post("/pagos/desglose", datos, token=token)
+    
+    if respuesta and isinstance(respuesta, dict):
+        # Mapear estructura de Rust (plana) a la estructura esperada por los templates de Okupo (anidada)
+        return {
+            "total": float(respuesta.get('total', 0)),
+            "gasto_conekta": float(respuesta.get('gasto_conekta', 0)),
+            "base_reparto": float(respuesta.get('base_reparto', 0)),
+            "reparto": {
+                "tecnico": float(respuesta.get('reparto_tecnico', 0)),
+                "empresa": float(respuesta.get('reparto_empresa', 0)),
+                "mayoral": float(respuesta.get('reparto_mayoral', 0)),
+                "socio": float(respuesta.get('reparto_socio', 0))
+            },
+            "impuestos": {
+                "isr": float(respuesta.get('impuesto_isr', 0)),
+                "iva": float(respuesta.get('impuesto_iva', 0)),
+                "imss": float(respuesta.get('impuesto_imss', 0)),
+                "total_impuestos": float(respuesta.get('impuesto_isr', 0)) + float(respuesta.get('impuesto_iva', 0)) + float(respuesta.get('impuesto_imss', 0))
+            }
+        }
+
+    # Fallback básico si el motor no responde (no recomendado para producción)
+    print("⚠️ ADVERTENCIA: Usando fallback local para desglose de pago. Motor Rust no disponible.")
     total = Decimal(str(precio_total))
-    
-    # 1. Calcular Gasto Conekta
-    if metodo_pago == 'tarjeta':
-        comision_base = (total * Decimal('0.029')) + Decimal('2.50')
-        gasto_conekta = comision_base * Decimal('1.16') # + 16% IVA
-    elif metodo_pago == 'efectivo' or metodo_pago == 'oxxo':
-        gasto_conekta = Decimal('13.92') # 12.00 + 16% IVA
-    elif metodo_pago == 'spei':
-        gasto_conekta = Decimal('5.80') # 5.00 + 16% IVA
-    else:
-        gasto_conekta = Decimal('0.00')
-    
-    # 2. Calcular Impuestos Globales (sobre el total)
-    isr_porcentaje = Decimal('0.021') if es_flete else Decimal('0.01')
-    iva_porcentaje = Decimal('0.08')
-    imss_porcentaje = Decimal('0.015')
-    
-    isr = total * isr_porcentaje
-    iva = total * iva_porcentaje
-    imss = total * imss_porcentaje
-    total_impuestos = isr + iva + imss
-    
-    # 3. Base de Reparto
-    base_reparto = total - gasto_conekta - total_impuestos
-    
-    # 4. Aplicar porcentajes sobre la base
-    tecnico = base_reparto * Decimal('0.75')
-    empresa = base_reparto * Decimal('0.15')
-    mayoral = base_reparto * Decimal('0.05')
-    socio = base_reparto * Decimal('0.05')
-    
     return {
         "total": float(total),
-        "gasto_conekta": float(gasto_conekta),
-        "base_reparto": float(base_reparto),
-        "reparto": {
-            "tecnico": float(tecnico),
-            "empresa": float(empresa),
-            "mayoral": float(mayoral),
-            "socio": float(socio)
-        },
-        "impuestos": {
-            "isr": float(isr),
-            "iva": float(iva),
-            "imss": float(imss),
-            "total_impuestos": float(total_impuestos)
-        }
+        "gasto_conekta": 0.0,
+        "base_reparto": float(total),
+        "reparto_tecnico": float(total * Decimal('0.75')),
+        "reparto_empresa": float(total * Decimal('0.15')),
+        "reparto_mayoral": float(total * Decimal('0.05')),
+        "reparto_socio": float(total * Decimal('0.05')),
+        "impuesto_isr": 0.0,
+        "impuesto_iva": 0.0,
+        "impuesto_imss": 0.0
     }

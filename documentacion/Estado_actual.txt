@@ -1,0 +1,39 @@
+# 📊 Estado Actual del Proyecto (Okupo + Finite)
+Fecha: Viernes, 15 de Mayo de 2026
+
+## 🛠️ Lo que ES (Realidad Técnica)
+El proyecto es un sistema de gestión de servicios técnicos compuesto por:
+1.  **Motor Finite (Rust)**: Backend robusto con arquitectura hexagonal, persistencia en MySQL (prod) y SQLite (test/dev), y lógica financiera avanzada.
+2.  **Okupo (Flask)**: Interfaz de usuario que consume la API de Finite para ofrecer servicios de cerrajería, plomería, etc., al cliente final.
+
+### Estado del Motor (Finite):
+- ✅ **Estable**: Compilación limpia y pruebas unitarias de dominio aprobadas.
+- ✅ **Reset & Seed**: Capacidad de reiniciar el entorno con un comando (`--reset-db`) creando un administrador por defecto.
+- ✅ **Sincronizado**: Modelos de datos actualizados (Portafolio, Evidencia, Solicitudes).
+
+### Estado de la Interfaz (Okupo):
+- ✅ **Lógica Financiera Migrada**: Los cálculos de desglose de pago e impuestos ya no se hacen en Python; se consultan dinámicamente al motor Rust via `/pagos/desglose`.
+- ✅ **Evidencia Multimedia Real**: Implementada la subida de fotos real en el flujo de pedidos. Las imágenes se guardan en el servidor Rust y se vinculan a la solicitud.
+- ✅ **Conectividad**: Los endpoints principales (Login, Categorías, Marketplace) son dinámicos y usan un proxy seguro (`/api_proxy`).
+
+---
+
+## 🚀 Lo que SIGUE (Próximos Pasos)
+
+### 1. Robustez del Dashboard
+- **Mis Pedidos**: Asegurar que las fotos de evidencia subidas se muestren correctamente en la vista de "Mis Pedidos".
+- **Dashboard Técnico**: Habilitar el flujo para que el técnico suba la "foto final" al terminar el trabajo.
+
+### 2. Chat y Notificaciones
+- Implementar la interfaz de chat real ahora que la estructura de mensajes en el motor es estable.
+
+### 3. Dinamismo Total en Clasificación
+- Sustituir el `clasificador.py` manual por un endpoint de búsqueda global en el motor Rust.
+
+### 4. Robustez de la Sesión
+- Implementar refresco automático de tokens o una redirección más elegante cuando el token JWT de Finite expira.
+
+---
+
+## 📝 Nota para el equipo
+Se ha sincronizado la documentación en `Okupo/documentacion/api_uso.md` con la realidad del motor. Úsenla como única fuente de verdad para el consumo de servicios.

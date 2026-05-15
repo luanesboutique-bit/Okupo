@@ -1,77 +1,78 @@
-# 🔌 Integración API
+# Guía de Uso de la API - finit
 
-Okupo utiliza el motor **Finite** como núcleo de procesamiento. A continuación se listan los endpoints principales y su propósito dentro de la interfaz.
+Este documento es para que el desarrollador del Frontend pueda consumir los servicios del motor `finit`.
 
----
+## Base URL
+Por defecto local: `http://localhost:3000`
 
-## 🔑 Autenticación y Usuarios
-
-### `POST /login`
-- **Uso**: Iniciar sesión.
-- **Retorno**: Token JWT.
-
-### `POST /usuarios`
-- **Uso**: Registro de nuevos usuarios (clientes o colaboradores).
-
-### `POST /auth/google` y `POST /auth/facebook`
-- **Uso**: Social Login mediante tokens OAuth2. Valida el token con el proveedor y devuelve un JWT. Registra automáticamente al usuario si no existe.
+## Seguridad (JWT)
+La mayoría de los endpoints protegidos requieren un encabezado de autorización:
+`Authorization: Bearer <TOKEN>`
 
 ---
 
-## 📂 Catálogo y Marketplace
+## Endpoints Principales
 
-### `POST /cotizaciones-especiales`
-- **Uso**: Enviar una solicitud de servicio para algo que no está en el catálogo estándar.
-- **Campos**: `usuario_id`, `descripcion_trabajo`, `fotos_evidencia`, `presupuesto_estimado`, `nivel_urgencia`.
+### 1. Estado de la API (Health Check)
+**GET** `/`
+- **Uso**: Verificar si el servidor está en línea.
+- **Respuesta**: `"Bienvenido al motor finit - API activa (finit.db)"`
 
-### `GET /categorias`
-- **Uso**: Listar los sectores de servicios principales.
-
-### `GET /categorias/{id}/subcategorias`
-- **Uso**: Obtener los servicios específicos de una categoría.
-
-### `GET /subcategorias/{id}`
-- **Uso**: Obtener detalles de una subcategoría específica (nombre, descripción, precios base).
-
-### `GET /subcategorias/{id}/colaboradores`
-- **Uso**: Búsqueda de profesionales mediante filtros de geolocalización.
-- **Parámetros**: `latitud`, `longitud`.
+### 2. Autenticación y Usuarios
+- **POST** `/usuarios`: Registro de nuevo usuario.
+- **POST** `/login`: Obtiene el token JWT.
+- **GET** `/usuarios/:id`: Obtiene perfil del usuario.
 
 ---
 
-## 🛠️ Perfil de Colaborador (Configuración)
-
-### `POST /colaboradores`
-- **Uso**: Inicializar perfil profesional.
-
-### `POST /colaboradores/{id}/documentacion`
-- **Uso**: Carga de documentos legales para certificación.
-- **Formato**: Soporta imágenes en Base64 enviadas como JSON.
-- **Campos**: `ine_frontal`, `ine_trasera`, `comprobante_domicilio`, `foto_selfie_ine`.
-- **Límite**: El motor soporta hasta **20MB** para asegurar calidad en las fotos.
-
-### `POST /colaboradores/{id}/precios-dinamicos`
-- **Uso**: Configuración de reglas de cobro variables.
-
-### `POST /colaboradores/{id}/horarios`
-- **Uso**: Establecer ventanas de disponibilidad semanal.
+### 3. Marketplace y Catálogos
+- **GET** `/categorias`: Listar categorías base.
+- **GET** `/categorias/:id/subcategorias`: Listar subcategorías.
+- **GET** `/subcategorias/:id/colaboradores?latitud=X&longitud=Y`: Listar profesionales activos y cercanos (ordenados por cercanía y precio).
+- **POST** `/cotizar`: Calcula el precio total (base + distancia + recargos nocturnos/domingo).
+  - **Cuerpo**: `{"colaborador_id": 1, "subcategoria_id": 2, "urgencia": "alta", "latitud": 19.4, "longitud": -99.1}`
 
 ---
 
-## 📝 Operativa de Servicios
+### 4. Gestión de Colaboradores (Técnicos)
+- **GET** `/colaboradores/:id`: Perfil público.
+- **GET** `/colaboradores/:id/estadisticas`: Métricas del dashboard.
+- **POST** `/colaboradores/:id/documentacion`: Subir fotografías de identidad en Base64.
+  - **Cuerpo**: `{"ine_frontal": "data:image/...", "ine_trasera": "...", "comprobante_domicilio": "...", "foto_selfie_ine": "..."}`
+  - **Nota**: El servidor soporta hasta **20MB** por petición para permitir imágenes de alta resolución.
+- **POST** `/colaboradores/:id/horarios`: Configurar disponibilidad semanal.
+- **POST** `/colaboradores/:id/precios-dinamicos`: Configurar recargos por distancia/clima/hora.
+- **POST** `/tecnico/servicios`: Registrar un nuevo servicio ofrecido.
+- **POST** `/colaboradores/:id/portafolio`: Agregar trabajo al portafolio.
+  - **Cuerpo**: `{"titulo": "...", "imagen": "data:image/...", "descripcion": "..."}`
 
-### `POST /solicitudes`
-- **Uso**: Crear un nuevo contrato de servicio.
+---
 
-### `GET /solicitudes?usuario_id={id}`
-- **Uso**: Listar pedidos de un usuario específico.
+### 5. Ciclo de Vida de Solicitudes
+- **POST** `/solicitudes`: Crear nueva solicitud.
+- **GET** `/solicitudes?usuario_id=X`: Listar mis solicitudes.
+- **POST** `/solicitudes/:id/evidencia`: Subir fotos de evidencia (inicial o final).
+  - **Cuerpo**: `{"inicial": true, "fotos": "url1,url2"}`
+- **Acciones de Estado (Protegidas)**:
+  - **POST** `/solicitudes/:id/aceptar`: El técnico acepta el trabajo.
+  - **POST** `/solicitudes/:id/finalizar`: El técnico marca el trabajo como terminado.
+  - **POST** `/solicitudes/:id/cancelar`: Cualquiera de las partes cancela la solicitud.
 
-### `GET /solicitudes/{id}/mensajes`
-- **Uso**: Recuperar historial de chat de una orden.
+---
 
-### `POST /solicitudes/{id}/mensajes`
-- **Uso**: Enviar un nuevo mensaje dentro del chat de servicio.
+### 6. Administración (Panel de Control)
+- **GET** `/admin/colaboradores/pendientes`: Lista colaboradores en espera de validación.
+- **POST** `/colaboradores/:id/verificar`: Aprobar o rechazar a un colaborador.
+  - **Cuerpo**: `{"estado": "verificado", "comentario": "Documentación correcta"}`
 
-### `POST /calificaciones`
-- **Uso**: Evaluar un servicio terminado.
-- **Campos**: `solicitud_id`, `puntuacion`, `aspectos` (lista: puntualidad, limpieza, calidad), `comentario`.
+---
+
+### 7. Comunicación y Multimedia
+- **POST** `/solicitudes/:id/mensajes`: Chat entre partes.
+- **GET** `/solicitudes/:id/mensajes`: Historial de chat.
+- **POST** `/calificaciones`: Calificar servicio terminado.
+
+## Tipos de Datos y Formatos
+- **Urgencia**: `"baja"`, `"media"`, `"alta"`, `"critica"`.
+- **Estado de Verificación**: `"pendiente"`, `"verificado"`, `"rechazado"`.
+- **Precios/Coordenadas**: Devueltos como Strings o Numbers dependiendo de la precisión.

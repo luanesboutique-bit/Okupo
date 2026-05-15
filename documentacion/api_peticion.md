@@ -1,41 +1,32 @@
-# 📥 Peticiones al Back-end (D'Maria)
+# 📥 Peticiones al Back-end (finit)
 
-Este archivo sirve como canal de comunicación para que **D'Mayoral** (Front-end) solicite formalmente nuevos endpoints o cambios en la API a **D'Maria** (Back-end).
-
----
-
-## 🚀 Nuevos Endpoints Solicitados
-- *(Todos completados)*
+Este archivo sirve como canal de comunicación para que el equipo de Front-end (Okupo) solicite cambios o nuevos servicios al motor Back-end (finit).
 
 ---
 
-## 🛠️ Modificaciones de Endpoints Existentes
-- *(Todos completados)*
+## 🚀 Peticiones Pendientes
+- [ ] **Soporte para múltiples fotos en evidencia**: Permitir que el endpoint `/solicitudes/:id/evidencia` acepte un array de URLs o archivos.
+- [ ] **Endpoint de Notificaciones**: Necesitamos saber cuándo hay un nuevo mensaje sin hacer polling constante.
+- [ ] **Búsqueda global**: Un endpoint `/buscar?q=termino` que devuelva categorías o subcategorías relevantes para evitar el clasificador hardcodeado en el front.
 
 ---
 
-## 📋 Historial de Peticiones Completadas
-### `POST /auth/google` y `POST /auth/facebook`
-- **Motivo**: Implementación de Social Login (OAuth2).
-- **Estado**: Completado. Soporta registro automático y validación de tokens.
+## 📋 Cambios Recientes Implementados (Sync Mayo 2026)
 
-### `POST /colaboradores` (Actualización)
-- **Cambio**: Acepta `nombre_completo` (actualiza usuario), `telefono_verificacion` y `zona_trabajo`.
-- **Estado**: Completado.
+### 📸 Gestión de Portafolio
+- **Endpoint**: `POST /colaboradores/:id/portafolio`
+- **Cambio**: Los campos ahora son `titulo`, `imagen` y `descripcion` (anteriormente `foto_antes`/`foto_despues`).
+- **Estado**: Sincronizado en Okupo.
 
-### `POST /cotizaciones-especiales`
-- **Motivo**: Para procesar el formulario de "¿No encuentras lo que buscas?" donde el usuario describe un problema libre y sube fotos.
-- **Estado**: Completado en motor Finit (Rust).
+### 🧾 Evidencia de Trabajo
+- **Endpoint**: `POST /solicitudes/:id/evidencia`
+- **Uso**: Se usa para subir fotos al inicio y al final del servicio.
+- **Campo añadido**: `fotos_evidencia_final` en el modelo de base de datos.
 
-### `POST /calificaciones`
-- **Motivo**: Para enviar la puntuación final (estrellas y aspectos) al terminar un servicio.
-- **Datos añadidos**: `aspectos` (lista de strings).
-- **Estado**: Completado en motor Finit (Rust).
+### 🛡️ Administración
+- **Endpoint**: `POST /colaboradores/:id/verificar`
+- **Uso**: Para que el administrador apruebe técnicos desde el panel Tauri.
 
-### `POST /colaboradores/{id}/documentacion`
-- **Cambio**: Los campos ahora se llaman: `identificacion_frontal`, `identificacion_trasera`, `comprobante_domicilio`, `foto_perfil_identificacion`.
-- **Estado**: Completado en motor Finit (Rust).
-
-### `POST /colaboradores/{id}/horarios`
-- **Cambio**: Recibir una lista de objetos con `dia_semana` (0-6), `hora_inicio`, `hora_fin` y `activo`.
-- **Estado**: Completado en motor Finit (Rust).
+### ⏰ Horarios y Precios
+- **Endpoints**: `/horarios` y `/precios-dinamicos`.
+- **Estado**: Completamente operativos en el motor Rust.

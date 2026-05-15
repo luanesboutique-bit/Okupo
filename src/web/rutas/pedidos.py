@@ -27,7 +27,7 @@ def solicitar_clic():
     es_flete = "FLETES" in servicio_nombre.upper()
     
     # Calcular desglose financiero según reglas de D'Mayoral
-    desglose = calcular_desglose_pago(precio_base, es_flete=es_flete)
+    desglose = calcular_desglose_pago(precio_base, es_flete=es_flete, token=token)
     
     # Buscar colaboradores para esta subcategoría
     colaboradores = api_get(f"/subcategorias/{subcategoria_id}/colaboradores?latitud={latitud}&longitud={longitud}", token=token)
@@ -94,6 +94,7 @@ def pedir():
             "descripcion": request.form.get('descripcion'),
             "latitud": request.form.get('latitud'),
             "longitud": request.form.get('longitud'),
+            "fotos_evidencia_inicial": request.form.get('fotos_evidencia_inicial'),
             "calle": request.form.get('calle'),
             "numero": request.form.get('numero'),
             "colonia": request.form.get('colonia'),
@@ -140,7 +141,7 @@ def finalizar_pedido():
         es_flete = "FLETES" in request.form.get('nombre_servicio', '').upper()
         metodo_pago = request.form.get('metodo_pago', 'tarjeta')
         
-        desglose = calcular_desglose_pago(precio_total, metodo_pago=metodo_pago, es_flete=es_flete)
+        desglose = calcular_desglose_pago(precio_total, metodo_pago=metodo_pago, es_flete=es_flete, token=token)
         print(f"DEBUG: Desglose: {desglose}")
         
         detalles_adicionales = {}
@@ -160,7 +161,7 @@ def finalizar_pedido():
             "subcategoria_id": subcategoria_id,
             "urgencia": "media",
             "descripcion_detallada": request.form.get('descripcion', 'Sin descripción'),
-            "fotos_evidencia_inicial": "placeholder.jpg",
+            "fotos_evidencia_inicial": request.form.get('fotos_evidencia_inicial'),
             "latitud": float(request.form.get('latitud', 19.4326)),
             "longitud": float(request.form.get('longitud', -99.1332)),
             "calle": request.form.get('calle'),

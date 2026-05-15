@@ -195,9 +195,14 @@
                 <!-- Evidencia obligatoria en primera vista -->
                 <div class="input-group">
                     <label>Evidencia Fotográfica (Obligatoria)</label>
-                    <div class="photo-upload" onclick="alert('Funcionalidad de cámara abierta')">
-                        <i class="fas fa-camera"></i>
-                        <p>Toma una foto del área de trabajo. Esto reemplaza las preguntas detalladas.</p>
+                    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                    <input type="hidden" name="fotos_evidencia_inicial" id="foto-evidencia-url">
+                    <div class="photo-upload" id="photo-dropzone">
+                        <i class="fas fa-camera" id="photo-icon"></i>
+                        <p id="photo-text">Toma una foto del área de trabajo. Esto reemplaza las preguntas detalladas.</p>
+                        <div id="photo-preview" style="display: none; margin-top: 10px;">
+                            <img id="preview-img" src="" style="width: 100%; border-radius: 10px; border: 2px solid var(--color-dorado);">
+                        </div>
                     </div>
                 </div>
 
@@ -342,7 +347,53 @@
 
             document.getElementById('lat-input').value = localStorage.getItem('okupo_lat') || '19.4326';
             document.getElementById('lon-input').value = localStorage.getItem('okupo_lon') || '-99.1332';
+        }
+
+        // --- Lógica de Subida de Fotos ---
+        const dropzone = document.getElementById('photo-dropzone');
+        const fileInput = document.getElementById('camera-input');
+        const photoText = document.getElementById('photo-text');
+        const photoIcon = document.getElementById('photo-icon');
+        const photoPreview = document.getElementById('photo-preview');
+        const previewImg = document.getElementById('preview-img');
+        const hiddenUrlInput = document.getElementById('foto-evidencia-url');
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Mostrar preview local
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                photoPreview.style.display = 'block';
+                photoIcon.style.display = 'none';
+                photoText.innerText = 'Foto cargada correctamente';
+            };
+            reader.readAsDataURL(file);
+
+            // Subir al motor Finite
+            const formData = new FormData();
+            formData.append('archivo', file);
+
+            try {
+                photoText.innerText = 'Subiendo foto...';
+                const response = await fetch('/api_proxy/subidas', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data) {
+                    hiddenUrlInput.value = data; // URL devuelta por el motor
+                    photoText.innerText = '✅ Foto lista';
+                }
+            } catch (err) {
+                console.error('Error al subir:', err);
+                photoText.innerText = '❌ Error al subir. Intenta de nuevo.';
+            }
         });
-    </script>
-</body>
+        </script>
+        </body>
 </html>
