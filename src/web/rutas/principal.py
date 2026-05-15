@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session
 from src.infraestructura.cliente_api import api_get
 from src.aplicacion.clasificador import clasificar_servicio
+from src.web.decoradores import login_requerido
 
 blueprint = Blueprint('principal', __name__)
 
@@ -61,8 +62,90 @@ def politicas():
     return render_template('politicas.html')
 
 @blueprint.route('/perfil')
+@login_requerido
 def perfil():
-    return f"<h1>Perfil de {session.get('nombre', 'Usuario')}</h1><p>Rol: {session.get('rol')}</p><a href='/'>Volver</a>"
+    token = session.get('token')
+    datos_usuario = api_get(f"/usuarios/{session['user_id']}", token=token)
+    
+    if datos_usuario == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+        
+    return render_template('perfil.html', usuario=datos_usuario or {})
+
+@blueprint.route('/direcciones')
+@login_requerido
+def direcciones():
+    # Obtener direcciones registradas del usuario
+    token = session.get('token')
+    direcciones = api_get(f"/usuarios/{session['user_id']}/direcciones", token=token)
+    
+    if direcciones == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+        
+    return render_template('direcciones.html', direcciones=direcciones or [])
+
+@blueprint.route('/direcciones/nueva', methods=['GET', 'POST'])
+@login_requerido
+def agregar_direccion():
+    if request.method == 'POST':
+        datos = {
+            "alias": request.form.get('alias'),
+            "calle": request.form.get('calle'),
+            "numero": request.form.get('numero'),
+            "colonia": request.form.get('colonia'),
+            "codigo_postal": request.form.get('cp')
+        }
+        token = session.get('token')
+        respuesta = api_post(f"/usuarios/{session['user_id']}/direcciones", datos, token=token)
+        
+        if respuesta:
+            return redirect(url_for('principal.direcciones'))
+        return render_template('agregar_direccion.html', error="No se pudo guardar la dirección.")
+        
+    return render_template('agregar_direccion.html')
+
+@blueprint.route('/pagos')
+@login_requerido
+def pagos():
+    # Obtener métodos de pago guardados del usuario
+    token = session.get('token')
+    metodos = api_get(f"/usuarios/{session['user_id']}/pagos", token=token)
+    
+    if metodos == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+        
+    return render_template('pagos.html', metodos=metodos or [])
+
+@blueprint.route('/pagos/nuevo', methods=['GET', 'POST'])
+@login_requerido
+def agregar_pago():
+    if request.method == 'POST':
+        # Los datos vendrían del formulario de tarjeta (ej: integración Conekta)
+        datos = {
+            "token_tarjeta": request.form.get('conekta_token'),
+            "tipo": request.form.get('tipo'),
+            "ultimos_digitos": request.form.get('ultimos_digitos'),
+            "expiracion": request.form.get('expiracion')
+        }
+        token = session.get('token')
+        respuesta = api_post(f"/usuarios/{session['user_id']}/pagos", datos, token=token)
+        
+        if respuesta:
+            return redirect(url_for('principal.pagos'))
+        return render_template('agregar_pago.html', error="No se pudo guardar el método de pago.")
+        
+    return render_template('agregar_pago.html')
+
+@blueprint.route('/facturacion')
+def facturacion():
+    # Obtener datos de facturación guardados del usuario
+    token = session.get('token')
+    datos = api_get(f"/usuarios/{session['user_id']}/facturacion", token=token)
+    
+    if datos == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+        
+    return render_template('facturacion.html', datos=datos or {})
 
 @blueprint.route('/soporte')
 def soporte():

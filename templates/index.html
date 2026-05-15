@@ -9,7 +9,18 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root { --wood-dark: #A67C52; --wood-light: #D4B996; --gold: #E8B760; --engraved: #2a1b12; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #F2EDE0; display: flex; justify-content: center; }
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--engraved);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
         .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: #F2EDE0; position: relative; padding-bottom: 120px; }
         
         .header { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; }
@@ -65,6 +76,7 @@
             <a href="/expertos_favoritos" class="menu-item"><i class="fas fa-heart" style="color: #e74c3c; margin-right: 10px;"></i> Mis Expertos Favoritos</a>
             <a href="/direcciones" class="menu-item"><i class="fas fa-map-marker-alt" style="color: var(--wood-dark); margin-right: 10px;"></i> Direcciones guardadas</a>
             <a href="/pagos" class="menu-item"><i class="fas fa-credit-card" style="color: #b8860b; margin-right: 10px;"></i> Métodos de pago</a>
+            <a href="/facturacion" class="menu-item"><i class="fas fa-file-invoice-dollar" style="color: #555; margin-right: 10px;"></i> Facturación</a>
             <a href="/chat" class="menu-item"><i class="fas fa-comments" style="color: #2980b9; margin-right: 10px;"></i> Chat seguro</a>
             <a href="/unete" class="menu-item"><i class="fas fa-tools" style="color: var(--wood-dark); margin-right: 10px;"></i> ¿Quieres ser colaborador?</a>
             <a href="/soporte" class="menu-item"><i class="fas fa-headset" style="color: #b8860b; margin-right: 10px;"></i> Ayuda/soporte</a>

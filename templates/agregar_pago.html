@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Pago - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover; background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0; padding: 20px; display: flex; justify-content: center;
+        }
+        .app-container { width: 100%; max-width: 450px; }
+        .header { display: flex; align-items: center; margin-bottom: 25px; }
+        .header a { color: var(--color-texto); font-size: 24px; }
+        .header h1 { flex: 1; font-size: 20px; font-weight: 900; text-transform: uppercase; margin: 0; text-align: center; }
+        
+        .form-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 20px; padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(139, 90, 43, 0.1);
+        }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(139, 90, 43, 0.2); box-sizing: border-box; background: #fff; }
+        .btn-enviar {
+            width: 100%; padding: 16px; border-radius: 15px; border: none;
+            background-image: url('/static/madera_oscura.jpg'); color: white; font-weight: 900;
+            cursor: pointer; text-transform: uppercase; margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('principal.pagos') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>Nuevo Método</h1>
+        </div>
+        
+        <form action="{{ url_for('principal.agregar_pago') }}" method="POST" class="form-card">
+            <div class="input-group">
+                <label>Número de Tarjeta (Token)</label>
+                <input type="text" name="conekta_token" placeholder="Token de tarjeta" required>
+            </div>
+            <div class="input-group">
+                <label>Tipo (ej. VISA, MASTERCARD)</label>
+                <input type="text" name="tipo" required>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <div class="input-group" style="flex: 1;">
+                    <label>Últimos 4 dígitos</label>
+                    <input type="text" name="ultimos_digitos" maxlength="4" placeholder="1234" required>
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label>CVV (3 dígitos)</label>
+                    <input type="text" name="cvv" maxlength="3" placeholder="123" required>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <div class="input-group" style="flex: 1;">
+                    <label>Mes Exp.</label>
+                    <select name="mes_exp" required>
+                        {% for m in range(1, 13) %}<option value="{{ '%02d'|format(m) }}">{{ '%02d'|format(m) }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label>Año Exp.</label>
+                    <select name="anio_exp" required>
+                        {% for y in range(2026, 2036) %}<option value="{{ y }}">{{ y }}</option>{% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-enviar">Guardar Método de Pago</button>
+        </form>
+    </div>
+</body>
+</html>

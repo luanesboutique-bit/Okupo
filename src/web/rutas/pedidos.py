@@ -212,6 +212,18 @@ def mis_pedidos():
                 
     return render_template('mis_pedidos.html', solicitudes=solicitudes or [])
 
+@blueprint.route('/chat')
+@login_requerido
+def listar_chats():
+    # Obtener solicitudes del usuario para listar chats activos
+    token = session.get('token')
+    solicitudes = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=token)
+    
+    if solicitudes == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+        
+    return render_template('lista_chats.html', solicitudes=solicitudes or [])
+
 @blueprint.route('/chat/<int:solicitud_id>', methods=['GET', 'POST'])
 @login_requerido
 def chat(solicitud_id):
@@ -227,6 +239,7 @@ def chat(solicitud_id):
     if mensajes == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
     return render_template('chat.html', mensajes=mensajes or [], solicitud_id=solicitud_id)
+
 
 @blueprint.route('/cotizacion/enviar', methods=['POST'])
 @login_requerido
@@ -292,18 +305,17 @@ def finalizar_pago():
 def mostrar_urgencia_final():
     return render_template('urgencia_final.html')
 
-@blueprint.route('/cancelar/<int:solicitud_id>', methods=['POST'])
+@blueprint.route('/historial_pagos')
 @login_requerido
-def cancelar_pedido(solicitud_id):
-    # Enviar al backend para que cambie el estado a cancelado
-    respuesta = api_post(f"/solicitudes/{solicitud_id}/estado", {
-        "nuevo_estado": "rechazado"
-    }, token=session.get('token'))
+def historial_pagos():
+    # Obtener historial de pagos desde Finite
+    pagos = api_get(f"/pagos?usuario_id={session['user_id']}", token=session.get('token'))
     
-    if respuesta:
-        return redirect(url_for('pedidos.mis_pedidos'))
+    if pagos == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
         
-    return "Error al cancelar el pedido", 500
+    return render_template('historial_pagos.html', pagos=pagos or [])
+
 
 @blueprint.route('/solicitar_urgencia_final', methods=['POST'])
 @login_requerido

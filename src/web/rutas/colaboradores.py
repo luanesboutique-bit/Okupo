@@ -221,7 +221,15 @@ def reportar_soporte():
 def ver_trabajo(solicitud_id):
     return render_template('ver_trabajo_tecnico.html', solicitud_id=solicitud_id)
 
-@blueprint.route('/trabajo/<int:solicitud_id>/detalle')
+@blueprint.route('/expertos_favoritos')
 @login_requerido
-def detalle_trabajo(solicitud_id):
-    return render_template('detalle_trabajo_tecnico.html', solicitud_id=solicitud_id)
+def expertos_favoritos():
+    # Obtener lista de expertos favoritos desde la API Finite
+    token = session.get('token')
+    favoritos = api_get(f"/usuarios/{session['user_id']}/favoritos", token=token)
+    
+    if favoritos == "UNAUTHORIZED":
+        return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+        
+    return render_template('expertos_favoritos.html', favoritos=favoritos or [])
+

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Chats - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover; background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif; color: var(--color-texto);
+            margin: 0; padding: 20px; display: flex; justify-content: center;
+        }
+        .app-container { width: 100%; max-width: 450px; }
+        .header { display: flex; align-items: center; margin-bottom: 25px; }
+        .header a { color: var(--color-texto); font-size: 24px; }
+        .header h1 { flex: 1; font-size: 20px; font-weight: 900; text-transform: uppercase; margin: 0; text-align: center; }
+        .card-chat {
+            background: rgba(253, 250, 245, 0.95);
+            border-radius: 20px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(139, 90, 43, 0.1);
+            text-decoration: none; color: var(--color-texto); display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('principal.index') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>Bandeja de Chats</h1>
+        </div>
+        
+        {% for sol in solicitudes %}
+        <a href="{{ url_for('pedidos.chat', solicitud_id=sol.id) }}" class="card-chat">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-weight: 900;">Solicitud #{{ sol.id }}</div>
+                <i class="fas fa-chevron-right" style="opacity: 0.3;"></i>
+            </div>
+            <div style="font-size: 13px; opacity: 0.8; margin-top: 5px;">{{ sol.servicio_nombre or 'Servicio' }}</div>
+        </a>
+        {% else %}
+        <div style="text-align: center; margin-top: 50px; opacity: 0.7;">No hay chats activos.</div>
+        {% endfor %}
+    </div>
+</body>
+</html>

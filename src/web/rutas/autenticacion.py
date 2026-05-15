@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
 from src.infraestructura.cliente_api import api_post
 from src.aplicacion.utilidades_token import obtener_usuario_id_de_token, obtener_rol_de_token
 
@@ -88,19 +88,31 @@ def registro():
         return render_template('registro.html', error="Error al registrar. Intenta con otro correo.")
     return render_template('registro.html', rol=rol)
 
-@blueprint.route('/login/social/<red_social>')
+@blueprint.route('/login/social/<red_social>', methods=['GET', 'POST'])
 def login_social(red_social):
-    # SIMULACIÓN (MOCK) según Protocolo de Adelantamiento
-    # En el futuro esto llamará a POST /auth/google o /auth/facebook
-    print(f"DEBUG: Simulando login social con {red_social}")
+    if request.method == 'GET':
+        return f"Proceso de autenticación con {red_social} en curso. Asegúrate de enviar un POST con tu token."
+        
+    token_social = request.json.get('token')
+    if not token_social:
+        return jsonify({"status": "error", "message": "Token social no proporcionado"}), 400
     
-    session.clear()
-    session['user_id'] = 999 # Usuario de prueba
-    session['nombre'] = f"Usuario {red_social.capitalize()}"
-    session['correo'] = f"prueba_{red_social}@okupo.mx"
-    session['token'] = "token_simulado_social_12345"
+    endpoint = f"/auth/{red_social}"
+    respuesta = api_post(endpoint, {"token": token_social})
     
-    return redirect(url_for('principal.index'))
+    if respuesta and respuesta != "UNAUTHORIZED" and isinstance(respuesta, dict):
+        token_jwt = respuesta.get('token')
+        usuario_id = obtener_usuario_id_de_token(token_jwt)
+        rol = obtener_rol_de_token(token_jwt)
+        
+        session.clear()
+        session['user_id'] = int(usuario_id)
+        session['token'] = token_jwt
+        session['rol'] = rol
+        
+        return jsonify({"status": "success", "redirect": url_for('principal.index')})
+        
+    return jsonify({"status": "error", "message": "Autenticación fallida con el proveedor"}), 401
 
 @blueprint.route('/logout')
 def logout():

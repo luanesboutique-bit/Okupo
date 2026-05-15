@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expertos Favoritos - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center;
+        }
+        .app-container { width: 100%; max-width: 450px; }
+        .header { display: flex; align-items: center; margin-bottom: 25px; }
+        .header a { color: var(--color-texto); font-size: 24px; }
+        .header h1 { flex: 1; font-size: 20px; font-weight: 900; text-transform: uppercase; margin: 0; text-align: center; }
+        
+        .card-experto {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 20px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(139, 90, 43, 0.1);
+            display: flex; align-items: center; gap: 15px;
+        }
+        .foto-experto { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-dorado); }
+        .nombre-experto { font-weight: 900; font-size: 16px; }
+        .especialidad { font-size: 12px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('principal.index') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>Mis Favoritos</h1>
+        </div>
+        {% for experto in favoritos %}
+        <div class="card-experto">
+            <img src="{{ experto.foto_perfil or '/static/avatar_default.png' }}" class="foto-experto">
+            <div style="flex: 1;">
+                <div class="nombre-experto">{{ experto.nombre_completo }}</div>
+                <div class="especialidad">{{ experto.especialidad_resumen }}</div>
+            </div>
+            <i class="fas fa-heart" style="color: var(--color-google);"></i>
+        </div>
+        {% else %}
+        <div style="text-align: center; margin-top: 50px; opacity: 0.7;">
+            <i class="fas fa-heart" style="font-size: 40px; margin-bottom: 10px;"></i>
+            <p>Aún no tienes expertos favoritos.</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

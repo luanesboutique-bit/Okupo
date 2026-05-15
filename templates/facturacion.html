@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Facturación - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; }
+        body {
+            background-image: url('/static/fondo_pared.jpg');
+            background-size: cover; background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+            margin: 0; padding: 20px; display: flex; justify-content: center;
+        }
+        .app-container { width: 100%; max-width: 450px; }
+        .header { display: flex; align-items: center; margin-bottom: 25px; }
+        .header a { color: var(--color-texto); font-size: 24px; }
+        .header h1 { flex: 1; font-size: 20px; font-weight: 900; text-transform: uppercase; margin: 0; text-align: center; }
+        
+        .form-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 20px; padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(139, 90, 43, 0.1);
+        }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(139, 90, 43, 0.2); box-sizing: border-box; background: #fff; }
+        .btn-enviar {
+            width: 100%; padding: 16px; border-radius: 15px; border: none;
+            background-image: url('/static/madera_oscura.jpg'); color: white; font-weight: 900;
+            cursor: pointer; text-transform: uppercase; margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="{{ url_for('principal.index') }}"><i class="fas fa-arrow-left"></i></a>
+            <h1>Facturación</h1>
+        </div>
+        
+        <form action="/facturacion/solicitar" method="POST" class="form-card">
+            <div class="input-group">
+                <label># Pedido (Folio)</label>
+                <input type="text" name="pedido_id" required>
+            </div>
+            <div class="input-group">
+                <label>RFC</label>
+                <input type="text" name="rfc" maxlength="13" required>
+            </div>
+            <div class="input-group">
+                <label>Nombre o Razón Social</label>
+                <input type="text" name="razon_social" placeholder="Sin régimen societario" required>
+            </div>
+            <div class="input-group">
+                <label>Código Postal</label>
+                <input type="text" name="cp" maxlength="5" required>
+            </div>
+            <div class="input-group">
+                <label>Domicilio Fiscal</label>
+                <input type="text" name="domicilio_fiscal" placeholder="Calle, número, colonia..." required>
+            </div>
+            <div class="input-group">
+                <label>Régimen Fiscal</label>
+                <select name="regimen" required>
+                    <option value="RESICO">Régimen Simplificado de Confianza (RESICO)</option>
+                    <option value="SUELDOS">Sueldos y Salarios e Ingresos Asimilados</option>
+                    <option value="ACTIVIDADES_EMPRESARIALES">Régimen de Actividades Empresariales y Profesionales</option>
+                    <option value="ARRENDAMIENTO">Régimen de Arrendamiento</option>
+                    <option value="PLATAFORMAS">Plataformas Tecnológicas</option>
+                    <option value="RIF">Régimen de Incorporación Fiscal (RIF)</option>
+                    <option value="GENERAL">Régimen General</option>
+                    <option value="RESICO_PM">Régimen Simplificado de Confianza (RESICO) - PM</option>
+                    <option value="NO_LUCRATIVAS">Personas Morales con Fines no Lucrativos</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Uso del CFDI</label>
+                <select name="uso_cfdi" required>
+                    <option value="G01">G01 - Adquisición de mercancías</option>
+                    <option value="G02">G02 - Devoluciones, descuentos o bonificaciones</option>
+                    <option value="G03" selected>G03 - Gastos en general</option>
+                    <option value="I01">I01 - Construcciones</option>
+                    <option value="I02">I02 - Mobiliario y equipo de oficina por inversiones</option>
+                    <option value="I03">I03 - Equipo de transporte</option>
+                    <option value="I04">I04 - Equipo de cómputo y accesorios</option>
+                    <option value="D01">D01 - Honorarios médicos, dentales y gastos hospitalarios</option>
+                    <option value="D04">D04 - Donativos</option>
+                    <option value="CP01">CP01 - Pagos</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Forma de Pago</label>
+                <select name="forma_pago">
+                    <option value="01">Efectivo</option>
+                    <option value="02">Cheque nominativo</option>
+                    <option value="03">Transferencia electrónica</option>
+                    <option value="04">Tarjeta de crédito</option>
+                    <option value="28">Tarjeta de débito</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Método de Pago</label>
+                <select name="metodo_pago">
+                    <option value="PUE">PUE - Pago en una sola exhibición</option>
+                    <option value="PPD">PPD - Pago en parcialidades o diferido</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Fecha de Compra</label>
+                <input type="date" name="fecha_compra" required>
+            </div>
+            <div class="input-group">
+                <label>Correo electrónico</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label>Teléfono de contacto</label>
+                <input type="tel" name="telefono" required>
+            </div>
+            <button type="submit" class="btn-enviar">Solicitar Factura</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -6,13 +6,14 @@
     <title>Bienvenido - Okupo</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         :root {
             --color-crema: #fdfaf5;
             --color-texto: #5a3e2b;
-            --color-google: #ea4335;
-            --color-facebook: #1877f2;
+            --color-dorado: #d4af37;
+            --color-madera-oscura: #3d2b1f;
         }
 
         body {
@@ -30,26 +31,32 @@
             min-height: 100vh;
         }
 
-        .welcome-container {
+        .app-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             padding: 40px 30px;
             text-align: center;
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 2px solid rgba(139, 90, 43, 0.1);
         }
 
         .logo-main {
-            font-size: 60px;
+            font-size: 50px;
             font-weight: 900;
             letter-spacing: -2px;
             margin-bottom: 5px;
-            color: var(--color-texto);
+            color: var(--color-madera-oscura);
+            text-transform: uppercase;
         }
 
         .slogan {
-            font-size: 16px;
-            opacity: 0.6;
-            margin-bottom: 50px;
-            font-weight: 600;
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 40px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -57,144 +64,140 @@
         .social-buttons {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 25px;
         }
 
         .btn-social {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border-radius: 15px;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(139, 90, 43, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-            background: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .btn-social:active { transform: scale(0.98); }
-
-        .btn-google { color: var(--color-google); }
-        .btn-facebook { color: var(--color-facebook); }
-        .btn-email { 
-            background-image: url('/static/madera_media.jpg'); 
-            background-size: cover;
-            color: var(--color-texto);
-            border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 30px 0;
-            opacity: 0.4;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--color-texto);
-        }
-
-        .professional-link {
-            margin-top: 40px;
-            padding: 20px;
-            border-radius: 20px;
-            background: rgba(139, 90, 43, 0.05);
-            border: 1px dashed rgba(139, 90, 43, 0.3);
-        }
-
-        .professional-link p {
+            gap: 12px;
             font-size: 14px;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-
-        .professional-link a {
-            color: var(--color-texto);
             font-weight: 800;
-            text-decoration: underline;
-            font-size: 15px;
+            text-decoration: none;
+            background: white;
+            cursor: pointer;
+            color: var(--color-texto);
         }
 
-        /* Modal simple para Login de Correo (Simulado para diseño) */
+        .btn-google { color: #ea4335; }
+        .btn-facebook { color: #1877f2; }
+        .btn-email { 
+            background-image: url('/static/madera_oscura.jpg');
+            color: white;
+            border: none;
+            text-shadow: 0 1px 2px black;
+        }
+
         .login-form {
-            display: none; /* Se activaría con JS */
+            display: none;
             text-align: left;
             margin-top: 20px;
         }
         .login-form.active { display: block; }
         
         .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
-        .input-group input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
+        .input-group label { display: block; font-size: 12px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(139, 90, 43, 0.2); box-sizing: border-box; background: var(--color-crema); }
 
+        .professional-link {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(139, 90, 43, 0.1);
+        }
+        .professional-link a { color: var(--color-dorado); font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div class="welcome-container">
+    <div class="app-container">
         <div class="logo-main">okupo</div>
         <div class="slogan">Tu experto a un clic</div>
 
         {% if error %}
-            <div style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px;">
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 12px; font-weight: 700;">
                 {{ error }}
             </div>
         {% endif %}
 
         <div id="social-view">
             <div class="social-buttons">
-                <a href="{{ url_for('autenticacion.login_social', red_social='google') }}" class="btn-social btn-google">
+                <!-- Google Sign-In Button -->
+                <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID" data-callback="handleGoogleLogin" data-auto_prompt="false"></div>
+                <div class="g_id_signin btn-social btn-google" data-type="standard" data-shape="pill">
                     <i class="fab fa-google"></i> Entrar con Google
-                </a>
-                <a href="{{ url_for('autenticacion.login_social', red_social='facebook') }}" class="btn-social btn-facebook">
+                </div>
+
+                <button id="btn-facebook" class="btn-social btn-facebook">
                     <i class="fab fa-facebook-f"></i> Entrar con Facebook
-                </a>
-                <a href="javascript:void(0)" onclick="showEmailLogin()" class="btn-social btn-email">
-                    <i class="fas fa-envelope"></i> Entrar con Correo / Teléfono
-                </a>
+                </button>
+                <button onclick="showEmailLogin()" class="btn-social btn-email">
+                    <i class="fas fa-envelope"></i> Entrar con Correo
+                </button>
             </div>
         </div>
 
         <div id="email-view" class="login-form">
             <form action="/login" method="POST">
-                {% if proximo %}
-                    <input type="hidden" name="proximo" value="{{ proximo }}">
-                {% endif %}
+                {% if proximo %} <input type="hidden" name="proximo" value="{{ proximo }}"> {% endif %}
                 <div class="input-group">
                     <label>Correo o Teléfono</label>
-                    <input type="email" name="email" placeholder="ejemplo@correo.com" required>
+                    <input type="email" name="email" required>
                 </div>
                 <div class="input-group">
                     <label>Contraseña</label>
-                    <input type="password" name="contrasenna" placeholder="••••••••" required>
+                    <input type="password" name="contrasenna" required>
                 </div>
-                <button type="submit" class="btn-social btn-email" style="cursor: pointer;">Ingresar</button>
-                <a href="javascript:void(0)" onclick="hideEmailLogin()" style="display: block; margin-top: 15px; font-size: 13px; opacity: 0.6; color: var(--color-texto);">
-                    <i class="fas fa-arrow-left"></i> Volver a opciones sociales
+                <button type="submit" class="btn-social btn-email" style="width: 100%;">Ingresar</button>
+                <a href="javascript:void(0)" onclick="hideEmailLogin()" style="display: block; margin-top: 15px; font-size: 12px; color: var(--color-texto);">
+                    <i class="fas fa-arrow-left"></i> Volver
                 </a>
             </form>
         </div>
 
         <div class="professional-link">
-            <p>¿Eres un profesional del hogar?</p>
-            <a href="{{ url_for('autenticacion.registro', rol='colaborador') }}">Regístrate como Técnico Aquí</a>
+            <p style="font-size: 12px; opacity: 0.7;">¿Eres un experto del hogar?</p>
+            <a href="{{ url_for('autenticacion.registro', rol='colaborador') }}">Regístrate como Técnico</a>
         </div>
-        
-        <p style="margin-top: 30px; font-size: 14px; color: var(--color-texto); font-weight: 800; text-shadow: 0 0 10px white;">
-            ¿No tienes cuenta? <a href="{{ url_for('autenticacion.registro') }}" style="color: var(--color-texto); font-weight: 900; text-decoration: underline;">Regístrate como cliente</a>
-        </p>
     </div>
 
     <script>
+        // Inicialización del SDK de Facebook
+        window.fbAsyncInit = function() {
+            FB.init({ appId: 'YOUR_FACEBOOK_APP_ID', cookie: true, xfbml: true, version: 'v18.0' });
+        };
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/es_LA/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        document.getElementById('btn-facebook').addEventListener('click', function(e) {
+            e.preventDefault();
+            FB.login(function(response) {
+                if (response.authResponse) loginSocial('facebook', response.authResponse.accessToken);
+            }, {scope: 'public_profile,email'});
+        });
+
+        async function loginSocial(red_social, token) {
+            const res = await fetch(`/login/social/${red_social}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ token: token })
+            });
+            const data = await res.json();
+            if (data.status === 'success') window.location.href = data.redirect;
+            else alert('Error: ' + data.message);
+        }
+
+        function handleGoogleLogin(response) { loginSocial('google', response.credential); }
         function showEmailLogin() {
             document.getElementById('social-view').style.display = 'none';
             document.getElementById('email-view').classList.add('active');
