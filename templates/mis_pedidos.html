@@ -177,9 +177,6 @@
                 </div>
                 <div class="sol-footer">
                     <div style="display: flex; gap: 8px;">
-                        <form action="{{ url_for('pedidos.cancelar_pedido', solicitud_id=sol.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas cancelar este pedido?');">
-                            <button type="submit" style="background-image: url('/static/madera_oscura.jpg'); background-size: cover; color: #ffffff; text-shadow: 0 0 5px black; padding: 10px 15px; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 11px; text-transform: uppercase; border: 1px solid #3d2b1f; box-shadow: 0 4px 6px rgba(0,0,0,0.3); cursor: pointer;">Cancelar</button>
-                        </form>
                         <a href="{{ url_for('pedidos.iniciar_pago', solicitud_id=sol.id) }}" style="background-image: url('/static/madera_oscura.jpg'); background-size: cover; color: #ffffff; text-shadow: 0 0 5px black; padding: 10px 15px; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 11px; text-transform: uppercase; border: 1px solid #3d2b1f; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">Pagar Ahora</a>
                     </div>
                     <a href="{{ url_for('pedidos.chat', solicitud_id=sol.id) }}" class="btn-chat">

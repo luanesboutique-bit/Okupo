@@ -119,26 +119,30 @@
         <p class="sub-guia">Tú decides cuánto cobrar por tu trabajo.</p>
 
         <form action="{{ url_for('colaboradores.registro_tecnico_horarios') }}" method="POST">
+            <!-- Ejemplo visual: esto debería iterar sobre las categorías seleccionadas -->
             <div class="servicio-config">
-                <div class="servicio-header">
-                    <i class="fas fa-tools" style="color: var(--color-dorado);"></i>
-                    <h3>Configuración de Precios</h3>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" name="servicios" value="cerrajeria_basica" style="width: 20px; height: 20px;">
+                    <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--color-texto);">Cerrajería Básica</h3>
+                </label>
+                
+                <div class="tarifa-row" style="margin-top: 15px;">
+                    <div class="tarifa-label">Normal</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_normal_cerrajeria" placeholder="0.00"></div>
                 </div>
                 <div class="tarifa-row">
-                    <div class="tarifa-label">Día Normal</div>
-                    <div class="input-precio"><span>$</span><input type="number" name="precio_normal" required></div>
+                    <div class="tarifa-label">Nocturna</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_noche_cerrajeria" placeholder="0.00"></div>
                 </div>
                 <div class="tarifa-row">
-                    <div class="tarifa-label">Horario Noche</div>
-                    <div class="input-precio"><span>$</span><input type="number" name="precio_noche" required></div>
-                </div>
-                <div class="tarifa-row">
-                    <div class="tarifa-label">Urgente/Festivo</div>
-                    <div class="input-precio"><span>$</span><input type="number" name="precio_urgente" required></div>
+                    <div class="tarifa-label">Urgente</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_urgente_cerrajeria" placeholder="0.00"></div>
                 </div>
             </div>
 
-            <button type="submit" class="btn-continuar">Configurar Horarios</button>
+            <!-- Más servicios aquí... -->
+
+            <button type="submit" class="btn-continuar" style="background-image: url('/static/madera_oscura.jpg'); color: white;">Configurar Horarios</button>
             <a href="javascript:history.back()" class="btn-retroceder">
                 <i class="fas fa-arrow-left"></i> Volver al paso anterior
             </a>
