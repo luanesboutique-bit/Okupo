@@ -6,6 +6,8 @@
     <title>Registro Técnico - Datos Personales - Okupo</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
         :root {
@@ -152,6 +154,16 @@
             color: var(--color-texto);
         }
 
+        #map-container {
+            height: 150px;
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid var(--color-dorado);
+            display: none;
+            overflow: hidden;
+        }
+
     </style>
 </head>
 <body>
@@ -168,7 +180,7 @@
         </div>
         {% endif %}
 
-        <form action="{{ url_for('colaboradores.registro_tecnico_datos') }}" method="POST">
+        <form action="{{ url_for('colaboradores.registro_tecnico_datos') }}" method="POST" id="registro-form">
             <!-- Nombre y Correo omitidos por ser redundantes según el plan de refacción -->
             
             <div class="input-group">
@@ -180,12 +192,19 @@
             </div>
 
             <div class="input-group">
-                <label>Zona de Trabajo</label>
+                <label>Zona de Trabajo (Ubicación Geocodificada)</label>
                 <div class="input-wrapper">
                     <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" name="zona_trabajo" placeholder="Ciudad o Municipio" required>
+                    <input type="text" id="zona_trabajo" name="zona_trabajo" placeholder="Busca tu ciudad o municipio..." required>
+                    <button type="button" onclick="buscarUbicacion()" style="position: absolute; right: 5px; background: var(--color-dorado); border: none; color: white; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: bold;">
+                        <i class="fas fa-search" style="position: static; color: white; font-size: 14px;"></i>
+                    </button>
                 </div>
             </div>
+
+            <div id="map-container"></div>
+            <input type="hidden" name="latitud" id="latitud">
+            <input type="hidden" name="longitud" id="longitud">
 
             <div class="input-group">
                 <label>Especialidad Resumen</label>
@@ -218,6 +237,61 @@
             Tus datos están protegidos por nuestras políticas de seguridad. Al continuar, aceptas los términos de servicio.
         </div>
     </div>
+
+    <script>
+        let map;
+        let marker;
+
+        function initMap(lat, lon) {
+            const container = document.getElementById('map-container');
+            container.style.display = 'block';
+
+            if (!map) {
+                map = L.map('map-container').setView([lat, lon], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+                marker = L.marker([lat, lon]).addTo(map);
+            } else {
+                map.setView([lat, lon], 13);
+                marker.setLatLng([lat, lon]);
+            }
+        }
+
+        async function buscarUbicacion() {
+            const query = document.getElementById('zona_trabajo').value;
+            if (!query) return;
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+                    
+                    document.getElementById('latitud').value = lat;
+                    document.getElementById('longitud').value = lon;
+                    document.getElementById('zona_trabajo').value = data[0].display_name;
+                    
+                    initMap(lat, lon);
+                } else {
+                    alert("No se encontró la ubicación. Intenta ser más específico.");
+                }
+            } catch (error) {
+                console.error("Error en geocoding:", error);
+                alert("Error al buscar la ubicación.");
+            }
+        }
+
+        // Permitir buscar al presionar Enter en el campo de zona_trabajo
+        document.getElementById('zona_trabajo').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                buscarUbicacion();
+            }
+        });
+    </script>
 
 </body>
 </html>

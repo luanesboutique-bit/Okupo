@@ -116,35 +116,42 @@
         <div class="step-indicator">Paso 4 de 5</div>
         
         <h2>Define tus Ganancias</h2>
-        <p class="sub-guia">Tú decides cuánto cobrar por tu trabajo.</p>
+        <p class="sub-guia">
+            Configurando: <strong>{{ categoria.nombre }}</strong><br>
+            <span style="font-size: 11px; opacity: 0.8;">(Categoría {{ cat_index + 1 }} de {{ total_cats }})</span>
+        </p>
 
-        <form action="{{ url_for('colaboradores.registro_tecnico_horarios') }}" method="POST">
-            <!-- Ejemplo visual: esto debería iterar sobre las categorías seleccionadas -->
+        <form action="{{ url_for('colaboradores.registro_tecnico_precios', cat_index=cat_index) }}" method="POST">
+            {% for sub in subcategorias %}
             <div class="servicio-config">
                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" name="servicios" value="cerrajeria_basica" style="width: 20px; height: 20px;">
-                    <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--color-texto);">Cerrajería Básica</h3>
+                    <input type="checkbox" name="subcategorias" value="{{ sub.id }}" style="width: 20px; height: 20px;" checked>
+                    <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--color-texto);">{{ sub.nombre }}</h3>
                 </label>
+                <p style="font-size: 11px; margin: 5px 0 15px 30px; opacity: 0.7;">{{ sub.descripcion }}</p>
                 
-                <div class="tarifa-row" style="margin-top: 15px;">
-                    <div class="tarifa-label">Normal</div>
-                    <div class="input-precio"><span>$</span><input type="number" name="precio_normal_cerrajeria" placeholder="0.00"></div>
+                <div class="tarifa-row" style="margin-top: 10px;">
+                    <div class="tarifa-label">Normal (Base)</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_normal_{{ sub.id }}" placeholder="0.00" value="{{ sub.precio_base if sub.precio_base > 0 else '' }}"></div>
                 </div>
                 <div class="tarifa-row">
-                    <div class="tarifa-label">Nocturna</div>
-                    <div class="input-precio"><span>$</span><input type="number" name="precio_noche_cerrajeria" placeholder="0.00"></div>
-                </div>
-                <div class="tarifa-row">
-                    <div class="tarifa-label">Urgente</div>
-                    <div class="input-precio"><span>$</span><input type="number" name="precio_urgente_cerrajeria" placeholder="0.00"></div>
+                    <div class="tarifa-label">Urgente (+Extra)</div>
+                    <div class="input-precio"><span>$</span><input type="number" name="precio_urgente_{{ sub.id }}" placeholder="0.00"></div>
                 </div>
             </div>
+            {% else %}
+            <p style="text-align: center; font-style: italic;">No hay subcategorías disponibles para esta categoría.</p>
+            {% endfor %}
 
-            <!-- Más servicios aquí... -->
-
-            <button type="submit" class="btn-continuar" style="background-image: url('/static/madera_oscura.jpg'); color: white;">Configurar Horarios</button>
+            <button type="submit" class="btn-continuar" style="background-image: url('/static/madera_oscura.jpg'); color: white;">
+                {% if cat_index + 1 < total_cats %}
+                    Siguiente Categoría
+                {% else %}
+                    Configurar Horarios
+                {% endif %}
+            </button>
             <a href="javascript:history.back()" class="btn-retroceder">
-                <i class="fas fa-arrow-left"></i> Volver al paso anterior
+                <i class="fas fa-arrow-left"></i> Volver
             </a>
         </form>
     </div>
