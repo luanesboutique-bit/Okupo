@@ -30,6 +30,8 @@ def registro_tecnico_datos():
     if request.method == 'POST':
         session['registro_telefono_verificacion'] = request.form.get('telefono_verificacion')
         session['registro_zona_trabajo'] = request.form.get('zona_trabajo')
+        session['registro_latitud'] = request.form.get('latitud')
+        session['registro_longitud'] = request.form.get('longitud')
         session['registro_especialidad_resumen'] = request.form.get('especialidad_resumen')
         session['registro_medio_transporte'] = request.form.get('medio_transporte')
         session['registro_sitio_web'] = request.form.get('sitio_web')
@@ -81,24 +83,33 @@ def registro_tecnico_documentos():
 
             # Mapeo de campos del form a campos esperados por la API de Finite
             mapeo_campos = {
-                'identificacion_frontal': 'ine_frontal', 
-                'identificacion_trasera': 'ine_trasera', 
+                'ine_frontal': 'ine_frontal', 
+                'carta_policia': 'ine_trasera', # Reutilizamos ine_trasera para carta_policia por ahora en Finite
                 'comprobante_domicilio': 'comprobante_domicilio', 
-                'foto_perfil_identificacion': 'foto_selfie_ine'
             }
 
 
             for campo_form, campo_api in mapeo_campos.items():
                 archivo = request.files.get(campo_form)
                 if archivo and archivo.filename != '':
-                    # Ya que re-leemos archivos, nos aseguramos que el puntero esté al inicio si es necesario
-                    # Pero request.files son diferentes objetos
                     contenido = archivo.read()
                     base64_data = base64.b64encode(contenido).decode('utf-8')
                     mime = archivo.content_type or 'image/jpeg'
                     datos_documentacion[campo_api] = f"data:{mime};base64,{base64_data}"
+                else:
+                    datos_documentacion[campo_api] = "" # Enviar vacío para evitar error de validación 400
 
-            api_post(f"/colaboradores/{colaborador_id}/documentacion", datos_documentacion, token=token)
+            # Añadir foto de perfil si no se envió en el primer post (o para actualizar)
+            if foto_perfil_b64:
+                datos_documentacion['foto_selfie_ine'] = foto_perfil_b64 # Reutilizamos este campo para foto_perfil en Finite por ahora
+            else:
+                datos_documentacion['foto_selfie_ine'] = ""
+
+            respuesta_doc = api_post(f"/colaboradores/{colaborador_id}/documentacion", datos_documentacion, token=token)
+            
+            if respuesta_doc is None or respuesta_doc == "UNAUTHORIZED":
+                return render_template('registro_tecnico_documentos.html', error="Error al subir la documentación. Verifica que los archivos no sean demasiado pesados.")
+
             return redirect(url_for('colaboradores.registro_tecnico_categorias'))
         else:
             error_msg = "Error de conexión con el servidor de Finite."
@@ -121,11 +132,37 @@ def registro_tecnico_categorias():
     return render_template('registro_tecnico_categorias.html', categorias=categorias or [])
 
 @blueprint.route('/registro/tecnico/precios', methods=['GET', 'POST'])
+@blueprint.route('/registro/tecnico/precios/<int:cat_index>', methods=['GET', 'POST'])
 @login_requerido
-def registro_tecnico_precios():
-    if request.method == 'POST':
+def registro_tecnico_precios(cat_index=0):
+    categorias_ids = session.get('categorias_seleccionadas', [])
+    if not categorias_ids:
+        return redirect(url_for('colaboradores.registro_tecnico_categorias'))
+    
+    if cat_index >= len(categorias_ids):
         return redirect(url_for('colaboradores.registro_tecnico_horarios'))
-    return render_template('registro_tecnico_precios.html')
+    
+    cat_id = categorias_ids[cat_index]
+    token = session.get('token')
+
+    if request.method == 'POST':
+        # Aquí se guardarían los precios en la sesión o se enviarían a la API
+        # Por ahora, avanzamos a la siguiente categoría o al siguiente paso
+        if cat_index + 1 < len(categorias_ids):
+            return redirect(url_for('colaboradores.registro_tecnico_precios', cat_index=cat_index + 1))
+        return redirect(url_for('colaboradores.registro_tecnico_horarios'))
+    
+    # Obtener info de la categoría y sus subcategorías
+    categorias_todas = api_get("/categorias", token=token)
+    categoria_actual = next((c for c in categorias_todas if str(c['id']) == str(cat_id)), {"nombre": "Categoría"})
+    
+    subcategorias = api_get(f"/categorias/{cat_id}/subcategorias", token=token)
+    
+    return render_template('registro_tecnico_precios.html', 
+                           categoria=categoria_actual, 
+                           subcategorias=subcategorias or [],
+                           cat_index=cat_index,
+                           total_cats=len(categorias_ids))
 
 @blueprint.route('/registro/tecnico/horarios', methods=['GET', 'POST'])
 @login_requerido

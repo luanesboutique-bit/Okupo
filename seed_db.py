@@ -29,7 +29,7 @@ def seed():
 
     # 1. Usuarios base con ROLES
     usuarios = [
-        {"nombre": "D'Mayoral Admin", "correo": "admin@okupo.com", "contrasenna": "admin123", "rol": "admin"},
+        {"nombre": "D'Mayoral Admin", "correo": "admin@okupo.com", "contrasenna": "admin", "rol": "admin"},
         {"nombre": "Ivan Cliente", "correo": "ivan@okupo.com", "contrasenna": "123456", "rol": "usuario"},
         {"nombre": "Juan Experto", "correo": "juan@experto.com", "contrasenna": "123456", "rol": "colaborador"},
     ]
@@ -103,7 +103,7 @@ def seed():
         print("📄 Documentación subida para Juan (Estado: Pendiente)")
 
     print("\n✨ Base de datos lista para pruebas.")
-    print("Admin: admin@okupo.com / admin123")
+    print("Admin: admin@okupo.com / admin")
     print("Cliente: ivan@okupo.com / 123456")
 
 if __name__ == "__main__":

@@ -150,48 +150,43 @@
 
         <form action="{{ url_for('colaboradores.registro_tecnico_documentos') }}" method="POST" enctype="multipart/form-data">
             <div class="upload-grid">
+                <!-- Foto de Perfil -->
                 <div class="upload-item" style="grid-column: span 2; margin-bottom: 10px;">
-                    <label>Foto de Perfil (Para Clientes)</label>
+                    <label>Foto de Perfil</label>
                     <div class="drop-zone" id="zone_foto_perfil" onclick="document.getElementById('foto_perfil').click()" style="aspect-ratio: 3.5;">
                         <i class="fas fa-user-circle"></i>
-                        <span>Subir Foto de Perfil Clara</span>
+                        <span>Subir Foto de Perfil</span>
                         <input type="file" id="foto_perfil" name="foto_perfil" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_foto_perfil')" required>
                     </div>
                 </div>
 
+                <!-- INE Frontal -->
                 <div class="upload-item">
-                    <label>Identificación (Frente)</label>
-                    <div class="drop-zone" id="zone_identificacion_frontal" onclick="document.getElementById('identificacion_frontal').click()">
+                    <label>INE Frontal</label>
+                    <div class="drop-zone" id="zone_ine_frontal" onclick="document.getElementById('ine_frontal').click()">
                         <i class="fas fa-id-card"></i>
-                        <span>Subir Foto</span>
-                        <input type="file" id="identificacion_frontal" name="identificacion_frontal" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_identificacion_frontal')" required>
+                        <span>Subir INE</span>
+                        <input type="file" id="ine_frontal" name="ine_frontal" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_ine_frontal')" required>
                     </div>
                 </div>
 
+                <!-- Carta Policía -->
                 <div class="upload-item">
-                    <label>Identificación (Atrás)</label>
-                    <div class="drop-zone" id="zone_identificacion_trasera" onclick="document.getElementById('identificacion_trasera').click()">
-                        <i class="fas fa-id-card"></i>
-                        <span>Subir Foto</span>
-                        <input type="file" id="identificacion_trasera" name="identificacion_trasera" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_identificacion_trasera')" required>
+                    <label>Carta Policía</label>
+                    <div class="drop-zone" id="zone_carta_policia" onclick="document.getElementById('carta_policia').click()">
+                        <i class="fas fa-file-shield"></i>
+                        <span>Subir Carta</span>
+                        <input type="file" id="carta_policia" name="carta_policia" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_carta_policia')" required>
                     </div>
                 </div>
 
-                <div class="upload-item">
-                    <label>Comprobante</label>
-                    <div class="drop-zone" id="zone_comprobante_domicilio" onclick="document.getElementById('comprobante_domicilio').click()">
+                <!-- Comprobante Domicilio -->
+                <div class="upload-item" style="grid-column: span 2;">
+                    <label>Comprobante de Domicilio</label>
+                    <div class="drop-zone" id="zone_comprobante_domicilio" onclick="document.getElementById('comprobante_domicilio').click()" style="aspect-ratio: 3.5;">
                         <i class="fas fa-home"></i>
-                        <span>Subir Foto</span>
+                        <span>Subir Comprobante</span>
                         <input type="file" id="comprobante_domicilio" name="comprobante_domicilio" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_comprobante_domicilio')" required>
-                    </div>
-                </div>
-
-                <div class="upload-item">
-                    <label>Selfie con ID</label>
-                    <div class="drop-zone" id="zone_foto_perfil_identificacion" onclick="document.getElementById('foto_perfil_identificacion').click()">
-                        <i class="fas fa-camera"></i>
-                        <span>Tomar Foto</span>
-                        <input type="file" id="foto_perfil_identificacion" name="foto_perfil_identificacion" style="display:none" accept="image/*" onchange="previewImage(this, 'zone_foto_perfil_identificacion')" required>
                     </div>
                 </div>
             </div>

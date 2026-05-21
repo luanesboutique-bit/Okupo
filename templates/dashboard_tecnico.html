@@ -244,54 +244,32 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <span>Ganado Hoy</span>
-                <h3>$2,450</h3>
+                <h3 id="ganadoHoy">$0.00</h3>
             </div>
             <div class="stat-card">
                 <span>Trabajos</span>
-                <h3>12</h3>
+                <h3 id="totalTrabajos">0</h3>
             </div>
         </div>
 
-        <!-- Trabajos en Curso (AHORA PRIMERO) -->
+        <!-- Trabajos en Curso -->
         <div class="section-header">
             <h4>En Curso</h4>
         </div>
 
-        <div class="job-card" style="border-left: 6px solid var(--color-verde);">
-            <div class="job-body">
-                <h5>Reparación de Fuga en Cocina</h5>
-                <div class="job-distancia">Cliente: Maria García</div>
-            </div>
-            <div class="job-footer">
-                <a href="{{ url_for('colaboradores.evidencia_fotografica', solicitud_id=1) }}" style="color: var(--color-dorado); font-weight: 800; font-size: 13px; text-decoration: none;">
-                    <i class="fas fa-camera"></i> Subir Evidencia
-                </a>
-                <a href="{{ url_for('pedidos.chat', solicitud_id=1) }}" style="color: var(--color-texto); font-weight: 800; font-size: 13px; text-decoration: none;">
-                    <i class="fas fa-comments"></i> Chat
-                </a>
-            </div>
+        <div id="enCursoContainer">
+            <p style="text-align: center; font-size: 12px; opacity: 0.6;">Cargando trabajos...</p>
         </div>
 
-        <!-- Nuevas Solicitudes (AHORA DESPUÉS) -->
+        <!-- Nuevas Solicitudes -->
         <div class="section-header" style="margin-top: 30px;">
             <h4>Nuevas Solicitudes</h4>
             <span style="font-size: 12px; font-weight: 800; color: var(--color-dorado);">Ver todas</span>
         </div>
 
-        {% for i in range(2) %}
-        <div class="job-card">
-            <div class="job-urgencia">Urgente</div>
-            <div class="job-body">
-                <h5>Instalación de Chapa Alta Seguridad</h5>
-                <div class="job-distancia"><i class="fas fa-map-marker-alt"></i> a 2.4 km de tu zona</div>
-                <p class="job-desc">Se requiere cambio de cilindro y ajuste de marco en puerta principal de madera...</p>
-            </div>
-            <div class="job-footer">
-                <div class="job-precio">$1,450</div>
-                <a href="{{ url_for('colaboradores.ver_trabajo', solicitud_id=1) }}" class="btn-aceptar">Aceptar</a>
-            </div>
+        <div id="solicitudesContainer">
+            <!-- Se llenará dinámicamente -->
         </div>
-        {% endfor %}
 
     </div>
 
@@ -299,6 +277,78 @@
         function toggleMenu() {
             document.getElementById("settingsMenu").classList.toggle("show");
         }
+
+        async function cargarDatosDashboard() {
+            try {
+                const response = await fetch('/dashboard/datos');
+                const solicitudes = await response.json();
+                
+                const enCursoContainer = document.getElementById('enCursoContainer');
+                const solicitudesContainer = document.getElementById('solicitudesContainer');
+                const ganadoHoyElement = document.getElementById('ganadoHoy');
+                const totalTrabajosElement = document.getElementById('totalTrabajos');
+
+                const enCurso = solicitudes.filter(s => s.estado === 'en_progreso' || s.estado === 'aceptado');
+                const pendientes = solicitudes.filter(s => s.estado === 'pendiente');
+
+                // Estadísticas simples
+                totalTrabajosElement.innerText = solicitudes.length;
+                let totalDinero = 0;
+                solicitudes.forEach(s => {
+                    if (s.estado === 'finalizado') totalDinero += parseFloat(s.precio_final || 0);
+                });
+                ganadoHoyElement.innerText = `$${totalDinero.toFixed(2)}`;
+
+                // Renderizar En Curso
+                if (enCurso.length === 0) {
+                    enCursoContainer.innerHTML = '<p style="text-align: center; font-size: 12px; opacity: 0.6;">No tienes trabajos activos.</p>';
+                } else {
+                    enCursoContainer.innerHTML = enCurso.map(s => `
+                        <div class="job-card" style="border-left: 6px solid var(--color-verde);">
+                            <div class="job-body">
+                                <h5>${s.titulo || 'Servicio Okupo'}</h5>
+                                <div class="job-distancia">Estado: ${s.estado.replace('_', ' ')}</div>
+                            </div>
+                            <div class="job-footer">
+                                <a href="/colaboradores/evidencia/${s.id}" style="color: var(--color-dorado); font-weight: 800; font-size: 13px; text-decoration: none;">
+                                    <i class="fas fa-camera"></i> Subir Evidencia
+                                </a>
+                                <a href="/chat/${s.id}" style="color: var(--color-texto); font-weight: 800; font-size: 13px; text-decoration: none;">
+                                    <i class="fas fa-comments"></i> Chat
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Renderizar Pendientes
+                if (pendientes.length === 0) {
+                    solicitudesContainer.innerHTML = '<p style="text-align: center; font-size: 12px; opacity: 0.6;">No hay nuevas solicitudes.</p>';
+                } else {
+                    solicitudesContainer.innerHTML = pendientes.map(s => `
+                        <div class="job-card">
+                            <div class="job-urgencia">${s.urgencia || 'Normal'}</div>
+                            <div class="job-body">
+                                <h5>${s.titulo || 'Instalación/Reparación'}</h5>
+                                <div class="job-distancia"><i class="fas fa-map-marker-alt"></i> ${s.distancia || 'Cerca de ti'}</div>
+                                <p class="job-desc">${s.descripcion || 'Sin descripción disponible.'}</p>
+                            </div>
+                            <div class="job-footer">
+                                <div class="job-precio">$${s.precio_propuesto || '0.00'}</div>
+                                <a href="/colaboradores/ver_trabajo/${s.id}" class="btn-aceptar">Aceptar</a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (error) {
+                console.error("Error cargando datos:", error);
+            }
+        }
+
+        window.onload = () => {
+            cargarDatosDashboard();
+        };
 
         // Cerrar el menú si se hace clic fuera de él
         window.onclick = function(event) {
