@@ -4,396 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitar - Okupo</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --color-crema: #fdfaf5;
-            --color-texto: #5a3e2b;
-            --color-dorado: #d4af37;
-        }
+        :root { --wood-dark: #A67C52; --wood-light: #D4B996; --gold: #E8B760; --engraved: #2a1b12; }
+        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; background-attachment: fixed; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--engraved); margin: 0; padding: 0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: #F2EDE0; position: relative; padding-bottom: 30px; }
+        
+        .header { display: flex; align-items: center; padding: 12px; background: #fff; }
+        .header a { color: var(--engraved); font-size: 20px; margin-right: 20px; text-decoration: none; }
+        .header h1 { font-size: 16px; margin: 0; font-weight: 700; }
 
-        body {
-            background-image: url('/static/fondo_pared.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--color-texto);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 450px;
-            min-height: 100vh;
-            background: var(--color-crema);
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            padding-bottom: 30px;
-        }
-
-        .header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid rgba(139, 90, 43, 0.1);
-        }
-        .header a { color: var(--color-texto); font-size: 22px; margin-right: 20px; }
-        .header h1 { font-size: 20px; margin: 0; font-weight: 700; }
-
-        .section-header {
-            background: rgba(139, 90, 43, 0.1);
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            color: var(--color-texto);
-            text-transform: uppercase;
-            font-size: 13px;
-        }
-
-        .form-container {
-            padding: 20px;
-        }
-
-        .category-fields {
-            display: none; /* Se muestra por JS */
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(139, 90, 43, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(139, 90, 43, 0.1);
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--color-texto);
-        }
-
-        .input-group textarea, .input-group select, .input-group input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid #ddd;
-            background: white;
-            box-sizing: border-box;
-            font-size: 15px;
-            font-family: inherit;
-            outline: none;
-        }
-
-        .input-group textarea:focus, .input-group select:focus, .input-group input:focus {
-            border-color: var(--color-dorado);
-        }
-
-        .photo-upload {
-            border: 2px dashed #ddd;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.2s;
-            background: white;
-        }
-        .photo-upload:hover { border-color: var(--color-dorado); }
-        .photo-upload i { font-size: 30px; color: var(--color-dorado); margin-bottom: 8px; opacity: 0.5; }
-        .photo-upload p { font-size: 11px; margin: 0; opacity: 0.6; font-weight: 700; }
-
-        .btn-enviar {
-            width: 100%;
-            padding: 20px;
-            background-image: url('/static/madera_media.jpg');
-            background-size: cover;
-            border: none;
-            border-radius: 20px;
-            color: var(--color-texto);
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .section-header { background: url('/static/madera_media.jpg'); color: #fff; padding: 12px; border-radius: 12px; margin: 15px 10px; font-weight: 800; text-transform: uppercase; font-size: 13px; text-shadow: 0 1px 2px black; }
+        .form-container { padding: 10px; }
+        .input-group { margin-bottom: 20px; padding: 0 10px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--engraved); }
+        .input-group textarea, .input-group input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--wood-dark); box-sizing: border-box; font-size: 14px; }
+        
+        #autocomplete-results { position: absolute; background: white; width: calc(100% - 40px); z-index: 1000; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-top: 5px; max-height: 200px; overflow-y: auto; border: 1px solid var(--wood-dark); }
+        .result-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 12px; }
+        .result-item:hover { background: #f0f0f0; }
+        
+        .photo-upload { border: 2px dashed var(--wood-dark); border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; background: white; }
+        .btn-enviar { width: 90%; margin: 20px auto; display: block; padding: 20px; background: url('/static/madera_oscura.jpg'); color: #ffff00; border: none; border-radius: 20px; font-size: 16px; font-weight: 900; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
     </style>
-    <!-- Google Maps API para autocompletado -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_AQUI&libraries=places&components=country:mx&region=mx"></script>
     <script>
-        function initAutocomplete() {
-            const input = document.getElementById('address-input');
-            const options = {
-                componentRestrictions: { country: "mx" },
-                fields: ["address_components", "formatted_address", "geometry"],
-                types: ["address"]
-            };
-            const autocomplete = new google.maps.places.Autocomplete(input, options);
-            
-            // Restringir a Guadalajara y zona metropolitana (opcional, basado en bounds)
-            const gdlBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(20.5, -103.6),
-                new google.maps.LatLng(20.9, -103.1)
-            );
-            autocomplete.setBounds(gdlBounds);
+        let debounceTimer;
+        function buscarDireccion(query) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                if (query.length < 5) return; // Esperar a una cadena más larga para mayor precisión
+                const resultsDiv = document.getElementById('autocomplete-results');
+                resultsDiv.innerHTML = 'Buscando...';
+                const queryFinal = query.toLowerCase().includes('jalisco') || query.toLowerCase().includes('guadalajara') ? query : query + ', Jalisco';
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(queryFinal)}&addressdetails=1&limit=5&countrycodes=mx&dedupe=1`;
+                console.log("Nominatim Request URL:", url);
+                try {
+                    let response = await fetch(url);
+                    let data = await response.json();
+                    
+                    // Fallback: si no hay resultados, intentar una búsqueda más general si el usuario puso un número con letra
+                    if (data.length === 0 && /\d+[a-z]$/i.test(query)) {
+                        const queryGeneral = query.replace(/([a-z])$/i, '');
+                        const urlGeneral = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(queryGeneral + ', Jalisco')}&addressdetails=1&limit=5&countrycodes=mx&dedupe=1`;
+                        console.log("Nominatim Fallback Request URL:", urlGeneral);
+                        response = await fetch(urlGeneral);
+                        data = await response.json();
+                    }
 
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) return;
-                
-                // Extraer componentes
-                const components = place.address_components;
-                let calle = '', numero = '', colonia = '', cp = '', municipio = '';
-
-                components.forEach(comp => {
-                    if (comp.types.includes('route')) calle = comp.long_name;
-                    if (comp.types.includes('street_number')) numero = comp.long_name;
-                    if (comp.types.includes('sublocality_level_1')) colonia = comp.long_name;
-                    if (comp.types.includes('postal_code')) cp = comp.long_name;
-                    if (comp.types.includes('locality') || comp.types.includes('sublocality')) municipio = comp.long_name;
-                });
-
-                // Guardar para el backend (formateado bonito)
-                input.value = `${calle} ${numero}, ${colonia}, CP ${cp}, ${municipio}`;
-            });
+                    console.log("Nominatim Response:", data);
+                    resultsDiv.innerHTML = '';
+                    if (data.length === 0) { resultsDiv.innerHTML = 'Sin resultados.'; return; }
+                    data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        div.innerText = item.display_name;
+                        div.onclick = () => {
+                            document.getElementById('address-input').value = item.display_name;
+                            resultsDiv.innerHTML = '';
+                            document.getElementById('lat-input').value = item.lat;
+                            document.getElementById('lon-input').value = item.lon;
+                        };
+                        resultsDiv.appendChild(div);
+                    });
+                } catch (e) { console.error("Error fetching Nominatim:", e); resultsDiv.innerHTML = 'Error al buscar.'; }
+            }, 800); // Mayor debounce para evitar peticiones innecesarias
         }
-        google.maps.event.addDomListener(window, 'load', initAutocomplete);
     </script>
 </head>
 <body>
-
     <div class="app-container">
         <div class="header">
             <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
-            <h1>
-                {% if colaborador_id and colaborador_id|string != "" and colaborador_id|string != "None" %}
-                    Detalles de Agenda
-                {% else %}
-                    Detalles del Pedido
-                {% endif %}
-            </h1>
+            <h1>{{ 'Agendar Servicio' if colaborador_id and colaborador_id != 'None' else 'Asignación Directa' }}</h1>
         </div>
-
         <div class="form-container">
             <form method="POST">
-                <div class="section-header">
-                    <i class="fas fa-diagnoses"></i> Diagnóstico del Servicio
+                {% if colaborador_id and colaborador_id != 'None' %}
+                <div class="section-header"><i class="fas fa-calendar-alt"></i> Detalles de tu Agenda</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="input-group">
+                        <label>Fecha</label>
+                        <input type="date" name="fecha_servicio" id="fecha-input" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Hora</label>
+                        <input type="time" name="hora_servicio" id="hora-input" required>
+                    </div>
                 </div>
-                <p style="font-size: 11px; opacity: 0.7; margin-bottom: 20px;">Sube una foto del problema y describe qué necesitas para enviarlo directamente al técnico.</p>
-
-                <!-- Evidencia obligatoria en primera vista -->
+                {% endif %}
+                
+                <div class="section-header"><i class="fas fa-diagnoses"></i> Diagnóstico</div>
                 <div class="input-group">
                     <label>Evidencia Fotográfica (Obligatoria)</label>
                     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
                     <input type="hidden" name="fotos_evidencia_inicial" id="foto-evidencia-url">
-                    <div class="photo-upload" id="photo-dropzone">
-                        <i class="fas fa-camera" id="photo-icon"></i>
-                        <p id="photo-text">Toma una foto del área de trabajo. Esto reemplaza las preguntas detalladas.</p>
-                        <div id="photo-preview" style="display: none; margin-top: 10px;">
-                            <img id="preview-img" src="" style="width: 100%; border-radius: 10px; border: 2px solid var(--color-dorado);">
-                        </div>
-                    </div>
+                    <div class="photo-upload" id="photo-dropzone"><i class="fas fa-camera"></i><p>Toma una foto del problema.</p></div>
                 </div>
-
                 <div class="input-group">
-                    <label>Describe brevemente el problema</label>
-                    <textarea name="descripcion" rows="3" placeholder="Ej: Mi chapa no abre y está trabada..." required></textarea>
+                    <label>Describe el problema</label>
+                    <textarea name="descripcion" rows="3" required placeholder="Ej: Fuga de agua..."></textarea>
                 </div>
 
-                <div class="section-header">
-                    <i class="fas fa-map-marker-alt"></i> 2. Ubicación y Pago
-                </div>
-
-                <!-- Campos de Agenda (solo visibles si se viene de Opción 2/Marketplace) -->
-                <div id="scheduling-fields" style="display: none;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                        <div class="input-group">
-                            <label>Fecha</label>
-                            <input type="date" name="fecha_servicio" id="fecha-input">
-                        </div>
-                        <div class="input-group">
-                            <label>Hora</label>
-                            <input type="time" name="hora_servicio" id="hora-input">
-                        </div>
-                    </div>
-                </div>
-
+                <div class="section-header"><i class="fas fa-map-marker-alt"></i> Ubicación y Pago</div>
                 <div class="input-group">
                     <label>Dirección completa</label>
-                    <input type="text" name="direccion_completa" id="address-input" placeholder="Escribe tu dirección (Calle, #, Colonia, CP...)" required>
+                    <input type="text" name="direccion_completa" id="address-input" placeholder="Escribe tu dirección aquí..." oninput="buscarDireccion(this.value)" autocomplete="off">
+                    <div id="autocomplete-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Referencias / Entre calles</label>
                     <textarea name="referencias" rows="2" placeholder="Ej: Portón café, frente al parque..."></textarea>
                 </div>
-
-                <!-- CONEKTA ELEMENTS: Integrado en Ubicación -->
-                <div style="background: white; padding: 20px; border-radius: 20px; border: 2px solid var(--color-dorado); margin-bottom: 25px; text-align: center;">
-                    <span style="font-size: 12px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">Total a Reservar</span>
-                    <div style="font-size: 32px; font-weight: 900; color: var(--color-verde);" id="precio-final-reserva">$ {{ subcategoria.get('precio_normal', 0) }}</div>
-
-                    <div id="conekta-element" style="margin-top: 15px; border: 1px solid #ddd; padding: 10px; border-radius: 10px;"></div>
-                    <div id="error-message" style="color: red; margin: 10px 0; font-size: 12px;"></div>
+                
+                <div style="background: white; padding: 20px; border-radius: 20px; border: 2px solid var(--gold); margin: 20px 10px; text-align: center;">
+                    <div style="font-size: 24px; font-weight: 900; color: var(--wood-dark);" id="precio-final-reserva">$ {{ subcategoria.get('precio_normal', 0) }}</div>
+                    <div id="conekta-element" style="margin-top: 15px;"></div>
                 </div>
 
-                <!-- Campos ocultos actualizados con localStorage -->                <input type="hidden" name="subcategoria_id" value="{{ subcategoria_id }}">
-                <input type="hidden" name="colaborador_id" value="{{ colaborador_id }}">
+                <input type="hidden" name="subcategoria_id" value="{{ subcategoria_id }}">
                 <input type="hidden" name="latitud" id="lat-input">
                 <input type="hidden" name="longitud" id="lon-input">
                 <input type="hidden" name="conekta_token" id="conekta_token">
-
-                <button type="submit" id="pay-button" class="btn-enviar" style="background-image: url('/static/madera_oscura.jpg'); color: #ffff00; text-shadow: 1px 1px 2px black; border: 2px solid #3d2b1f;">CONFIRMAR SERVICIO</button>
+                <button type="submit" id="pay-button" class="btn-enviar">CONFIRMAR SERVICIO</button>
             </form>
         </div>
     </div>
 
-    <!-- Integración Conekta JS -->
     <script type="text/javascript" src="https://cdn.conekta.io/js/latest/conekta.js"></script>
     <script>
-        // RECUERDA: SUSTITUYE ESTO POR TU LLAVE PÚBLICA (pk_test_...)
-        Conekta.setPublicKey('TU_LLAVE_PUBLICA_PK'); 
+        Conekta.setPublicKey('{{ config.get("VITE_CONEKTA_PUBLIC_KEY") }}');
         const conektaElements = Conekta.Elements({});
         const paymentElement = conektaElements.create('payment', { amount: {{ subcategoria.get('precio_normal', 0) * 100 }} });
         paymentElement.mount('#conekta-element');
 
         document.querySelector('form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('pay-button');
-            btn.disabled = true;
-            btn.innerText = 'Procesando...';
-
             const token = await conektaElements.createToken(paymentElement);
-            
-            if (token.error) {
-                document.getElementById('error-message').innerText = token.error.message;
-                btn.disabled = false;
-                btn.innerText = 'CONFIRMAR SERVICIO';
-            } else {
+            if (token.error) { alert(token.error.message); } else {
                 document.getElementById('conekta_token').value = token.id;
-                e.target.submit(); // Enviar formulario al backend con el token
+                e.target.submit();
             }
         });
-    </script>
 
-    <script>
-        function toggleMuebleSubfields(valor) {
-            const limpieza = document.getElementById('mueble-limpieza');
-            const armado = document.getElementById('mueble-armado');
-            const photoLabel = document.querySelector('.photo-upload p');
-            
-            if (valor === 'limpieza') {
-                limpieza.style.display = 'block';
-                armado.style.display = 'none';
-                if (photoLabel) photoLabel.innerText = 'Foto del mueble completo y manchas difíciles';
-            } else {
-                limpieza.style.display = 'none';
-                armado.style.display = 'block';
-                if (photoLabel) photoLabel.innerText = 'Foto del instructivo o link al producto';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Lógica de visibilidad para agenda
-            const colaboradorId = "{{ colaborador_id }}";
-            if (colaboradorId && colaboradorId !== "None" && colaboradorId !== "") {
-                document.getElementById('scheduling-fields').style.display = 'block';
-                document.getElementById('fecha-input').required = true;
-                document.getElementById('hora-input').required = true;
-            }
-            // Obtener categoria_id de la URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const categoriaId = urlParams.get('categoria_id');
-            const instructions = {
-                '1': 'Foto de frente y de perfil de la chapa',
-                '2': 'Foto de la fuga y de la llave de paso principal',
-                '3': 'Foto del centro de carga (pastillas) y área afectada',
-                '4': 'Foto de las áreas con mayor suciedad',
-                '5': 'Foto del mueble completo y manchas difíciles',
-                '6': 'Foto del instructivo o link al producto',
-                '7': 'Foto panorámica de la zona y detalle del daño',
-                '8': 'Foto de los 3 muebles más voluminosos',
-                '9': 'Foto panorámica de la zona y detalle del daño'
-            };
-            
-            if (categoriaId) {
-                console.log("Categoria ID encontrada:", categoriaId);
-                // Sincronizar Cat 9 con Cat 8 si es necesario
-                if (categoriaId === '9') {
-                    document.getElementById('fields-cat-9').innerHTML = document.getElementById('fields-cat-8').innerHTML;
-                }
-
-                const targetDiv = document.getElementById(`fields-cat-${categoriaId}`);
-                if (targetDiv) {
-                    targetDiv.style.display = 'block';
-                }
-                
-                // Actualizar leyenda de foto si existe
-                if (instructions[categoriaId]) {
-                    const photoLabel = document.querySelector('.photo-upload p');
-                    if (photoLabel) photoLabel.innerText = instructions[categoriaId] + ". (Obligatorio)";
-                }
-            }
-
-            document.getElementById('lat-input').value = localStorage.getItem('okupo_lat') || '19.4326';
-            document.getElementById('lon-input').value = localStorage.getItem('okupo_lon') || '-99.1332';
-        }
-
-        // --- Lógica de Subida de Fotos ---
         const dropzone = document.getElementById('photo-dropzone');
-        const fileInput = document.getElementById('camera-input');
-        const photoText = document.getElementById('photo-text');
-        const photoIcon = document.getElementById('photo-icon');
-        const photoPreview = document.getElementById('photo-preview');
-        const previewImg = document.getElementById('preview-img');
-        const hiddenUrlInput = document.getElementById('foto-evidencia-url');
-
-        dropzone.addEventListener('click', () => fileInput.click());
-
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            // Mostrar preview local
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                photoPreview.style.display = 'block';
-                photoIcon.style.display = 'none';
-                photoText.innerText = 'Foto cargada correctamente';
-            };
-            reader.readAsDataURL(file);
-
-            // Subir al motor Finite
-            const formData = new FormData();
-            formData.append('archivo', file);
-
-            try {
-                photoText.innerText = 'Subiendo foto...';
-                const response = await fetch('/api_proxy/subidas', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                if (data) {
-                    hiddenUrlInput.value = data; // URL devuelta por el motor
-                    photoText.innerText = '✅ Foto lista';
-                }
-            } catch (err) {
-                console.error('Error al subir:', err);
-                photoText.innerText = '❌ Error al subir. Intenta de nuevo.';
-            }
-        });
-        </script>
-        </body>
+        dropzone.addEventListener('click', () => document.getElementById('camera-input').click());
+    </script>
+</body>
 </html>

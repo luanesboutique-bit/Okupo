@@ -163,21 +163,35 @@
         }
         </script>
         
-        <div class="carrusel">
-            <a href="/categorias/1/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-key"></i><span class="btn-title">CERRAJERÍA</span><span class="btn-desc">Chapas, duplicados</span></a>
-            <a href="/categorias/2/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-faucet"></i><span class="btn-title">PLOMERÍA</span><span class="btn-desc">Fugas, destapes</span></a>
-            <a href="/categorias/3/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-bolt"></i><span class="btn-title">ELECTRICIDAD</span><span class="btn-desc">Cortos, instalaciones</span></a>
-            <a href="/categorias/4/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-broom"></i><span class="btn-title">LIMPIEZA GENERAL</span><span class="btn-desc">Hogar, oficinas</span></a>
-            <a href="/categorias/5/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-couch"></i><span class="btn-title">LIMPIEZA MUEBLES</span><span class="btn-desc">Salas, lavado</span></a>
-            <a href="/categorias/6/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-chair"></i><span class="btn-title">ARMADO</span><span class="btn-desc">Cocinas, closets</span></a>
-            <a href="/categorias/8/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-truck"></i><span class="btn-title">FLETES</span><span class="btn-desc">Carga, transporte</span></a>
-            <a href="/categorias/7/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-hammer"></i><span class="btn-title">ALBAÑILERÍA</span><span class="btn-desc">Reparación, resanes</span></a>
-            <a href="/categorias/9/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-tools"></i><span class="btn-title">REPARACIONES</span><span class="btn-desc">Mantenimiento</span></a>
-            <a href="/categorias/10/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-sun"></i><span class="btn-title">PANELES</span><span class="btn-desc">Instalación solar</span></a>
-            <a href="/categorias/11/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-car"></i><span class="btn-title">AUTOS</span><span class="btn-desc">Lavado, estética</span></a>
-            <a href="/categorias/12/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-tv"></i><span class="btn-title">INSTALACIONES</span><span class="btn-desc">Minisplit, TV, Rack</span></a>
-            <a href="/cotizar" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-ellipsis-h"></i><span class="btn-title">SERVICIOS EXTRA</span><span class="btn-desc">Cotizar otros</span></a>
+        <!-- CARRUSEL DE SERVICIOS -->
+        <div style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center; padding: 10px 0;">
+            <button onmouseover="this.style.backgroundColor='#FF7A00'" onmouseout="this.style.backgroundColor='#D2B48C'" onclick="desplazarCarrusel(-180)" style="position: absolute; left: 2px; z-index: 20; background: #D2B48C; border: 2px solid #8B4513; color: #4A2F1E; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: background 0.3s;">&lt;</button>
+            
+            <div id="carrusel-contenedor" class="carrusel" style="width: 100%; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; padding: 0 45px; box-sizing: border-box;">
+                <style>.carrusel::-webkit-scrollbar { display: none; }</style>
+                <a href="/categorias/1/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-key"></i><span class="btn-title">CERRAJERÍA</span><span class="btn-desc">Chapas, duplicados</span></a>
+                <a href="/categorias/2/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-faucet"></i><span class="btn-title">PLOMERÍA</span><span class="btn-desc">Fugas, destapes</span></a>
+                <a href="/categorias/3/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-bolt"></i><span class="btn-title">ELECTRICIDAD</span><span class="btn-desc">Cortos, instalaciones</span></a>
+                <a href="/categorias/4/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-broom"></i><span class="btn-title">LIMPIEZA GENERAL</span><span class="btn-desc">Hogar, oficinas</span></a>
+                <a href="/categorias/5/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-couch"></i><span class="btn-title">LIMPIEZA MUEBLES</span><span class="btn-desc">Salas, lavado</span></a>
+                <a href="/categorias/6/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-chair"></i><span class="btn-title">ARMADO</span><span class="btn-desc">Cocinas, closets</span></a>
+                <a href="/categorias/8/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-truck"></i><span class="btn-title">FLETES</span><span class="btn-desc">Carga, transporte</span></a>
+                <a href="/categorias/7/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-hammer"></i><span class="btn-title">ALBAÑILERÍA</span><span class="btn-desc">Reparación, resanes</span></a>
+                <a href="/categorias/9/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-tools"></i><span class="btn-title">REPARACIONES</span><span class="btn-desc">Mantenimiento</span></a>
+                <a href="/categorias/10/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-gavel"></i><span class="btn-title">HERRERIA</span><span class="btn-desc">Soldadura, Portones</span></a>
+                <a href="/categorias/11/subcategorias" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-car"></i><span class="btn-title">AUTOS</span><span class="btn-desc">Lavado, estética</span></a>
+                <a href="/categorias/12/subcategorias" class="btn" style="background:url('/static/madera_clara.jpg')"><i class="fas fa-tv"></i><span class="btn-title">INSTALACIONES</span><span class="btn-desc">Minisplit, TV, Rack</span></a>
+                <a href="/cotizar" class="btn" style="background:url('/static/madera_media.jpg')"><i class="fas fa-ellipsis-h"></i><span class="btn-title">SERVICIOS EXTRA</span><span class="btn-desc">Cotizar otros</span></a>
+            </div>
+
+            <button onmouseover="this.style.backgroundColor='#FF7A00'" onmouseout="this.style.backgroundColor='#D2B48C'" onclick="desplazarCarrusel(180)" style="position: absolute; right: 2px; z-index: 20; background: #D2B48C; border: 2px solid #8B4513; color: #4A2F1E; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: background 0.3s;">&gt;</button>
         </div>
+        <script>
+            function desplazarCarrusel(valor) {
+                const contenedor = document.getElementById('carrusel-contenedor');
+                contenedor.scrollLeft += valor;
+            }
+        </script>
     </div>
     <script>
         const map = L.map('map', { zoomControl: false }).setView([20.6736, -103.3444], 15);
@@ -233,7 +247,7 @@
                 {i:'fa-truck', n:'Fletes', lat: 0, lng: 0.005},
                 {i:'fa-hammer', n:'Albañilería', lat: 0, lng: -0.005},
                 {i:'fa-tools', n:'Reparaciones', lat: 0.002, lng: 0.002},
-                {i:'fa-sun', n:'Paneles', lat: -0.002, lng: -0.002},
+                {i:'fa-gavel', n:'Herreria', lat: -0.002, lng: -0.002},
                 {i:'fa-car', n:'Autos', lat: 0.002, lng: -0.002},
                 {i:'fa-tv', n:'Instalaciones', lat: -0.002, lng: 0.002}
             ];

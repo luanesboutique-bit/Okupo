@@ -124,6 +124,16 @@ def registro_tecnico_categorias():
 @login_requerido
 def registro_tecnico_precios():
     if request.method == 'POST':
+        # Capturamos los datos del formulario de precios
+        # El formulario ahora envía prefijos por servicio, por ejemplo: precio_normal_cerrajeria
+        precios = {
+            'cerrajeria_basica': {
+                'normal': request.form.get('precio_normal_cerrajeria'),
+                'nocturna': request.form.get('precio_noche_cerrajeria'),
+                'urgente': request.form.get('precio_urgente_cerrajeria')
+            }
+        }
+        session['registro_precios'] = precios
         return redirect(url_for('colaboradores.registro_tecnico_horarios'))
     return render_template('registro_tecnico_precios.html')
 

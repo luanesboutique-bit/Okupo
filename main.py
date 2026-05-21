@@ -2,6 +2,10 @@ from flask import Flask, send_from_directory, request, jsonify
 import requests
 import dotenv
 from src.infraestructura.configuracion import CLAVE_SECRETA, CONEKTA_PUBLIC_KEY, URL_BASE_API
+from src.web.rutas.autenticacion import blueprint as blueprint_autenticacion
+from src.web.rutas.principal import blueprint as blueprint_principal
+from src.web.rutas.pedidos import blueprint as blueprint_pedidos
+from src.web.rutas.colaboradores import blueprint as blueprint_colaboradores
 
 dotenv.load_dotenv()
 
