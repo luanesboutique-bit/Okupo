@@ -134,27 +134,12 @@ def registro_tecnico_categorias():
 @blueprint.route('/registro/tecnico/precios', methods=['GET', 'POST'])
 @blueprint.route('/registro/tecnico/precios/<int:cat_index>', methods=['GET', 'POST'])
 @login_requerido
-<<<<<<< HEAD
-def registro_tecnico_precios():
-    if request.method == 'POST':
-        # Capturamos los datos del formulario de precios
-        # El formulario ahora envía prefijos por servicio, por ejemplo: precio_normal_cerrajeria
-        precios = {
-            'cerrajeria_basica': {
-                'normal': request.form.get('precio_normal_cerrajeria'),
-                'nocturna': request.form.get('precio_noche_cerrajeria'),
-                'urgente': request.form.get('precio_urgente_cerrajeria')
-            }
-        }
-        session['registro_precios'] = precios
-=======
 def registro_tecnico_precios(cat_index=0):
     categorias_ids = session.get('categorias_seleccionadas', [])
     if not categorias_ids:
         return redirect(url_for('colaboradores.registro_tecnico_categorias'))
     
     if cat_index >= len(categorias_ids):
->>>>>>> d8dbcef02183bc5a2a429921988a7905c155b171
         return redirect(url_for('colaboradores.registro_tecnico_horarios'))
     
     cat_id = categorias_ids[cat_index]

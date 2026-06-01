@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Okupo Clic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/fonts.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -14,16 +15,16 @@
             background-size: cover !important;
             background-attachment: fixed !important;
             background-position: center !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             color: var(--engraved);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
         }
-        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: #F2EDE0; position: relative; padding-bottom: 120px; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; position: relative; padding-bottom: 120px; }
         
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #fff; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 12px; }
         .logo-text { font-size: 11px; font-weight: bold; color: var(--engraved); line-height: 1.1; }
         .search-box { flex: 1; margin: 0 10px; padding: 15px; border: 2px solid var(--wood-dark); 
             border-radius: 20px; font-size: 14px; background: #fff; outline: none; }
@@ -63,6 +64,8 @@
         #barra-servicio { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 420px; background: url('/static/madera_clara.jpg') center/cover; color: var(--engraved); padding: 15px; display: none; align-items: center; justify-content: space-between; border-radius: 16px; border: 1px solid var(--wood-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; }
         #user-menu { position: fixed; top: 60px; right: 15px; width: 220px; background: url('/static/madera_clara.jpg') center/cover; padding: 15px; border-radius: 16px; border: 2px solid var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: none; z-index: 2000; }
         .menu-item { display: block; color: var(--engraved); font-weight: 800; font-size: 11px; padding: 8px 0; text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .user-icon { font-size: 24px; cursor: pointer; color: var(--engraved); transition: all 0.3s ease; }
+        .user-icon:active { color: var(--gold); text-shadow: 0 0 10px var(--gold); transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -79,6 +82,7 @@
             <a href="/facturacion" class="menu-item"><i class="fas fa-file-invoice-dollar" style="color: #555; margin-right: 10px;"></i> Facturación</a>
             <a href="/chat" class="menu-item"><i class="fas fa-comments" style="color: #2980b9; margin-right: 10px;"></i> Chat seguro</a>
             <a href="/unete" class="menu-item"><i class="fas fa-tools" style="color: var(--wood-dark); margin-right: 10px;"></i> ¿Quieres ser colaborador?</a>
+            <a href="/documentos-legales" class="menu-item"><i class="fas fa-file-contract" style="color: #b8860b; margin-right: 10px;"></i> Información Legal</a>
             <a href="/soporte" class="menu-item"><i class="fas fa-headset" style="color: #b8860b; margin-right: 10px;"></i> Ayuda/soporte</a>
             <a href="/logout" class="menu-item" style="color: #d9534f; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 5px;"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i> Cerrar sesión</a>
         {% else %}
@@ -97,16 +101,15 @@
     </div>
 
     <div class="app-container">
-        <div class="header">
-            <div class="logo-box">
-                <img src="/static/logo_okupo.png" style="height:35px;">
-                <div class="logo-text">OKUPO CLIC<br>Tu experto en casa</div>
+        <div class="header" style="padding: 5px 12px;">
+            <div class="logo-box" style="flex: 1; display: flex; justify-content: center; padding-left: 20px;">
+                <img src="/static/logo_okupo_naranja.svg" style="width: 100%; max-width: 250px; height: auto;">
             </div>
-            <i class="fas fa-user-circle" style="font-size:24px; cursor:pointer;" onclick="document.getElementById('user-menu').style.display = (document.getElementById('user-menu').style.display === 'block' ? 'none' : 'block')"></i>
+            <i class="fas fa-user-circle user-icon" onclick="document.getElementById('user-menu').style.display = (document.getElementById('user-menu').style.display === 'block' ? 'none' : 'block')"></i>
         </div>
 
         <!-- BARRA DE BÚSQUEDA NEUMÓRFICA PREMIUM -->
-        <form action="/buscar" method="GET" style="display: flex; justify-content: center; padding: 20px 15px;">
+        <form action="/buscar" method="GET" style="display: flex; justify-content: center; padding: 5px 15px; margin-bottom: 20px;">
             <div class="neumo-search" style="width: calc(100% - 20px); max-width: 430px; height: 55px; background: #fdfaf5; border-radius: 30px; box-shadow: 8px 8px 16px #d1ccc0, -8px -8px 16px #ffffff; border: 1px solid var(--wood-light); overflow: hidden; display: flex; align-items: center;">
                 <button type="submit" style="background: url('/static/madera_clara.jpg') center/cover; border: none; padding: 0 20px; height: 100%; cursor: pointer; color: var(--wood-dark); font-size: 18px; border-right: 1px solid var(--wood-light);">
                     <i class="fas fa-search"></i>

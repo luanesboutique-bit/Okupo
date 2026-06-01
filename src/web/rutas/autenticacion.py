@@ -4,6 +4,23 @@ from src.aplicacion.utilidades_token import obtener_usuario_id_de_token, obtener
 
 blueprint = Blueprint('autenticacion', __name__)
 
+@blueprint.route('/api/login', methods=['POST'])
+def api_login():
+    datos = request.get_json()
+    email = datos.get('correo')
+    contrasenna = datos.get('contrasenna')
+    
+    print(f"DEBUG API LOGIN: Intentando login con correo: {email}")
+    respuesta = api_post("/login", {"correo": email, "contrasenna": contrasenna})
+    print(f"DEBUG API LOGIN: Respuesta de Finite: {respuesta}")
+    
+    if respuesta and respuesta != "UNAUTHORIZED":
+        token = respuesta.get('token', '') if isinstance(respuesta, dict) else respuesta
+        return jsonify(token), 200
+    
+    print("DEBUG API LOGIN: Fallo en autenticación")
+    return jsonify({"error": "Credenciales inválidas"}), 401
+
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:

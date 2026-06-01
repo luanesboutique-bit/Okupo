@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentos Legales - Okupo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --color-crema: #fdfaf5;
+            --color-texto: #5a3e2b;
+            --color-dorado: #d4af37;
+        }
+
+        html, body {
+            background-color: var(--color-crema) !important;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-texto);
+        }
+
+        body {
+            background-image: url('/static/fondo_pared.jpg') !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background: transparent !important;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header a { color: var(--color-texto); font-size: 24px; text-shadow: 0 0 8px white; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px white; margin: 0; text-align: center; }
+
+        .docs-card {
+            background: rgba(253, 250, 245, 0.95);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--color-dorado);
+        }
+
+        .doc-link {
+            display: block;
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            color: var(--color-texto);
+            text-decoration: none;
+            font-weight: 700;
+            border-left: 5px solid var(--color-dorado);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .doc-link:hover { transform: scale(1.02); }
+        .doc-link i { margin-right: 10px; color: var(--color-dorado); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Documentos Legales</h1>
+        </div>
+
+        <div class="docs-card">
+            <a href="/static/docs/AVISO_DE_PRIVACIDAD_INTEGRAL_OKUPO_CLIC.pdf" class="doc-link" target="_blank">
+                <i class="fas fa-file-pdf"></i> Aviso de Privacidad
+            </a>
+            <a href="/static/docs/CONTRATO_TECNICOS.pdf" class="doc-link" target="_blank">
+                <i class="fas fa-file-pdf"></i> Contrato Técnicos
+            </a>
+            <a href="/static/docs/POLITICA_DE_GESTION_DE_MATERIALES_REFACCIONES_Y_SUMINISTROS.pdf" class="doc-link" target="_blank">
+                <i class="fas fa-file-pdf"></i> Política de Materiales
+            </a>
+            <a href="/static/docs/TERMINOS_Y_CONDICIONES_DE_LAS_CATEGORIAS.pdf" class="doc-link" target="_blank">
+                <i class="fas fa-file-pdf"></i> Términos de Categorías
+            </a>
+            <a href="/static/docs/TERMINOS_Y_CONDICIONES_GENERALES_DE_USO_DE_LA_PLATAFORMA_OKUPO_CLIC.pdf" class="doc-link" target="_blank">
+                <i class="fas fa-file-pdf"></i> Términos Generales
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

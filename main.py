@@ -1,5 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, render_template
+from flask_cors import CORS
 import requests
+import os
 import dotenv
 from src.infraestructura.configuracion import CLAVE_SECRETA, CONEKTA_PUBLIC_KEY, URL_BASE_API
 from src.web.rutas.autenticacion import blueprint as blueprint_autenticacion
@@ -10,8 +12,19 @@ from src.web.rutas.colaboradores import blueprint as blueprint_colaboradores
 dotenv.load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = CLAVE_SECRETA
 app.config['VITE_CONEKTA_PUBLIC_KEY'] = CONEKTA_PUBLIC_KEY
+
+@app.route('/documentos-legales')
+def documentos_legales():
+    return render_template('documentos_legales.html')
+
+# Ruta para servir los documentos legales
+@app.route('/docs/<path:filename>')
+def serve_docs(filename):
+    # Ruta donde están tus archivos HTML integrados
+    return send_from_directory('C:/Users/blanc/documentos_legales_extraidos', filename)
 
 @app.route('/api_proxy/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def api_proxy(path):
