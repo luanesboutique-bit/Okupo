@@ -19,12 +19,13 @@
         /* 🛠️ ESTILO UNIFICADO "OKUPO" */
         html, body {
             background-color: var(--color-crema) !important;
-            margin: 0; padding: 0; width: 100%; height: 100%;
+            margin: 0; padding: 0; width: 100%; min-height: 100%;
         }
 
         body {
             background-image: url('/static/fondo_pared.jpg') !important;
             background-size: cover !important;
+            background-repeat: no-repeat !important;
             background-attachment: fixed !important;
             background-position: center !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -263,6 +264,7 @@
         </div>
 
         <div class="list-container">
+            <div style="display:none;">DEBUG: categoria_id = {{ categoria_id }}</div>
             {% for sub in subcategorias %}
             <div class="card-servicio">
                 <h3>{{ sub.nombre }}</h3>
@@ -276,28 +278,58 @@
                 <div class="opciones-hibridas">
                     <!-- OPCIÓN 1: RÁPIDA -->
                     <div class="opcion-col">
-                        <span class="opcion-label">Opción 1</span>
+                        <span class="opcion-label">OPCIÓN 1: ASIGNAR YA</span>
                         <a href="{{ url_for('pedidos.pedir', subcategoria_id=sub.id, categoria_id=categoria_id) }}" class="btn-hibrido btn-ahora">
                             <i class="fas fa-bolt"></i>
-                            PEDIR YA
+                            ASIGNAR YA
                         </a>
-                        <div class="desc-hibrida">Asignación rápida · Tarifa fija</div>
+                        <div class="desc-hibrida">Aplica la tarifa sugerida para hoy mismo</div>
                     </div>
 
                     <!-- OPCIÓN 2: MANUAL -->
                     <div class="opcion-col">
-                        <span class="opcion-label">Opción 2</span>
+                        <span class="opcion-label">OPCIÓN 2: COMPARAR</span>
                         <a href="{{ url_for('principal.marketplace', subcategoria_id=sub.id, categoria_id=categoria_id) }}" class="btn-hibrido btn-expertos">
                             <i class="fas fa-users"></i>
-                            ELEGIR
+                            COMPARAR
                         </a>
-                        <div class="desc-hibrida">Búsqueda manual · Agenda y ahorra</div>
+                        <div class="desc-hibrida">Tu eliges al experto y su precio · Agenda</div>
                     </div>
                 </div>
 
                 <div class="info-nota">
                     <i class="fas fa-info-circle"></i> 
-                    {% if categoria_id == 1 %} 
+                    {% if "duplicado" in sub.nombre.lower() and "llaves" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ MÍNIMO 3 PIEZAS:</b> El precio mostrado aplica por el paquete de 3 llaves.
+                    {% elif "apagador" in sub.nombre.lower() or "contacto" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ MÍNIMO 2 PIEZAS:</b> El precio ya incluye las 2 piezas.
+                    {% elif "lavado" in sub.nombre.lower() and "sillas" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ MÍNIMO 4 PIEZAS:</b> El precio ya incluye las 4 piezas.
+                    {% elif "lavado" in sub.nombre.lower() and "cojines" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ PAQUETE DE 2 PIEZAS:</b> El precio aplica por el paquete de 2 piezas.
+                    {% elif ("reparacion" in sub.nombre.lower() or "ajuste" in sub.nombre.lower()) and ("puerta" in sub.nombre.lower() or "porton" in sub.nombre.lower()) %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> POR HOJA DE PORTÓN O PUERTA INDIVIDUAL.
+                    {% elif "encolado" in sub.nombre.lower() or "muebles" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ PAQUETE:</b> SILLAS O MESAS (HASTA 2 SILLAS O 1 MESA PEQUEÑA).
+                    {% elif "closet" in sub.nombre.lower() or "ropero" in sub.nombre.lower() or "armario" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> Base: Armario de 2 a 3 puertas.
+                    {% elif "resane" in sub.nombre.lower() and "muros" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ PAQUETE POR TRAMO:</b> Hasta 2 metros lineales.
+                    {% elif "loseta" in sub.nombre.lower() or "azulejo" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> DE 1 A 3 PIEZAS. TRABAJOS MÁS GRANDES SOLO POR COTIZACIÓN.
+                    {% elif "protecciones" in sub.nombre.lower() and "ventanas" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> NO INCLUYE FABRICACIÓN DE PROTECCIONES, SI SE REQUIEREN SOLICITAR COTIZACIÓN.
+                    {% elif "pintura" in sub.nombre.lower() and ("recamara" in sub.nombre.lower() or "habitacion" in sub.nombre.lower()) %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> MANOS DE PINTURA EN LOS MUROS Y EL PLAFON(TECHO) DE UN CUARTO DE HASTA 4X4 METROS. CLIENTE PROPORCIONA PINTURA.
+                    {% elif "pintura" in sub.nombre.lower() and ("muro" in sub.nombre.lower() or "fachada" in sub.nombre.lower()) %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> MÁXIMO 12 METROS CUADRADOS. CLIENTE PROPORCIONA PINTURA.
+                    {% elif "flete" in sub.nombre.lower() and "pick-up" in sub.nombre.lower() %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> DISTANCIA MÁXIMA 15KM, INCLUYE SOLO CHOFER, EL CLIENTE AYUDA A CARGAR. MERCANCÍA QUE QUEPA EN LA CAJA.
+                    {% elif "flete" in sub.nombre.lower() and ("mediano" in sub.nombre.lower() or "nissan" in sub.nombre.lower() or "estacas" in sub.nombre.lower() or "van" in sub.nombre.lower()) %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> INCLUYE CHOFER Y 1 AYUDANTE CARGADOR. DISTANCIA MÁXIMA DE 15KM.
+                    {% elif categoria_id == 8 %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> CARGO POR KM EXCEDENTE $15 MXN POR KM EXTRA. PARA FLETES GRANDES ES NECESARIO COTIZAR.
+                    {% elif categoria_id == 1 %} 
                         {% if "Apertura" in sub.nombre %}
                             <b style="color: var(--color-rojo);">⚠️ INE OBLIGATORIA:</b> Para aperturas es requisito mostrar identificación oficial al técnico para validar propiedad.
                         {% else %}
@@ -320,43 +352,60 @@
         </div>
         
         <script>
-            // Capturar ubicación en segundo plano al cargar la página
-            function capturarUbicacion() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        localStorage.setItem('okupo_lat', position.coords.latitude);
-                        localStorage.setItem('okupo_lon', position.coords.longitude);
-                        console.log("Ubicación capturada con éxito.");
-                    }, function(error) {
-                        console.warn("No se pudo obtener la ubicación automáticamente.");
-                    });
-                }
-            }
+            document.addEventListener('DOMContentLoaded', async () => {
+                let preciosConfig = {};
+                try {
+                    const resp = await fetch('/api/precios');
+                    preciosConfig = await resp.json();
+                } catch (e) { console.error("Error cargando precios:", e); }
 
-            document.addEventListener('DOMContentLoaded', () => {
-                capturarUbicacion();
                 const ahora = new Date();
                 const hora = ahora.getHours();
                 const dia = ahora.getDay();
                 
                 const esUrgenciaGlobal = localStorage.getItem('okupo_urgencia_247') === 'true';
 
-                {% for sub in subcategorias %}
-                    let precio = "{{ sub.precio_normal }}";
+                // Definimos los IDs de subcategorías disponibles en esta página desde el backend
+                const subcategorias = [
+                    {% for sub in subcategorias %}
+                        { id: "{{ sub.id }}" },
+                    {% endfor %}
+                ];
+
+                subcategorias.forEach(sub => {
+                    const subId = sub.id;
+                    const config = preciosConfig[subId] || preciosConfig[parseInt(subId)] || { normal: 0, medio: 0, urgente: 0 };
+                    
+                    let precio = config.normal;
                     let etiqueta = "Tarifa Normal";
 
                     if (esUrgenciaGlobal || dia === 0) {
-                        precio = "{{ sub.precio_urgente }}";
+                        precio = config.urgente;
                         etiqueta = "Tarifa Urgente";
                         document.body.classList.add('modo-urgencia-activo');
                     } else if (hora >= 20 || hora < 6) {
-                        precio = "{{ sub.precio_noche }}";
-                        etiqueta = "Tarifa Nocturna";
+                        precio = config.medio;
+                        etiqueta = "Tarifa Media";
                     }
 
-                    document.getElementById('monto-{{ sub.id }}').innerText = "$" + precio;
-                    document.getElementById('tipo-tarifa-{{ sub.id }}').innerText = etiqueta;
-                {% endfor %}
+                    const elPrecio = document.getElementById('monto-' + subId);
+                    const elTipo = document.getElementById('tipo-tarifa-' + subId);
+                    
+                    if (elPrecio) {
+                        elPrecio.innerText = "$" + parseFloat(precio).toFixed(2);
+                        // Aplicar color según tarifa (calculada pero no mostrada como texto)
+                        if (etiqueta === "Tarifa Urgente") elPrecio.style.color = "#e74c3c"; // Rojo
+                        else if (etiqueta === "Tarifa Media") elPrecio.style.color = "#e67e22"; // Naranja
+                        else elPrecio.style.color = "#27ae60"; // Verde
+                    }
+                    if (elTipo) {
+                        elTipo.innerText = "TARIFA SUGERIDA"; // Etiqueta fija
+                        // Aplicar color a la etiqueta
+                        if (etiqueta === "Tarifa Urgente") elTipo.style.color = "#e74c3c";
+                        else if (etiqueta === "Tarifa Media") elTipo.style.color = "#e67e22";
+                        else elTipo.style.color = "#27ae60";
+                    }
+                });
             });
         </script>
     </div>

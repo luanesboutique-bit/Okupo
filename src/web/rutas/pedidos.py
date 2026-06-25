@@ -74,10 +74,10 @@ def pedir():
         ahora = datetime.datetime.now()
         tarifa_tipo = "Normal"
         precio = subcategoria.get('precio_normal', 0) if subcategoria else 0
-        
+
         if ahora.hour >= 20 or ahora.hour < 6:
-            tarifa_tipo = "Noche"
-            precio = subcategoria.get('precio_noche', precio)
+            tarifa_tipo = "Media"
+            precio = subcategoria.get('precio_medio', precio)
         if ahora.weekday() == 6: # Domingo
             tarifa_tipo = "Urgente"
             precio = subcategoria.get('precio_urgente', precio)

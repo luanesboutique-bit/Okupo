@@ -43,15 +43,52 @@ def api_proxy(path):
         
     return (resp.content, resp.status_code, resp.headers.items())
 
+import json
+
+# ... (resto de los imports)
+
 # Registro de Blueprints
 app.register_blueprint(blueprint_autenticacion)
 app.register_blueprint(blueprint_principal)
 app.register_blueprint(blueprint_pedidos)
 app.register_blueprint(blueprint_colaboradores)
 
+@app.route('/api/precios', methods=['GET', 'POST'])
+def gestionar_precios():
+    archivo_precios = 'precios_config.json'
+    if request.method == 'POST':
+        nuevos_datos = request.get_json() # Esperamos formato { "id": { normal, medio, urgente } }
+        
+        # Cargar datos existentes si existen
+        datos_existentes = {}
+        if os.path.exists(archivo_precios):
+            with open(archivo_precios, 'r') as f:
+                try:
+                    datos_existentes = json.load(f)
+                except:
+                    datos_existentes = {}
+        
+        # Actualizar con los nuevos datos
+        datos_existentes.update(nuevos_datos)
+        
+        # Guardar archivo completo
+        with open(archivo_precios, 'w') as f:
+            json.dump(datos_existentes, f, indent=4)
+        return jsonify({"status": "ok"})
+    else:
+        if not os.path.exists(archivo_precios):
+            return jsonify({})
+        with open(archivo_precios, 'r') as f:
+            try:
+                return jsonify(json.load(f))
+            except:
+                return jsonify({})
+
+
+
 @app.route('/favicon.ico')
 def favicon():
     return "", 204
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=3000)

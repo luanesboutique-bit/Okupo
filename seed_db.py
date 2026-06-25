@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-API_URL = "http://localhost:3000"
+API_URL = "http://localhost:5001"
 
 def post(endpoint, data, token=None):
     headers = {"Content-Type": "application/json"}

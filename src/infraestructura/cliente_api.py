@@ -9,13 +9,16 @@ def obtener_cabeceras(token=None):
 
 def api_get(endpoint, token=None):
     try:
-        respuesta = requests.get(f"{URL_BASE_API}{endpoint}", headers=obtener_cabeceras(token))
+        url_completa = f"{URL_BASE_API}{endpoint}"
+        print(f"DEBUG: Llamando a API en: {url_completa}")
+        respuesta = requests.get(url_completa, headers=obtener_cabeceras(token))
         if respuesta.status_code == 200:
             return respuesta.json()
         if respuesta.status_code == 401:
             return "UNAUTHORIZED"
         return None
-    except Exception:
+    except Exception as e:
+        print(f'🔥 ERROR EN API_GET: {e}')
         return None
 
 def api_post(endpoint, datos, token=None):
