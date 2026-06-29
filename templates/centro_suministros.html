@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Suministros - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; --color-verde: #27ae60; --wood-dark: #3d2b1f; }
+        body { background-color: var(--color-crema); font-family: 'Segoe UI', sans-serif; color: var(--color-texto); margin: 0; padding: 0; background-image: url('/static/fondo_pared.jpg'); background-attachment: fixed; }
+        .app-container { max-width: 450px; margin: auto; padding: 20px; }
+        .header { display: flex; align-items: center; margin-bottom: 20px; }
+        .header a { color: var(--color-texto); font-size: 20px; margin-right: 20px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: 15px; border: 2px solid var(--wood-dark); background: white; font-weight: 800; cursor: pointer; }
+        .tab-btn.active { background: url('/static/madera_oscura.jpg'); color: #ffff00; }
+        
+        .card { background: rgba(253, 250, 245, 0.95); border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--color-dorado); display: flex; justify-content: space-between; align-items: center; }
+        .product-info h3 { margin: 0; font-size: 14px; }
+        .product-info p { margin: 5px 0; font-weight: 900; color: var(--color-verde); }
+        .controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; background: var(--wood-dark); color: white; cursor: pointer; }
+        
+        .floating-total { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: white; padding: 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); text-align: center; border-radius: 20px 20px 0 0; }
+        .btn-qr { background: url('/static/madera_oscura.jpg'); color: #ffff00; padding: 15px 30px; border-radius: 20px; text-decoration: none; font-weight: 900; display: block; margin-top: 10px; }
+        .banner-incentivo { background: #fffdf0; border: 1px solid var(--color-dorado); border-radius: 20px; padding: 15px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--color-texto); font-size: 13px; }
+        .banner-incentivo p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Suministros</h1>
+        </div>
+
+        <div class="banner-incentivo">
+            <i class="fas fa-chart-line" style="color:var(--color-verde); margin-bottom:5px;"></i>
+            <p><strong>¡Asegura más del 85% de ganancia libre!</strong> Al usar los químicos oficiales concentrados de la app, el costo de insumo por servicio es menor a $15 pesos. ¡Invierte menos y gana más!</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('liquidos')">Líquidos (5L)</button>
+            <button class="tab-btn" onclick="showTab('secos')">Secos (Kilos)</button>
+        </div>
+
+        <div id="liquidos-list">
+            <!-- Productos Líquidos cargados dinámicamente -->
+        </div>
+
+        <div id="secos-list" style="display:none;">
+            <!-- Productos Secos cargados dinámicamente -->
+        </div>
+
+        <div class="floating-total">
+            <div style="font-size: 18px; font-weight: 900;">Total: $<span id="total">0.00</span></div>
+            <button onclick="generarPedido()" class="btn-qr" style="border:none; width:100%; cursor:pointer;">GENERAR QR DE RECOLECCIÓN</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        async function generarPedido() {
+            const items = [];
+            document.querySelectorAll('.card').forEach(card => {
+                const qty = parseInt(card.querySelector('.controls span').innerText);
+                if (qty > 0) {
+                    items.push({
+                        nombre: card.querySelector('h3').innerText,
+                        cantidad: qty
+                    });
+                }
+            });
+            const total = parseFloat(document.getElementById('total').innerText);
+            
+            if (items.length === 0) return alert("El carrito está vacío");
+
+            const resp = await fetch('/api/pedido_suministros', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items, total })
+            });
+            
+            const data = await resp.json();
+            if (data.status === 'ok') {
+                mostrarQR(data.pedido_id);
+            } else {
+                alert("Error al generar pedido.");
+            }
+        }
+
+        function mostrarQR(pedidoId) {
+            document.querySelector('.app-container').innerHTML = `
+                <div class="header">
+                    <h1>QR Recolección</h1>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <h3>Pedido Confirmado #${pedidoId}</h3>
+                    <div id="qrcode" style="display:flex; justify-content:center; margin: 20px 0;"></div>
+                    <p>Muestra este código para tu recolección.</p>
+                    <a href="javascript:location.reload()" class="btn-qr">NUEVO PEDIDO</a>
+                </div>
+            `;
+            
+            new QRCode(document.getElementById("qrcode"), {
+                text: "PEDIDO_SUMINISTRO_" + pedidoId,
+                width: 200,
+                height: 200
+            });
+        }
+        
+        let carrito = {};
+
+        async function cargarSuministros() {
+            const resp = await fetch('/api/suministros');
+            const suministros = await resp.json();
+            
+            const liqContainer = document.getElementById('liquidos-list');
+            const secContainer = document.getElementById('secos-list');
+            
+            liqContainer.innerHTML = '';
+            secContainer.innerHTML = '';
+            
+            Object.keys(suministros).forEach(id => {
+                const prod = suministros[id];
+                const card = `
+                    <div class="card" data-id="${id}" data-price="${prod.precio}">
+                        <div class="product-info"><h3>${prod.nombre}</h3><p>$${prod.precio.toFixed(2)}</p></div>
+                        <div class="controls"><button class="qty-btn" onclick="updateQty(this, -1)">-</button><span>0</span><button class="qty-btn" onclick="updateQty(this, 1)">+</button></div>
+                    </div>
+                `;
+                if(prod.tipo === 'liquido') liqContainer.innerHTML += card;
+                else secContainer.innerHTML += card;
+            });
+        }
+
+        function showTab(tab) {
+            document.getElementById('liquidos-list').style.display = tab === 'liquidos' ? 'block' : 'none';
+            document.getElementById('secos-list').style.display = tab === 'secos' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active'));
+        }
+
+        function updateQty(btn, delta) {
+            const span = btn.parentElement.querySelector('span');
+            let val = parseInt(span.innerText) + delta;
+            if(val < 0) val = 0;
+            span.innerText = val;
+            calcularTotal();
+        }
+
+        function calcularTotal() {
+            let total = 0;
+            document.querySelectorAll('.card').forEach(card => {
+                const qty = parseInt(card.querySelector('.controls span').innerText);
+                const price = parseFloat(card.dataset.price);
+                total += qty * price;
+            });
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        cargarSuministros();
+    </script>
+</body>
+</html>

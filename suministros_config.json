@@ -1,0 +1,42 @@
+{
+    "1": {
+        "nombre": "Trastes tipo Salvo (5L)",
+        "precio": 180,
+        "tipo": "liquido"
+    },
+    "2": {
+        "nombre": "Quitacochambre Li\u00adquido (5L)",
+        "precio": 150,
+        "tipo": "liquido"
+    },
+    "3": {
+        "nombre": "Desengrasante Universal (5L)",
+        "precio": 150,
+        "tipo": "liquido"
+    },
+    "4": {
+        "nombre": "Sarrix / Sarricida (5L)",
+        "precio": 150,
+        "tipo": "liquido"
+    },
+    "5": {
+        "nombre": "Fabuloso Lavanda/Mar (5L)",
+        "precio": 90,
+        "tipo": "liquido"
+    },
+    "6": {
+        "nombre": "Cloro (5L)",
+        "precio": 80,
+        "tipo": "liquido"
+    },
+    "7": {
+        "nombre": "Pastillas de Cloro (1 kg)",
+        "precio": 210,
+        "tipo": "seco"
+    },
+    "8": {
+        "nombre": "Cloro en Polvo (1 kg)",
+        "precio": 200,
+        "tipo": "seco"
+    }
+}

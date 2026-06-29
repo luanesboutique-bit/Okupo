@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Técnico - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; --color-verde: #27ae60; }
+        body { background-color: var(--color-crema); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--color-texto); display: flex; justify-content: center; padding: 20px; }
+        .app-container { width: 100%; max-width: 450px; background: var(--color-crema); border-radius: 30px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid rgba(139, 90, 43, 0.3); }
+        .step { display: none; }
+        .step.active { display: block; }
+        .progress-bar { height: 10px; background: #eee; border-radius: 5px; margin-bottom: 20px; }
+        .progress-fill { height: 100%; background: var(--color-dorado); border-radius: 5px; width: 16.6%; }
+        
+        /* Estilos de cuadrícula para categorías */
+        .oficios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .oficio-card { background: rgba(255,255,255,0.6); border: 2px solid #d4c5b3; border-radius: 20px; padding: 15px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: all 0.2s; }
+        .oficio-card:has(input:checked) { border-color: var(--color-dorado); background: white; }
+        .oficio-card input[type="checkbox"] { display: none; }
+        .oficio-card i { font-size: 30px; color: var(--color-texto); opacity: 0.6; }
+        .oficio-card:has(input:checked) i { color: var(--color-dorado); opacity: 1; }
+
+        button { width: 100%; padding: 15px; background: var(--color-dorado); color: white; border: none; border-radius: 15px; cursor: pointer; font-weight: 900; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h2>Configuración de tu Negocio</h2>
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        
+        <form id="wizard-form">
+            <div id="step-1" class="step active">
+                <h3>Paso 1: Categorías</h3>
+                <p>Selecciona lo que sabes hacer:</p>
+                <div id="categorias-list" class="oficios-grid"></div>
+            </div>
+            <div id="step-2" class="step">
+                <h3>Paso 2: Precios</h3>
+                <div id="precios-list"></div>
+            </div>
+            <div id="step-3" class="step">
+                <h3>Paso 3: Horarios</h3>
+                <div id="horarios-list">
+                    <script>
+                        const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                        dias.forEach((dia, index) => {
+                            document.getElementById('horarios-list').innerHTML += `
+                                <div class="horario-dia" data-dia="${index}" style="margin-bottom: 10px;">
+                                    <input type="checkbox" class="dia-activo"> ${dia}
+                                    <input type="time" class="hora-inicio"> a <input type="time" class="hora-fin">
+                                </div>
+                            `;
+                        });
+                    </script>
+                </div>
+            </div>
+            <div id="step-4" class="step">
+                <h3>Paso 4: Portafolio</h3>
+                <input type="text" placeholder="Título del trabajo" id="p-titulo">
+                <textarea placeholder="Descripción" id="p-desc"></textarea>
+            </div>
+            <div id="step-5" class="step">
+                <h3>Paso 5: Perfil</h3>
+                <input type="text" placeholder="Sobre mí" id="perfil-sobre">
+            </div>
+            <div id="step-6" class="step">
+                <h3>Paso 6: Centro de Suministros</h3>
+                <p>Bienvenido al Centro de Suministros. Aquí podrás gestionar tus materiales.</p>
+            </div>
+        </form>
+
+        <button onclick="nextStep()">Siguiente</button>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedCategorias = [];
+
+        window.onload = async () => {
+            const iconMap = {
+                'Cerrajería': 'fa-key',
+                'Plomería': 'fa-faucet-drip',
+                'Electricidad': 'fa-bolt',
+                'Limpieza General': 'fa-broom',
+                'Limpieza de Muebles': 'fa-couch',
+                'Armado de Muebles': 'fa-chair',
+                'Fletes y Mudanzas': 'fa-truck',
+                'Albañilería y Pintura': 'fa-paint-roller',
+                'Herrería': 'fa-hammer',
+                'Reparaciones': 'fa-screwdriver-wrench',
+                'Autos': 'fa-car',
+                'Instalaciones': 'fa-plug',
+                'Servicios Extra': 'fa-plus-circle'
+            };
+
+            const resp = await fetch('/api_proxy/categorias');
+            const categorias = await resp.json();
+            const list = document.getElementById('categorias-list');
+            categorias.forEach(cat => {
+                const icon = iconMap[cat.nombre] || 'fa-tools';
+                list.innerHTML += `
+                    <label class="oficio-card">
+                        <input type="checkbox" name="categorias" value="${cat.id}">
+                        <i class="fas ${icon}"></i>
+                        <span>${cat.nombre}</span>
+                    </label>
+                `;
+            });
+        };
+
+        async function nextStep() {
+            // Guardar datos según el paso actual
+            if (currentStep === 1) {
+                selectedCategorias = Array.from(document.querySelectorAll('input[name="categorias"]:checked')).map(el => el.value);
+                if (selectedCategorias.length === 0) { alert("Selecciona al menos una categoría"); return; }
+                
+                // Cargar subcategorías y preparar inputs
+                const preciosList = document.getElementById('precios-list');
+                preciosList.innerHTML = '';
+                for (const catId of selectedCategorias) {
+                    const resp = await fetch(`/api_proxy/categorias/${catId}/subcategorias`);
+                    const subs = await resp.json();
+                    subs.forEach(sub => {
+                        preciosList.innerHTML += `
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ccc;" class="subcat-price" data-id="${sub.id}">
+                                <p><strong>${sub.nombre}</strong></p>
+                                <input type="number" placeholder="Normal" class="p-normal">
+                                <input type="number" placeholder="Medio" class="p-medio">
+                                <input type="number" placeholder="Urgente" class="p-urgente">
+                            </div>
+                        `;
+                    });
+                }
+            } else if (currentStep === 2) {
+                const precios = [];
+                document.querySelectorAll('.subcat-price').forEach(div => {
+                    precios.push({
+                        subcategoria_id: div.dataset.id,
+                        normal: div.querySelector('.p-normal').value,
+                        medio: div.querySelector('.p-medio').value,
+                        urgente: div.querySelector('.p-urgente').value
+                    });
+                });
+                await fetch('/colaboradores/configuracion/precios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ precios }) });
+            } else if (currentStep === 3) {
+                const horarios = [];
+                document.querySelectorAll('.horario-dia').forEach(div => {
+                    if (div.querySelector('.dia-activo').checked) {
+                        horarios.push({ dia: div.dataset.dia, inicio: div.querySelector('.hora-inicio').value, fin: div.querySelector('.hora-fin').value });
+                    }
+                });
+                await fetch('/colaboradores/configuracion/horarios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ horarios }) });
+            } else if (currentStep === 4) {
+                const portafolio = { titulo: document.getElementById('p-titulo').value, descripcion: document.getElementById('p-desc').value };
+                await fetch('/colaboradores/configuracion/portafolio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(portafolio) });
+            } else if (currentStep === 5) {
+                const perfil = { sobre: document.getElementById('perfil-sobre').value };
+                await fetch('/colaboradores/configuracion/perfil', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(perfil) });
+            }
+
+            if(currentStep === 6) { window.location.href = '/colaboradores/dashboard'; return; }
+
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep++;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById('progress').style.width = (currentStep * 16.6) + '%';
+        }
+    </script>
+</body>
+</html>

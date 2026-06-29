@@ -228,14 +228,13 @@
             <div class="settings-container">
                 <a href="javascript:void(0)" onclick="toggleMenu()" style="color: var(--color-texto); font-size: 24px;"><i class="fas fa-cog"></i></a>
                 <div id="settingsMenu" class="settings-menu">
-                    <a href="{{ url_for('colaboradores.portafolio') }}"><i class="fas fa-briefcase"></i> Portafolio</a>
-                    <a href="{{ url_for('colaboradores.registro_tecnico_datos') }}"><i class="fas fa-user-edit"></i> Perfil</a>
-                    <a href="#"><i class="fas fa-store"></i> Mi negocio</a>
-                    <a href="{{ url_for('colaboradores.registro_tecnico_horarios') }}"><i class="fas fa-clock"></i> Horario</a>
-                    <a href="{{ url_for('colaboradores.registro_tecnico_precios') }}"><i class="fas fa-tag"></i> Precios</a>
-                    <a href="{{ url_for('colaboradores.registro_tecnico_categorias') }}"><i class="fas fa-list"></i> Categorías</a>
+                    <a href="/colaboradores/configuracion_guiada"><i class="fas fa-store"></i> Mi negocio</a>
+                    <a href="/colaboradores/registro/tecnico/horarios"><i class="fas fa-clock"></i> Horario</a>
+                    <a href="/colaboradores/registro/tecnico/precios"><i class="fas fa-tag"></i> Precios</a>
+                    <a href="/colaboradores/registro/tecnico/categorias"><i class="fas fa-list"></i> Categorías</a>
+                    <a href="/colaboradores/centro_suministros"><i class="fas fa-box"></i> Centro de Suministros</a>
                     <a href="/" style="background: rgba(0,0,0,0.05);"><i class="fas fa-exchange-alt"></i> Entrar como usuario</a>
-                    <a href="{{ url_for('autenticacion.logout') }}" style="color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                    <a href="/logout" style="color: #e74c3c;"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
                 </div>
             </div>
         </div>

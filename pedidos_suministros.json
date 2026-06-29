@@ -1,0 +1,236 @@
+[
+    {
+        "id": 1,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Trastes tipo Salvo (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Quitacochambre Li\u00adquido (5L)",
+                "cantidad": 1
+            }
+        ],
+        "total": 330,
+        "fecha": "2026-06-29T00:04:27.290213",
+        "estado": "pendiente"
+    },
+    {
+        "id": 2,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Trastes tipo Salvo (5L)",
+                "cantidad": 1
+            }
+        ],
+        "total": 180,
+        "fecha": "2026-06-29T00:26:33.727148",
+        "estado": "pendiente"
+    },
+    {
+        "id": 3,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "categoria_id": 2,
+                "id": "533",
+                "nombre": "LAVADO Y DESINFECCION DE TINACOS",
+                "precio": 1549.99,
+                "precio_cobrado": 1549.99
+            },
+            {
+                "categoria_id": 2,
+                "id": "530",
+                "nombre": "INSTALACION O CAMBIO DE GRIFERIA",
+                "precio": 949.99,
+                "precio_cobrado": 759.9920000000001
+            }
+        ],
+        "total": 2309.982,
+        "fecha": "2026-06-29T00:30:48.472646",
+        "estado": "pendiente"
+    },
+    {
+        "id": 4,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "categoria_id": 2,
+                "id": "533",
+                "nombre": "LAVADO Y DESINFECCION DE TINACOS",
+                "precio": 1549.99,
+                "precio_cobrado": 1549.99
+            },
+            {
+                "categoria_id": 2,
+                "id": "530",
+                "nombre": "INSTALACION O CAMBIO DE GRIFERIA",
+                "precio": 949.99,
+                "precio_cobrado": 759.9920000000001
+            }
+        ],
+        "total": 2309.982,
+        "fecha": "2026-06-29T00:31:17.654127",
+        "estado": "pendiente"
+    },
+    {
+        "id": 5,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "categoria_id": 2,
+                "id": "533",
+                "nombre": "LAVADO Y DESINFECCION DE TINACOS",
+                "precio": 1549.99,
+                "precio_cobrado": 1549.99
+            },
+            {
+                "categoria_id": 2,
+                "id": "530",
+                "nombre": "INSTALACION O CAMBIO DE GRIFERIA",
+                "precio": 949.99,
+                "precio_cobrado": 759.9920000000001
+            }
+        ],
+        "total": 2309.982,
+        "fecha": "2026-06-29T00:31:33.572287",
+        "estado": "pendiente"
+    },
+    {
+        "id": 6,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "categoria_id": 2,
+                "id": "533",
+                "nombre": "LAVADO Y DESINFECCION DE TINACOS",
+                "precio": 1549.99,
+                "precio_cobrado": 1549.99
+            },
+            {
+                "categoria_id": 2,
+                "id": "530",
+                "nombre": "INSTALACION O CAMBIO DE GRIFERIA",
+                "precio": 949.99,
+                "precio_cobrado": 759.9920000000001
+            }
+        ],
+        "total": 2309.982,
+        "fecha": "2026-06-29T00:31:45.670620",
+        "estado": "pendiente"
+    },
+    {
+        "id": 7,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "categoria_id": 2,
+                "id": "533",
+                "nombre": "LAVADO Y DESINFECCION DE TINACOS",
+                "precio": 1549.99,
+                "precio_cobrado": 1549.99
+            },
+            {
+                "categoria_id": 2,
+                "id": "530",
+                "nombre": "INSTALACION O CAMBIO DE GRIFERIA",
+                "precio": 949.99,
+                "precio_cobrado": 759.9920000000001
+            }
+        ],
+        "total": 2309.982,
+        "fecha": "2026-06-29T00:31:47.538135",
+        "estado": "pendiente"
+    },
+    {
+        "id": 8,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Trastes tipo Salvo (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Quitacochambre Li\u00adquido (5L)",
+                "cantidad": 1
+            }
+        ],
+        "total": 330,
+        "fecha": "2026-06-29T00:37:48.809535",
+        "estado": "pendiente"
+    },
+    {
+        "id": 9,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Trastes tipo Salvo (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Quitacochambre Li\u00adquido (5L)",
+                "cantidad": 1
+            }
+        ],
+        "total": 330,
+        "fecha": "2026-06-29T00:44:31.336684",
+        "estado": "pendiente"
+    },
+    {
+        "id": 10,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Trastes tipo Salvo (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Quitacochambre Li\u00adquido (5L)",
+                "cantidad": 1
+            }
+        ],
+        "total": 330,
+        "fecha": "2026-06-29T00:47:15.443209",
+        "estado": "pendiente"
+    },
+    {
+        "id": 11,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Trastes tipo Salvo (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Quitacochambre Li\u00adquido (5L)",
+                "cantidad": 1
+            }
+        ],
+        "total": 330,
+        "fecha": "2026-06-29T00:59:54.526062",
+        "estado": "pendiente"
+    },
+    {
+        "id": 12,
+        "tecnico": "Daniel",
+        "items": [
+            {
+                "nombre": "Desengrasante Universal (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Sarrix / Sarricida (5L)",
+                "cantidad": 1
+            },
+            {
+                "nombre": "Pastillas de Cloro (1 kg)",
+                "cantidad": 1
+            }
+        ],
+        "total": 510,
+        "fecha": "2026-06-29T01:03:35.414466",
+        "estado": "pendiente"
+    }
+]

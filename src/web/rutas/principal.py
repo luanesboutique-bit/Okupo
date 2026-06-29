@@ -1,3 +1,5 @@
+import json
+import os
 from flask import Blueprint, render_template, redirect, url_for, request, session
 from src.infraestructura.cliente_api import api_get
 from src.aplicacion.clasificador import clasificar_servicio
@@ -34,6 +36,20 @@ def ver_subcategorias(categoria_id):
     subcategorias = api_get(f"/categorias/{categoria_id}/subcategorias", token=session.get('token'))
     if subcategorias == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
+    
+    # Cargar notas desde precios_config.json
+    try:
+        with open('precios_config.json', 'r') as f:
+            precios_config = json.load(f)
+    except:
+        precios_config = {}
+
+    # Inyectar nota en cada subcategoría
+    for sub in subcategorias:
+        sub_id = str(sub.get('id'))
+        if sub_id in precios_config:
+            sub['nota'] = precios_config[sub_id].get('nota')
+            
     return render_template('subcategorias.html', subcategorias=subcategorias or [], categoria_id=categoria_id)
 
 @blueprint.route('/marketplace/<int:subcategoria_id>')

@@ -245,6 +245,20 @@
             text-shadow: 1px 1px 2px black;
         }
 
+        /* MODAL ESTILO */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; }
+        .modal-content { background:white; margin: 40% 10% auto; padding: 20px; border-radius: 15px; text-align: center; position: relative; border: 3px solid var(--color-dorado); }
+        .modal-btn { background:var(--color-naranja-btn); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold; }
+        
+        /* TOAST ESTILO */
+        .toast {
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
+            border-radius: 20px; padding: 16px; position: fixed; z-index: 10000; left: 50%; bottom: 30px;
+            transform: translateX(-50%); font-weight: 700; border: 2px solid var(--color-dorado);
+        }
+        .toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
@@ -263,33 +277,54 @@
             Elige la forma de solicitar tu servicio
         </div>
 
+        <!-- Etiqueta Promocional Dinámica -->
+        <div style="background: #e67e22; color: var(--color-texto); padding: 10px; border-radius: 15px; margin: 10px 15px; text-align: center; font-weight: 900; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid var(--color-dorado);">
+            <i class="fas fa-gift"></i> ¡Arma tu paquete! Agrega 2 o más servicios de esta categoría y obtén 20% de desc. en los adicionales.
+            <br>
+            <a href="javascript:void(0)" onclick="mostrarModalRestriccion()" style="color: var(--color-texto); font-size: 10px; text-decoration: underline; cursor: pointer;">Ver restricciones de paquete</a>
+        </div>
+
+        <!-- Modal de restricción -->
+        <div id="modal-restriccion" class="modal">
+            <div class="modal-content">
+                <p style="font-size: 14px; color: var(--color-texto);">*Solo puedes agrupar servicios de la misma categoría. Si necesitas servicios de otra, solicítalos por separado para garantizar al experto adecuado.</p>
+                <button onclick="cerrarModalRestriccion()" class="modal-btn">Entendido</button>
+            </div>
+        </div>
+
+        <!-- Toast de notificación -->
+        <div id="okupo-toast" class="toast"></div>
+
         <div class="list-container">
             <div style="display:none;">DEBUG: categoria_id = {{ categoria_id }}</div>
             {% for sub in subcategorias %}
-            <div class="card-servicio">
+            <div class="card-servicio" id="card-{{ sub.id }}">
                 <h3>{{ sub.nombre }}</h3>
                 
                 <div class="precio-actual">
-                    <!-- DEBUG RAW DATA: {{ sub }} -->
                     <span class="tipo" id="tipo-tarifa-{{ sub.id }}">Calculando Tarifa...</span>
                     <span class="monto" id="monto-{{ sub.id }}">$0.00</span>
+                    
+                    {% if "tinaco" in sub.nombre.lower() or "calentador solar" in sub.nombre.lower() or "limpieza express" in sub.nombre.lower() or "limpieza de mudanza" in sub.nombre.lower() or "limpieza post-fiesta" in sub.nombre.lower() or "limpieza post-evento" in sub.nombre.lower() or "lavado salas" in sub.nombre.lower() or "lavado de colchones" in sub.nombre.lower() or "lavado sillas" in sub.nombre.lower() or "lavado de tapetes" in sub.nombre.lower() or "lavado de alfombra" in sub.nombre.lower() or "lavado de cojines" in sub.nombre.lower() %}
+                        <div style="font-size: 10px; color: #27ae60; font-weight: 700; margin-top: 5px;">
+                            <i class="fas fa-leaf"></i> Químicos profesionales incluidos
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div class="opciones-hibridas">
-                    <!-- OPCIÓN 1: RÁPIDA -->
                     <div class="opcion-col">
                         <span class="opcion-label">OPCIÓN 1: ASIGNAR YA</span>
-                        <a href="{{ url_for('pedidos.pedir', subcategoria_id=sub.id, categoria_id=categoria_id) }}" class="btn-hibrido btn-ahora">
+                        <button onclick="agregarAlCarrito('{{ sub.id }}', '{{ sub.nombre }}', {{ categoria_id }})" class="btn-hibrido btn-ahora" style="width: 100%;">
                             <i class="fas fa-bolt"></i>
-                            ASIGNAR YA
-                        </a>
+                            AGREGAR AL PAQUETE
+                        </button>
                         <div class="desc-hibrida">Aplica la tarifa sugerida para hoy mismo</div>
                     </div>
 
-                    <!-- OPCIÓN 2: MANUAL -->
                     <div class="opcion-col">
                         <span class="opcion-label">OPCIÓN 2: COMPARAR</span>
-                        <a href="{{ url_for('principal.marketplace', subcategoria_id=sub.id, categoria_id=categoria_id) }}" class="btn-hibrido btn-expertos">
+                        <a href="{{ url_for('principal.marketplace', subcategoria_id=sub.id, categoria_id=categoria_id) }}" class="btn-hibrido btn-expertos" style="width: 100%;">
                             <i class="fas fa-users"></i>
                             COMPARAR
                         </a>
@@ -299,7 +334,11 @@
 
                 <div class="info-nota">
                     <i class="fas fa-info-circle"></i> 
-                    {% if "duplicado" in sub.nombre.lower() and "llaves" in sub.nombre.lower() %}
+                    {% if sub.get('nota') %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> {{ sub.nota }}
+                    {% elif sub.id == 522 %}
+                        <b style="color: #e67e22;">⚠️ AVISO:</b> Solo cubre cerraduras comunes (perilla/cerrojo). Si es chapa multipunto de alta seguridad o digital, usa el boton de cotizar.
+                    {% elif "duplicado" in sub.nombre.lower() and "llaves" in sub.nombre.lower() %}
                         <b style="color: #e67e22;">⚠️ MÍNIMO 3 PIEZAS:</b> El precio mostrado aplica por el paquete de 3 llaves.
                     {% elif "apagador" in sub.nombre.lower() or "contacto" in sub.nombre.lower() %}
                         <b style="color: #e67e22;">⚠️ MÍNIMO 2 PIEZAS:</b> El precio ya incluye las 2 piezas.
@@ -341,31 +380,71 @@
                         {% else %}
                             Incluye químicos básicos.
                         {% endif %}
-                    {% elif categoria_id == 2 or categoria_id == 3 %} Materiales no incluidos. {% else %} Incluye químicos básicos. {% endif %}
+                    {% else %} 
+                        Incluye químicos básicos.
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
-
+            
             <a href="/cotizar" class="btn-especial">
-                ⚡ ¿OTRO TRABAJO?<br>COTIZAR AQUÍ
+                ⚡ ¿NO ESTA TU TRABAJO?<br>COTIZAR AQUÍ
+            </a>
+            
+            <!-- Botón para ver el resumen del paquete -->
+            <a href="/resumen_paquete" id="btn-ver-paquete" class="btn-especial" style="background-image:none; background:#27ae60; display:none;">
+                📦 VER MI PAQUETE Y DESCUENTO
             </a>
         </div>
         
         <script>
+            function mostrarModalRestriccion() { document.getElementById('modal-restriccion').style.display = 'block'; }
+            function cerrarModalRestriccion() { document.getElementById('modal-restriccion').style.display = 'none'; }
+
+            function mostrarToast(mensaje) {
+                const toast = document.getElementById("okupo-toast");
+                toast.innerText = mensaje;
+                toast.className = "toast show";
+                setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+            }
+
+            async function agregarAlCarrito(id, nombre, catId) {
+                const response = await fetch('/carrito/agregar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, nombre, categoria_id: catId, precio: parseFloat(document.getElementById('monto-' + id).innerText.replace('$', '')) })
+                });
+                
+                if (response.ok) {
+                    mostrarToast('Servicio agregado al paquete: ' + nombre);
+                    document.getElementById('btn-ver-paquete').style.display = 'block';
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Error al agregar al paquete.');
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', async () => {
                 let preciosConfig = {};
                 try {
+                    console.log("DEBUG [Frontend]: Fetching /api/precios...");
                     const resp = await fetch('/api/precios');
                     preciosConfig = await resp.json();
-                } catch (e) { console.error("Error cargando precios:", e); }
+                    console.log("DEBUG [Frontend]: Precios recibidos:", preciosConfig);
+                } catch (e) { console.error("DEBUG [Frontend]: Error cargando precios:", e); }
 
                 const ahora = new Date();
-                const hora = ahora.getHours();
+                const hora = ahora.getHours(); 
                 const dia = ahora.getDay();
                 
-                const esUrgenciaGlobal = localStorage.getItem('okupo_urgencia_247') === 'true';
+                const esUrgenciaManual = localStorage.getItem('okupo_urgencia_247') === 'true';
+                const esUrgenciaHoraria = (hora >= 23 || hora < 8);
+                const esUrgencia = esUrgenciaManual || esUrgenciaHoraria;
 
-                // Definimos los IDs de subcategorías disponibles en esta página desde el backend
+                const esFinDeSemana = (dia === 0 || dia === 6);
+                const esTarde = (hora >= 18 && hora < 23);
+                const esMedia = esFinDeSemana || esTarde;
+
                 const subcategorias = [
                     {% for sub in subcategorias %}
                         { id: "{{ sub.id }}" },
@@ -375,41 +454,41 @@
                 subcategorias.forEach(sub => {
                     const subId = sub.id;
                     const config = preciosConfig[subId] || preciosConfig[parseInt(subId)] || { normal: 0, medio: 0, urgente: 0 };
+                    console.log(`DEBUG [Frontend]: Config para ${subId}:`, config);
                     
                     let precio = config.normal;
-                    let etiqueta = "Tarifa Normal";
+                    let color = "#27ae60";
 
-                    if (esUrgenciaGlobal || dia === 0) {
+                    if (esUrgencia) {
                         precio = config.urgente;
-                        etiqueta = "Tarifa Urgente";
+                        color = "#dc3545";
                         document.body.classList.add('modo-urgencia-activo');
-                    } else if (hora >= 20 || hora < 6) {
+                    } else if (esMedia) {
                         precio = config.medio;
-                        etiqueta = "Tarifa Media";
+                        color = "#fd7e14";
                     }
 
                     const elPrecio = document.getElementById('monto-' + subId);
                     const elTipo = document.getElementById('tipo-tarifa-' + subId);
                     
                     if (elPrecio) {
-                        elPrecio.innerText = "$" + parseFloat(precio).toFixed(2);
-                        // Aplicar color según tarifa (calculada pero no mostrada como texto)
-                        if (etiqueta === "Tarifa Urgente") elPrecio.style.color = "#e74c3c"; // Rojo
-                        else if (etiqueta === "Tarifa Media") elPrecio.style.color = "#e67e22"; // Naranja
-                        else elPrecio.style.color = "#27ae60"; // Verde
+                        elPrecio.innerText = "$" + parseFloat(precio || 0).toFixed(2);
+                        elPrecio.style.color = color;
                     }
                     if (elTipo) {
-                        elTipo.innerText = "TARIFA SUGERIDA"; // Etiqueta fija
-                        // Aplicar color a la etiqueta
-                        if (etiqueta === "Tarifa Urgente") elTipo.style.color = "#e74c3c";
-                        else if (etiqueta === "Tarifa Media") elTipo.style.color = "#e67e22";
-                        else elTipo.style.color = "#27ae60";
+                        elTipo.innerText = "TARIFA SUGERIDA";
+                        elTipo.style.color = color;
                     }
                 });
+
+                const res = await fetch('/carrito/resumen');
+                const data = await res.json();
+                if (data.desglose && data.desglose.length > 0) {
+                    document.getElementById('btn-ver-paquete').style.display = 'block';
+                }
             });
         </script>
     </div>
 
 </body>
 </html>
-

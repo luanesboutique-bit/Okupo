@@ -117,7 +117,15 @@
                 </div>
                 
                 <div style="background: white; padding: 20px; border-radius: 20px; border: 2px solid var(--gold); margin: 20px 10px; text-align: center;">
-                    <div style="font-size: 24px; font-weight: 900; color: var(--wood-dark);" id="precio-final-reserva">$ {{ subcategoria.get('precio_normal', 0) }}</div>
+                    {% set tarifa = subcategoria.tarifa_tipo | lower %}
+                    {% set color = '#28a745' if tarifa == 'normal' else ('#fd7e14' if tarifa == 'medio' else '#dc3545') %}
+                    
+                    <div style="font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: {{ color }};">
+                        Total a pagar
+                    </div>
+                    <div style="font-size: 32px; font-weight: 900; color: {{ color }};" id="precio-final-reserva">
+                        $ {{ subcategoria.get('precio_activo') if subcategoria.get('precio_activo') is not none else 0 }}
+                    </div>
                     <div id="conekta-element" style="margin-top: 15px;"></div>
                 </div>
 
@@ -134,7 +142,8 @@
     <script>
         Conekta.setPublicKey('{{ config.get("VITE_CONEKTA_PUBLIC_KEY") }}');
         const conektaElements = Conekta.Elements({});
-        const paymentElement = conektaElements.create('payment', { amount: {{ subcategoria.get('precio_normal', 0) * 100 }} });
+        const price = {{ (subcategoria.get('precio_activo') or 0) }};
+        const paymentElement = conektaElements.create('payment', { amount: price * 100 });
         paymentElement.mount('#conekta-element');
 
         document.querySelector('form').addEventListener('submit', async (e) => {

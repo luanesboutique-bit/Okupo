@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Paquete - Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --wood-dark: #A67C52; --wood-light: #D4B996; --gold: #E8B760; --engraved: #2a1b12; }
+        body { background-image: url('/static/fondo_pared.jpg'); background-size: cover; background-attachment: fixed; font-family: 'Segoe UI', sans-serif; color: var(--engraved); margin: 0; padding: 0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: #F2EDE0; position: relative; padding-bottom: 30px; }
+        .header { display: flex; align-items: center; padding: 12px; background: #fff; }
+        .header a { color: var(--engraved); font-size: 20px; margin-right: 20px; text-decoration: none; }
+        .header h1 { font-size: 16px; margin: 0; font-weight: 700; text-transform: uppercase; }
+        .section-header { background: url('/static/madera_media.jpg'); color: #fff; padding: 12px; border-radius: 12px; margin: 15px 10px; font-weight: 800; text-transform: uppercase; font-size: 13px; text-shadow: 0 1px 2px black; }
+        .input-group { margin-bottom: 20px; padding: 0 10px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--engraved); }
+        .input-group textarea, .input-group input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--wood-dark); box-sizing: border-box; font-size: 14px; }
+        .photo-upload { border: 2px dashed var(--wood-dark); border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; background: white; }
+        .btn-enviar { width: 90%; margin: 20px auto; display: block; padding: 20px; background: url('/static/madera_oscura.jpg'); color: #ffff00; border: none; border-radius: 20px; font-size: 16px; font-weight: 900; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Confirmar Paquete</h1>
+        </div>
+        
+        <form method="POST" action="/confirmar_paquete">
+            <div class="section-header"><i class="fas fa-diagnoses"></i> Diagnóstico del Paquete</div>
+            <div class="input-group">
+                <label>Evidencia Fotográfica (Obligatoria)</label>
+                <div class="photo-upload" id="photo-dropzone"><i class="fas fa-camera"></i><p>Toma fotos del problema.</p></div>
+            </div>
+            <div class="input-group">
+                <label>Descripción general del problema</label>
+                <textarea name="descripcion" rows="3" required placeholder="Ej: Varios servicios en la casa..."></textarea>
+            </div>
+
+            <div class="section-header"><i class="fas fa-map-marker-alt"></i> Ubicación</div>
+            <div class="input-group">
+                <label>Dirección completa</label>
+                <input type="text" name="direccion" required placeholder="Escribe tu dirección...">
+            </div>
+            <div class="input-group">
+                <label>Referencias</label>
+                <textarea name="referencias" rows="2" placeholder="Ej: Portón café..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn-enviar">FINALIZAR Y AGENDAR</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -2,12 +2,17 @@ from flask import Blueprint, render_template, request, jsonify, session, redirec
 from src.infraestructura.cliente_api import api_get, api_post
 from src.web.decoradores import login_requerido
 
-blueprint = Blueprint('colaboradores', __name__)
+blueprint = Blueprint('colaboradores', __name__, url_prefix='/colaboradores')
 
 @blueprint.route('/dashboard')
 @login_requerido
 def dashboard_colaborador():
     return render_template('dashboard_tecnico.html')
+
+@blueprint.route('/centro_suministros')
+@login_requerido
+def centro_suministros():
+    return render_template('centro_suministros.html')
 
 @blueprint.route('/dashboard/datos')
 @login_requerido
@@ -15,6 +20,93 @@ def dashboard_datos():
     token = session.get('token')
     solicitudes = api_get(f"/solicitudes", token=token)
     return jsonify(solicitudes or [])
+
+# Nuevos endpoints para configurar el técnico
+@blueprint.route('/configuracion_guiada')
+@login_requerido
+def configuracion_guiada():
+    return render_template('wizard_configuracion.html')
+
+@blueprint.route('/configuracion/categorias', methods=['POST'])
+@login_requerido
+def guardar_categorias():
+    token = session.get('token')
+    colaborador_id = session.get('colaborador_id')
+    categorias_ids = request.get_json().get('categorias', [])
+    # Aquí iría la lógica para llamar a tu API de Finite y guardar las categorías del colaborador
+    # Por ahora, simulamos el éxito
+    return jsonify({"status": "ok"})
+
+import json
+import os
+
+@blueprint.route('/configuracion/precios', methods=['POST'])
+@login_requerido
+def guardar_precios():
+    token = session.get('token')
+    colaborador_id = session.get('colaborador_id')
+    precios_data = request.get_json().get('precios', [])
+    
+    # Ruta aislada para los precios de los técnicos
+    archivo_precios_tecnico = 'tecnico_precios.json'
+    
+    # Cargar datos existentes o crear nuevo dict
+    datos_existentes = {}
+    if os.path.exists(archivo_precios_tecnico):
+        with open(archivo_precios_tecnico, 'r') as f:
+            try:
+                datos_existentes = json.load(f)
+            except:
+                datos_existentes = {}
+    
+    # Actualizar solo para este colaborador
+    datos_existentes[str(colaborador_id)] = precios_data
+    
+    # Guardar de forma aislada
+    with open(archivo_precios_tecnico, 'w') as f:
+        json.dump(datos_existentes, f, indent=4)
+        
+    return jsonify({"status": "ok"})
+
+@blueprint.route('/configuracion/perfil', methods=['POST'])
+@login_requerido
+def guardar_perfil():
+    token = session.get('token')
+    colaborador_id = session.get('colaborador_id')
+    datos = request.get_json()
+    
+    # Lógica de guardado en archivo aislado o API
+    archivo_perfil = 'tecnico_perfil.json'
+    datos_existentes = {}
+    if os.path.exists(archivo_perfil):
+        with open(archivo_perfil, 'r') as f:
+            try: datos_existentes = json.load(f)
+            except: datos_existentes = {}
+    datos_existentes[str(colaborador_id)] = datos
+    with open(archivo_perfil, 'w') as f:
+        json.dump(datos_existentes, f, indent=4)
+        
+    return jsonify({"status": "ok"})
+
+@blueprint.route('/configuracion/portafolio', methods=['POST'])
+@login_requerido
+def guardar_portafolio_wizard():
+    token = session.get('token')
+    colaborador_id = session.get('colaborador_id')
+    datos = request.get_json()
+    
+    # Lógica de guardado en archivo aislado o API
+    archivo_portafolio = 'tecnico_portafolio.json'
+    datos_existentes = {}
+    if os.path.exists(archivo_portafolio):
+        with open(archivo_portafolio, 'r') as f:
+            try: datos_existentes = json.load(f)
+            except: datos_existentes = {}
+    datos_existentes[str(colaborador_id)] = datos
+    with open(archivo_portafolio, 'w') as f:
+        json.dump(datos_existentes, f, indent=4)
+        
+    return jsonify({"status": "ok"})
 
 @blueprint.route('/dashboard/estado/<int:id>', methods=['POST'])
 @login_requerido

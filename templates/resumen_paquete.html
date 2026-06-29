@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Paquete Okupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --color-crema: #fdfaf5; --color-texto: #5a3e2b; --color-dorado: #d4af37; --color-verde: #27ae60; --color-naranja-btn: #e67e22; }
+        html, body { background-color: var(--color-crema) !important; margin: 0; padding: 0; width: 100%; min-height: 100%; }
+        body { background-image: url('/static/fondo_pared.jpg') !important; background-size: cover !important; font-family: 'Segoe UI', sans-serif; color: var(--color-texto); display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 450px; min-height: 100vh; background: transparent !important; padding: 20px; }
+        .header { padding: 20px 0; display: flex; align-items: center; margin-bottom: 20px; }
+        .header a { color: var(--color-texto); font-size: 24px; }
+        .header h1 { flex: 1; font-size: 18px; font-weight: 900; text-transform: uppercase; margin: 0; text-align: center; }
+        .card { background: rgba(253, 250, 245, 0.95); background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); border-radius: 30px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid var(--color-dorado); }
+        .servicio-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #e6d7a1; padding-bottom: 10px; font-weight: 700; }
+        .tachado { text-decoration: line-through; color: #a09080; margin-right: 10px; font-size: 0.9em; }
+        .precio-final { font-weight: 900; color: var(--color-verde); }
+        .total { font-size: 28px; font-weight: 900; text-align: center; margin-top: 30px; color: var(--color-texto); }
+        .btn-confirmar { background-image: url('/static/madera_oscura.jpg'); background-size: cover; color: #ffff00; display: block; text-align: center; padding: 20px; border-radius: 25px; text-decoration: none; font-weight: 900; margin-top: 30px; text-transform: uppercase; box-shadow: 0 10px 20px rgba(0,0,0,0.3); text-shadow: 1px 1px 2px black; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1>Tu Paquete</h1>
+        </div>
+
+        <div class="card">
+            <div id="lista-servicios"></div>
+            <div class="total" id="total-final"></div>
+        </div>
+        
+        <a href="/confirmar_paquete" class="btn-confirmar">CONFIRMAR Y AGENDAR</a>
+    </div>
+
+    <script>
+        async function eliminarDelCarrito(index) {
+            const resp = await fetch('/carrito/eliminar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ index })
+            });
+            if (resp.ok) { cargarResumen(); }
+        }
+
+        async function cargarResumen() {
+            try {
+                const resp = await fetch('/carrito/resumen');
+                const data = await resp.json();
+                const lista = document.getElementById('lista-servicios');
+
+                if (data.mensaje || !data.desglose) {
+                    lista.innerHTML = `<p style="text-align:center;">${data.mensaje || 'Carrito vacío'}</p>`;
+                    document.getElementById('total-final').innerText = 'TOTAL: $0.00';
+                    return;
+                }
+
+                let html = '';
+                data.desglose.forEach((item, index) => {
+                    const esDescuento = item.precio_cobrado < item.precio;
+                    html += `
+                        <div class="servicio-item">
+                            <button onclick="eliminarDelCarrito(${index})" style="background:none; border:none; color: #dc3545; cursor:pointer; margin-right: 10px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <span style="flex-grow:1;">${item.nombre}</span>
+                            <span>
+                                ${esDescuento ? `<span class="tachado">$${item.precio.toFixed(2)}</span>` : ''}
+                                <span class="precio-final">$${item.precio_cobrado.toFixed(2)}</span>
+                            </span>
+                        </div>
+                    `;
+                    
+                    // Lógica para el aviso de Fletes
+                    if (item.id === 553 || item.id === 554) {
+                        html += `
+                            <div style="background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 10px; font-size: 0.85em; margin-bottom: 10px; text-align: left;">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                <strong>Reglas del Flete Express:</strong>
+                                <ul style="margin: 5px 0 0 15px; padding: 0;">
+                                    <li>Incluye solo chofer; el cliente debe ayudar activamente a cargar/descargar en planta baja. No incluye maniobras en pisos altos ni volado de muebles. Si se requieren cargadores o es segundo piso en adelante, regresa y da clic en "Cotizar".</li>
+                                    <li>La tarifa base cubre hasta 15 km. Cada kilómetro excedente detectado por GPS sumará automáticamente $15.00 MXN extra.</li>
+                                </ul>
+                            </div>
+                        `;
+                    }
+                });
+                lista.innerHTML = html;
+                document.getElementById('total-final').innerText = 'TOTAL: $' + data.total_final.toFixed(2);
+            } catch (e) { console.error("Error:", e); }
+        }
+        cargarResumen();
+    </script>
+</body>
+</html>

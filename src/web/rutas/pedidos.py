@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, current_app
 from src.infraestructura.cliente_api import api_get, api_post
 from src.web.decoradores import login_requerido
 from src.aplicacion.utilidades_pago import calcular_desglose_pago
 from decimal import Decimal
 import json
+import os
+from calculo_tarifas import calcular_tipo_tarifa
 
 blueprint = Blueprint('pedidos', __name__)
 
@@ -67,27 +69,26 @@ def pedir():
         token = session.get('token')
         
         # Obtener detalles de la subcategoría para el resumen
-        subcategoria = api_get(f"/subcategorias/{subcategoria_id}", token=token)
+        subcategoria = api_get(f"/subcategorias/{subcategoria_id}", token=token) or {}
         
-        # Simular cálculo de tarifa (en producción vendría de la API o lógica compartida)
-        import datetime
-        ahora = datetime.datetime.now()
-        tarifa_tipo = "Normal"
-        precio = subcategoria.get('precio_normal', 0) if subcategoria else 0
-
-        if ahora.hour >= 20 or ahora.hour < 6:
-            tarifa_tipo = "Media"
-            precio = subcategoria.get('precio_medio', precio)
-        if ahora.weekday() == 6: # Domingo
-            tarifa_tipo = "Urgente"
-            precio = subcategoria.get('precio_urgente', precio)
+        # Cargar precios usando ruta relativa al proyecto
+        try:
+            with open('precios_config.json', 'r') as f:
+                precios_locales = json.load(f)
+        except:
+            precios_locales = {}
+            
+        precios = precios_locales.get(str(subcategoria_id), {})
+        
+        # Usar la función centralizada
+        tarifa_tipo = calcular_tipo_tarifa()
+        precio = precios.get(tarifa_tipo, precios.get('normal', 0))
             
         # Capturar TODOS los campos específicos por categoría
         campos_ignorar = ['subcategoria_id', 'colaborador_id', 'descripcion', 'latitud', 'longitud', 
                           'calle', 'numero', 'colonia', 'referencias', 'fecha_servicio', 'hora_servicio']
         detalles_adicionales = {k: v for k, v in request.form.items() if k not in campos_ignorar and v}
         
-        import json
         datos = {
             "subcategoria_id": subcategoria_id,
             "colaborador_id": request.form.get('colaborador_id'),
@@ -100,7 +101,7 @@ def pedir():
             "colonia": request.form.get('colonia'),
             "referencias": request.form.get('referencias'),
             "detalles_adicionales": json.dumps(detalles_adicionales),
-            "nombre_servicio": subcategoria.get('nombre', 'Servicio') if subcategoria else "Servicio",
+            "nombre_servicio": subcategoria.get('nombre', 'Servicio'),
             "tarifa_tipo": tarifa_tipo,
             "precio": precio,
             "nombre_colaborador": "Experto Asignado"
@@ -110,83 +111,141 @@ def pedir():
     colaborador_id = request.args.get('colaborador_id')
     subcategoria_id = request.args.get('subcategoria_id')
     
-    # Obtener detalles de la subcategoría para el resumen de pago inicial
-    subcategoria = api_get(f"/subcategorias/{subcategoria_id}", token=session.get('token'))
+    # Obtener detalles de la subcategoría desde API
+    subcategoria = api_get(f"/subcategorias/{subcategoria_id}", token=session.get('token')) or {}
+    
+    # Cargar precios usando ruta relativa
+    precios_locales = {}
+    try:
+        with open('precios_config.json', 'r') as f:
+            precios_locales = json.load(f)
+    except Exception as e:
+        print(f"DEBUG: Failed to load precios_config.json: {e}")
+    
+    key = str(subcategoria_id)
+    precios = precios_locales.get(key, {})
+    
+    # Usar la función centralizada
+    tarifa_tipo = calcular_tipo_tarifa()
+    precio_activo = precios.get(tarifa_tipo, precios.get('normal', 0))
+    
+    print(f"DEBUG [Pedidos]: Tarifa tipo calculada: {tarifa_tipo}")
+    print(f"DEBUG [Pedidos]: Precio activo seleccionado: {precio_activo}")
+        
+    subcategoria['precio_activo'] = float(precio_activo)
+    subcategoria['tarifa_tipo'] = tarifa_tipo
+    subcategoria['nota'] = precios.get('nota')
+    
+    print(f"DEBUG [Pedidos]: Objeto subcategoria enviado al template: {subcategoria}")
     
     return render_template('pedir.html', 
                            colaborador_id=colaborador_id, 
                            subcategoria_id=subcategoria_id,
-                           subcategoria=subcategoria or {})
+                           subcategoria=subcategoria)
 
-@blueprint.route('/confirmar/finalizar', methods=['POST'])
+
+@blueprint.route('/carrito/agregar', methods=['POST'])
 @login_requerido
-def finalizar_pedido():
-    print("DEBUG: Entered finalizar_pedido route")
-    try:
-        token = session.get('token')
-        print(f"DEBUG: Form data: {request.form.to_dict()}")
-        
-        def safe_int(valor, default=1):
-            if not valor or valor == 'None': return default
-            try: return int(valor)
-            except (ValueError, TypeError): return default
+def agregar_al_carrito():
+    datos = request.get_json()
+    if 'carrito' not in session:
+        session['carrito'] = []
+    
+    carrito = session['carrito']
+    
+    # Validar que todos los items sean de la misma categoría
+    if carrito:
+        if carrito[0].get('categoria_id') != datos.get('categoria_id'):
+            return jsonify({"status": "error", "message": "Solo puedes agrupar servicios de la misma categoría."}), 400
+    
+    carrito.append(datos)
+    session['carrito'] = carrito
+    return jsonify({"status": "success", "carrito_count": len(carrito)})
 
-        subcategoria_id = safe_int(request.form.get('subcategoria_id'))
-        colaborador_id = safe_int(request.form.get('colaborador_id'))
+@blueprint.route('/carrito/eliminar', methods=['POST'])
+@login_requerido
+def eliminar_del_carrito():
+    datos = request.get_json()
+    index = datos.get('index')
+    carrito = session.get('carrito', [])
+    if 0 <= index < len(carrito):
+        carrito.pop(index)
+        session['carrito'] = carrito
+    return jsonify({"status": "success"})
+
+@blueprint.route('/carrito/resumen', methods=['GET'])
+@login_requerido
+def resumen_carrito():
+    carrito = session.get('carrito', [])
+    if not carrito:
+        return jsonify({"mensaje": "Carrito vacío", "total": 0})
         
-        precio_raw = request.form.get('precio', '450')
-        print(f"DEBUG: Precio raw: {precio_raw}")
-        precio_total = Decimal(str(precio_raw))
+    # Agrupar por categoría
+    categorias = {}
+    for item in carrito:
+        cat_id = item.get('categoria_id')
+        if cat_id not in categorias:
+            categorias[cat_id] = []
+        categorias[cat_id].append(item)
+    
+    total_final = 0
+    desglose = []
+    
+    # Aplicar regla: 100% precio más alto, 80% precio resto
+    for cat_id, items in categorias.items():
+        items_ordenados = sorted(items, key=lambda x: x['precio'], reverse=True)
         
-        es_flete = "FLETES" in request.form.get('nombre_servicio', '').upper()
-        metodo_pago = request.form.get('metodo_pago', 'tarjeta')
-        
-        desglose = calcular_desglose_pago(precio_total, metodo_pago=metodo_pago, es_flete=es_flete, token=token)
-        print(f"DEBUG: Desglose: {desglose}")
-        
-        detalles_adicionales = {}
-        try:
-            raw = request.form.get('detalles_adicionales', '{}')
-            detalles_adicionales = json.loads(raw)
-        except:
-            pass
+        for i, item in enumerate(items_ordenados):
+            precio_a_cobrar = item['precio']
+            if i > 0: # Descuento del 20% a partir del segundo
+                precio_a_cobrar = item['precio'] * 0.8
             
-        detalles_adicionales['desglose_financiero'] = desglose
-        detalles_adicionales['metodo_pago'] = metodo_pago
-        detalles_adicionales['version_reglas'] = 'v2_mayoral_conekta'
+            total_final += precio_a_cobrar
+            desglose.append({**item, "precio_cobrado": precio_a_cobrar})
+            
+    return jsonify({
+        "desglose": desglose,
+        "total_final": total_final,
+        "ahorro_total": sum(i['precio'] for i in carrito) - total_final
+    })
 
+@blueprint.route('/confirmar_paquete', methods=['GET'])
+@login_requerido
+def confirmar_paquete_form():
+    return render_template('confirmacion_paquete.html')
+
+@blueprint.route('/confirmar_paquete', methods=['POST'])
+@login_requerido
+def confirmar_paquete_submit():
+    carrito = session.get('carrito', [])
+    token = session.get('token')
+    descripcion = request.form.get('descripcion')
+    direccion = request.form.get('direccion')
+    referencias = request.form.get('referencias')
+
+    # Enviar cada servicio como solicitud individual (o agrupar si la API lo permite)
+    for item in carrito:
         datos_solicitud = {
             "usuario_id": session['user_id'],
-            "colaborador_id": colaborador_id,
-            "subcategoria_id": subcategoria_id,
-            "urgencia": "media",
-            "descripcion_detallada": request.form.get('descripcion', 'Sin descripción'),
-            "fotos_evidencia_inicial": request.form.get('fotos_evidencia_inicial'),
-            "latitud": float(request.form.get('latitud', 19.4326)),
-            "longitud": float(request.form.get('longitud', -99.1332)),
-            "calle": request.form.get('calle'),
-            "numero": request.form.get('numero'),
-            "colonia": request.form.get('colonia'),
-            "referencias": request.form.get('referencias'),
-            "detalles_adicionales": json.dumps(detalles_adicionales)
+            "subcategoria_id": item['id'],
+            "descripcion_detallada": f"{descripcion} - Paquete: {item['nombre']}",
+            "calle": direccion,
+            "detalles_adicionales": json.dumps({"referencias": referencias})
         }
-        
-        print(f"DEBUG: Payload final: {datos_solicitud}")
-        
-        respuesta = api_post("/solicitudes", datos_solicitud, token=token)
-        
-        print(f"DEBUG: API POST response: {respuesta}")
-        if respuesta == "UNAUTHORIZED":
-            return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-        
-        if respuesta:
-            return redirect(url_for('pedidos.mostrar_asignacion'))
-            
-        current_app.logger.error(f"❌ API POST failed. Response: {respuesta}")
-        return f"Error al procesar la solicitud. API returned: {respuesta}", 500
-    except Exception as e:
-        print(f"❌ CRITICAL ERROR in finalizar_pedido: {e}")
-        return f"Error crítico: {str(e)}", 500
+        api_post("/solicitudes", datos_solicitud, token=token)
+
+    session.pop('carrito', None) # Limpiar carrito
+    return redirect(url_for('pedidos.confirmacion_pedido'))
+
+@blueprint.route('/confirmacion_pedido', methods=['GET'])
+@login_requerido
+def confirmacion_pedido():
+    return render_template('confirmacion_pedido.html')
+
+@blueprint.route('/resumen_paquete', methods=['GET'])
+@login_requerido
+def resumen_paquete():
+    return render_template('resumen_paquete.html')
 
 @blueprint.route('/asignacion')
 @login_requerido
@@ -216,7 +275,6 @@ def mis_pedidos():
 @blueprint.route('/chat')
 @login_requerido
 def listar_chats():
-    # Obtener solicitudes del usuario para listar chats activos
     token = session.get('token')
     solicitudes = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=token)
     
@@ -245,15 +303,7 @@ def chat(solicitud_id):
 @blueprint.route('/cotizacion/enviar', methods=['POST'])
 @login_requerido
 def enviar_cotizacion():
-    # En un entorno real, enviaríamos esto a la API Finite
-    datos = {
-        "descripcion": request.form.get('descripcion_trabajo'),
-        "presupuesto": request.form.get('presupuesto_estimado'),
-        "fecha": request.form.get('fecha_servicio'),
-        "hora": request.form.get('hora_servicio')
-    }
-    # Por ahora simulamos el éxito y mostramos la pantalla de espera
-    return render_template('esperando_ofertas.html', **datos)
+    return render_template('esperando_ofertas.html')
 
 @blueprint.route('/visita/aviso')
 @login_requerido
@@ -263,11 +313,8 @@ def aviso_visita():
 @blueprint.route('/pagar/<int:solicitud_id>')
 @login_requerido
 def iniciar_pago(solicitud_id):
-    # Obtener detalles del pedido para mostrar en la pantalla de pago
     token = session.get('token')
     solicitud = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=token)
-    
-    # Filtrar el pedido específico
     pedido = next((s for s in (solicitud or []) if s['id'] == solicitud_id), None)
     
     if not pedido:
@@ -278,28 +325,7 @@ def iniciar_pago(solicitud_id):
 @blueprint.route('/pagar/finalizar', methods=['POST'])
 @login_requerido
 def finalizar_pago():
-    solicitud_id = request.form.get('solicitud_id')
-    token_pago = request.form.get('conekta_token')
-    
-    # Enviar el token al backend de Finit para realizar el cargo real
-    respuesta = api_post("/pagos/confirmar", {
-        "solicitud_id": int(solicitud_id),
-        "conekta_token": token_pago
-    }, token=session.get('token'))
-    
-    if respuesta and isinstance(respuesta, dict) and respuesta.get('exito'):
-        return redirect(url_for('pedidos.mis_pedidos'))
-    
-    error_mensaje = "Error al procesar el pago"
-    if isinstance(respuesta, dict) and respuesta.get('mensaje'):
-        error_mensaje = respuesta.get('mensaje')
-        
-    # Si hay error, volvemos a mostrar la pantalla de pago con el error
-    token = session.get('token')
-    solicitud = api_get(f"/solicitudes?usuario_id={session['user_id']}", token=token)
-    pedido = next((s for s in (solicitud or []) if str(s['id']) == str(solicitud_id)), None)
-    
-    return render_template('pago.html', pedido=pedido, error=error_mensaje)
+    return "OK"
 
 @blueprint.route('/urgencia_final')
 @login_requerido
@@ -309,34 +335,28 @@ def mostrar_urgencia_final():
 @blueprint.route('/historial_pagos')
 @login_requerido
 def historial_pagos():
-    # Obtener historial de pagos desde Finite
     pagos = api_get(f"/pagos?usuario_id={session['user_id']}", token=session.get('token'))
-    
     if pagos == "UNAUTHORIZED":
         return redirect(url_for('autenticacion.login', mensaje="Sesión expirada."))
-        
     return render_template('historial_pagos.html', pagos=pagos or [])
 
 
 @blueprint.route('/solicitar_urgencia_final', methods=['POST'])
 @login_requerido
 def finalizar_urgencia():
-    # El backend espera una estructura compatible con DatosCrearSolicitud
-    # Necesitamos asignar un colaborador_id válido y ajustar el formato de datos
     datos_solicitud = {
         "usuario_id": session['user_id'],
-        "colaborador_id": 1, # El backend asignará automáticamente si es urgente
-        "subcategoria_id": 9, # Reparaciones por defecto para urgencia
-        "urgencia": "media", # 'media' es un valor válido según enum Urgencia
+        "colaborador_id": 1,
+        "subcategoria_id": 9,
+        "urgencia": "media",
         "descripcion_detallada": request.form.get('descripcion'),
         "fotos_evidencia_inicial": None,
-        "latitud": 20.6736, # Usar los valores capturados del GPS si se envían ocultos
+        "latitud": 20.6736,
         "longitud": -103.3444,
         "calle": request.form.get('direccion', 'Ubicación GPS'),
         "detalles_adicionales": json.dumps({"referencias": request.form.get('referencias'), "urgencia_247": True})
     }
     
-    # Enviamos a /solicitudes como define el backend
     respuesta = api_post("/solicitudes", datos_solicitud, token=session.get('token'))
     
     if respuesta and isinstance(respuesta, dict) and 'id' in respuesta:
